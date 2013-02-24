@@ -49,6 +49,7 @@ code, pre {
 #render h1:first-child,
 #render h2:first-child {
     margin-top: 0;
+    margin-bottom: 20px;
 }
 #render h3 {
     line-height: 34px;
