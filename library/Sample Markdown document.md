@@ -875,8 +875,7 @@ Markdown provides backslash escapes for the following characters:
     []  square brackets
     ()  parentheses
     #   hash mark
-  + plus sign
-  - minus sign (hyphen)
+    + plus sign
+    - minus sign (hyphen)
     .   dot
     !   exclamation mark
-

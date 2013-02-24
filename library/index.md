@@ -21,6 +21,14 @@ Now, there are other Markdown-powered wikis out there, and I've tried some of th
 
   You don't have to use the `library` directory if you don't want to. Simply open the `index.php` file and set another value for the `LIBRARY` constant. That's where your files will be read from.
 
+### Roadmap
+
+Some of the features I plan to implement next:
+
+* [Pastebin](http://pastebin.com/) API integration. I think it would be cool to share snippets on Pastebin (or a similar service) with a single click
+* Creating / updating files directly through the web interface. Other wikis place great accent on creating and editing pages in the browser, but since I have my trusty code editor open non-stop anyway, I prefer to update my files manually for now.
+* Search in files
+
 ### Special thanks go to:
 
 * [Michel Fortin](http://michelf.ca/home/), for the [PHP Markdown parser](http://michelf.ca/projects/php-markdown/).
