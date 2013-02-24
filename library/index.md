@@ -4,7 +4,7 @@
 
   [1]: https://github.com/victorstanciu
 
-The page you are looking at right now is part of the actual wiki, and is written using the [Markdown](http://daringfireball.net/projects/markdown/syntax) syntax. If you're not familiar with Markdown go ahead, press the `Toggle source` button in the upper right corner, or check out the sample document in the sidebar.
+The page you are looking at right now is part of the actual wiki, and is written using the [Markdown](http://daringfireball.net/projects/markdown/syntax) syntax. If you're not familiar with Markdown go ahead, press the `Toggle source` button in the upper right corner, or check out the [sample document](Sample%20Markdown%20document.md) in the sidebar. By the way, if you're reading the source, noticed how I linked to another page within the wiki?
 
 Now, there are other Markdown-powered wikis out there, and I've tried some of them, but I wanted something that I could use to store my code snippets too, so `syntax highlighting` was a must. Expand the `Code snippets` folder in the sidebar and take a look at some of the supported file types. I also needed something light enough that I could sync on Dropbox, because I access my notes and snippets on multiple machines.
 

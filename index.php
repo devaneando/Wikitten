@@ -1,6 +1,6 @@
 <?php
 
-define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR);
+define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
 
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
 $request_uri = explode("/", $request_uri['path']);

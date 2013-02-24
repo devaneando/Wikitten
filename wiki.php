@@ -27,7 +27,7 @@ class Wiki
             throw new Exception("Page $page not found");
         };
 
-        $path = realpath(LIBRARY . $page);
+        $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
 
         if (!$path) {
             return $not_found();
@@ -101,33 +101,9 @@ class Wiki
         }
     }
 
-    /**
-     * Directories first
-     */
-    protected function _getTreeSorter($dir = LIBRARY)
-    {
-        return function ($a, $b) use ($dir) {
-            $a = $dir . DIRECTORY_SEPARATOR . $a;
-            $b = $dir . DIRECTORY_SEPARATOR . $b;
-
-            $is_dir_a = is_dir($a);
-            $is_dir_b = is_dir($b);
-
-            if ($is_dir_a xor $is_dir_b) {
-                if ($is_dir_a) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else {
-                return strnatcmp($a, $b);
-            }
-        };
-    }
-
     protected function _getTree($dir = LIBRARY)
     {
-        $return = array();
+        $return = array('directories' => array(), 'files' => array());
 
         $items = scandir($dir);
         foreach ($items as $item) {
@@ -137,16 +113,17 @@ class Wiki
 
             $path = $dir . DIRECTORY_SEPARATOR . $item;
             if (is_dir($path)) {
-                $return[$item] = $this->_getTree($path);
+                $return['directories'][$item] = $this->_getTree($path);
                 continue;
             }
 
-            $return[] = $item;
+            $return['files'][$item] = $item;
         }
 
-        uasort($return, $this->_getTreeSorter($dir));
+        uksort($return['directories'], "strnatcasecmp");
+        uksort($return['files'], "strnatcasecmp");
 
-        return $return;
+        return array_merge($return['directories'], $return['files']);
     }
 
     public function dispatch()
