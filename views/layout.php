@@ -15,7 +15,7 @@
     </head>
 <body>
     <div id="main">
-        <a href="<?php echo BASE_URL ?>" id="logo" target="_blank">
+        <a href="http://wikitten.vizuina.com" id="logo" target="_blank">
             <img src="static/img/logo.png" alt="" />
             <div class="bubble">Remember to check for updates!</div>
         </a>

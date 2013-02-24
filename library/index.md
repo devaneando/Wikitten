@@ -15,9 +15,11 @@ Now, there are other Markdown-powered wikis out there, and I've tried some of th
 
 ### Installation
 
-* Download the latest version or clone the repository on GitHub
+* [Download](https://github.com/victorstanciu/Wikitten/archive/master.zip) the latest version or clone the [repository on GitHub](https://github.com/victorstanciu/Wikitten)
 * After extracting the archive, drop the files somewhere in your DocumentRoot, or make a separate Apache [VirtualHost](http://httpd.apache.org/docs/2.2/mod/core.html#virtualhost) (this is the way I currently use it myself)
 * That's it. There's a `library` directory in the installation folder. Everything you place in there will be rendered by the wiki. If there's an `index.md` file (such as the one you are reading now) in that folder, it will be served by default when accessing the wiki.
+
+  You don't have to use the `library` directory if you don't want to. Simply open the `index.php` file and set another value for the `LIBRARY` constant. That's where your files will be read from.
 
 ### Special thanks go to:
 
