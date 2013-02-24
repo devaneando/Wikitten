@@ -1,6 +1,6 @@
 # Hello there! Welcome to your personal wiki!
 
-`Wikitten` is a small, fast, PHP wiki that [I][1] made because I really needed a place to store my notes, snippets, ideas, and so on. I've tried a lot of personal wikis and note-taking applications in the past, but since I have peculiar needs, none of them really suited me, so I rolled my own. With [blackjack](http://youtu.be/z5tZMDBXTRQ) and so on.
+`Wikitten` is a small, fast, PHP wiki that [I][1] made because I really needed a place to store my notes, snippets, ideas, and so on. I've tried a lot of personal wikis and note-taking applications in the past, but since I have peculiar needs, none of them really suited me, so I rolled my own. With [blackjack](http://youtu.be/z5tZMDBXTRQ) and whatnot.
 
   [1]: https://github.com/victorstanciu
 
