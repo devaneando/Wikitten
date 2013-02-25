@@ -10,6 +10,7 @@
         <li>
             <a href="<?php echo BASE_URL; ?>"><i class="icon-home icon-white"></i> /wiki</a>
         </li>
+        <?php $i = 0; ?>
         <?php foreach ($parts as $part): ?>
             <?php $path[] = $part; ?>
             <li>
