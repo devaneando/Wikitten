@@ -24,7 +24,7 @@ class Wiki
     protected function _render($page)
     {
         $not_found = function () use ($page) {
-            throw new Exception("Page $page not found");
+            throw new Exception("Page '$page' was not found");
         };
 
         $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
@@ -193,8 +193,10 @@ class Wiki
             return $this->_render($page);
 
         } catch (Exception $e) {
-            // TODO: friendly error page
-            echo $e->getMessage();
+            $this->_view('uhoh', array(
+                'error' => $e->getMessage(),
+                'parts' => array('Uh-oh')
+            ));
             exit();
         }
     }
