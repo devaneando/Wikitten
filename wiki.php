@@ -60,6 +60,7 @@ class Wiki
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $renderer  = $this->_getRenderer($extension);
 
+        $html = false;
         if ($renderer) {
             $html = $renderer($source);
         }
