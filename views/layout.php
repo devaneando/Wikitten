@@ -16,7 +16,7 @@
     </head>
 <body>
     <div id="main">
-        <a href="http://wikitten.vizuina.com" id="logo" target="_blank">
+        <a href="http://wikitten.vizuina.com" id="logo" target="_blank" class="hidden-phone">
             <img src="static/img/logo.png" alt="">
             <div class="bubble">Remember to check for updates!</div>
         </a>
