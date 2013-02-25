@@ -5,7 +5,7 @@
         <base href="<?php echo BASE_URL; ?>/">
 
         <link rel="shortcut icon" href="static/img/favicon.ico">
-        <link rel="stylesheet" href="static/css/bootstrap.css">
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
         <link rel="stylesheet" href="static/css/prettify.css">
         <link rel="stylesheet" href="static/css/codemirror.css">
         <link rel="stylesheet" href="static/css/main.css">
