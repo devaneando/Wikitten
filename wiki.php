@@ -187,7 +187,7 @@ class Wiki
                 return $this->_render('index.md');
             }
 
-            return $this->_view('index', array('layout' => false));
+            return $this->_view('index');
         }
 
         try {
