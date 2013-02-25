@@ -1,7 +1,3 @@
-@import url(bootstrap.css);
-@import url(prettify.css);
-@import url(codemirror.css);
-
 body {
     background: #EBEEF1 url(../img/noise.png);
     font-size: 13px;
