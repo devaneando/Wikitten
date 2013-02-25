@@ -31,7 +31,7 @@
     <div id="render">
         <?php echo $html; ?>
     </div>
-    <script type="text/javascript">
+    <script>
         $('#render pre').addClass('prettyprint linenums');
         prettyPrint();
 
@@ -45,7 +45,7 @@
 <div id="source">
     <textarea id="editor" class="input-block-level" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
 </div>
-<script type="text/javascript">
+<script>
     <?php if ($html) { ?>
         CodeMirror.defineInitHook(function () {
             $('#source').hide();

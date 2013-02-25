@@ -29,7 +29,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
 
 <?php echo tree($this->_getTree(), BASE_URL, $parts); ?>
 
-<script type="text/javascript">
+<script>
     $('#sidebar a[data-role="directory"]').click(function (event) {
         event.preventDefault();
 

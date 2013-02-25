@@ -2,21 +2,22 @@
 <html>
     <head>
         <title><?php echo APP_NAME ?></title>
-        <base href="<?php echo BASE_URL; ?>/" />
+        <base href="<?php echo BASE_URL; ?>/">
 
-        <link rel="stylesheet" href="static/css/main.css" />
+        <link rel="shortcut icon" href="static/img/favicon.ico">
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/css/prettify.css">
+        <link rel="stylesheet" href="static/css/codemirror.css">
+        <link rel="stylesheet" href="static/css/main.css">
 
-        <script type="text/javascript" src="static/js/jquery.min.js"></script>
-        <script type="text/javascript" src="static/js/prettify.js"></script>
-
-        <script type="text/javascript" src="static/js/codemirror.min.js"></script>
-
-        <link rel="shortcut icon" href="static/img/favicon.ico" />
+        <script src="static/js/jquery.min.js"></script>
+        <script src="static/js/prettify.js"></script>
+        <script src="static/js/codemirror.min.js"></script>
     </head>
 <body>
     <div id="main">
-        <a href="http://wikitten.vizuina.com" id="logo" target="_blank">
-            <img src="static/img/logo.png" alt="" />
+        <a href="http://wikitten.vizuina.com" id="logo" target="_blank" class="hidden-phone">
+            <img src="static/img/logo.png" alt="">
             <div class="bubble">Remember to check for updates!</div>
         </a>
         <div class="inner">
@@ -41,7 +42,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#logo').delay(2000).animate({
                 left: '20px'
