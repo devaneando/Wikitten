@@ -193,8 +193,22 @@ class Wiki
             return $this->_render($page);
 
         } catch (Exception $e) {
-            // TODO: friendly error page
-            echo $e->getMessage();
+            $source = "# An error occured!\n\n" .
+                '`'.$e->getMessage().'`';
+
+            $renderer = $this->_getRenderer('md');
+
+            $html = false;
+            if ($renderer) {
+                $html = $renderer($source);
+            }
+
+            return $this->_view('render', array(
+                'html' => $html,
+                'source' => $source,
+                'extension' => '.md',
+                'parts' => array('Error')
+            ));
             exit();
         }
     }
