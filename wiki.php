@@ -24,6 +24,7 @@ class Wiki
     protected function _render($page)
     {
         $not_found = function () use ($page) {
+            $page = htmlspecialchars($page, ENT_QUOTES);
             throw new Exception("Page '$page' was not found");
         };
 
