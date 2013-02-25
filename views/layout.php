@@ -27,7 +27,7 @@
                     <div class="span3">
                         <div id="sidebar">
                             <div class="inner">
-                                <h2><span><?php echo APP_NAME ?></span></h2>
+                                <h2><span><a href="<?= BASE_URL ?>"><?php echo APP_NAME ?></a></span></h2>
                                 <?php include('tree.php') ?>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 function tree($array, $parent, $parts = array(), $step = 0) {
 
     if (!count($array)) {
-        return '';
+        return '<p>Nothing added yet</p><p>Add files to <strong>Add files to ' . LIBRARY . '</strong></p>';
     }
 
     $t = '<ul class="unstyled">';
