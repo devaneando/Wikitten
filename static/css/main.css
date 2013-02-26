@@ -57,6 +57,9 @@ code, pre {
 #render :last-child {
     margin-bottom: 0;
 }
+#sidebar h2:first-child a {
+    color: #000;
+}
 #sidebar {
     padding: 3px;
     background-color: #C1CFDC;
