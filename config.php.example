@@ -1,0 +1,9 @@
+<?php
+// Example configuration file for Wikitten. To use it,
+// first rename it to `config.php`.
+
+// Custom name for your wiki:
+define('APP_NAME', 'My Wiki');
+
+// Custom path to your wiki's library:
+// define('LIBRARY', '/path/to/wiki/library')
