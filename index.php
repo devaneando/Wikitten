@@ -1,6 +1,18 @@
 <?php
 
-define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
+// Conditionally load configuration from a config.php file in
+// the site root, if it exists.
+if(is_file($config_file = __DIR__ . DIRECTORY_SEPARATOR . 'config.php')) {
+    require_once $config_file;
+}
+
+if(!defined('APP_NAME')) {
+    define('APP_NAME', 'Wikitten');
+}
+
+if(!defined('LIBRARY')) {
+  define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
+}
 
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
 $request_uri = explode("/", $request_uri['path']);
@@ -24,7 +36,6 @@ define('BASE_URL', "http" . ($https ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] 
 
 unset($request_uri, $script_name, $app_dir, $https);
 
-define('APP_NAME', 'Wikitten');
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'wiki.php';
 
