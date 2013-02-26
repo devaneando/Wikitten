@@ -27,7 +27,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
 }
 ?>
 
-<?php echo tree($this->_getTree(), BASE_URL, $parts, isset($parts) ? $parts : array()); ?>
+<?php echo tree($this->_getTree(), BASE_URL, isset($parts) ? $parts : array()); ?>
 
 <script>
     $('#sidebar a[data-role="directory"]').click(function (event) {
