@@ -8,6 +8,8 @@ class Wiki
     );
     protected $_ignore = array(".", "..", ".svn", ".git", ".hg", "CVS", ".sass-cache", ".bundle", ".gitignore", ".gitkeep", ".sass-cache", ".DS_Store");
 
+    protected $_action;
+
     protected function _getRenderer($extension)
     {
         if (!isset($this->_renderers[$extension])) {
@@ -130,8 +132,14 @@ class Wiki
 
     public function dispatch()
     {
-        $action = $this->_getAction() . "Action";
-        $this->$action();
+        $action = $this->_getAction();
+        $actionMethod = "{$action}Action";
+
+        if($action === null || !method_exists($this, $actionMethod)) {
+            $this->_404();
+        }
+
+        $this->$actionMethod();
     }
 
     protected function _getAction()
@@ -171,10 +179,15 @@ class Wiki
         return false;
     }
 
-    protected function _404()
+    protected function _404($message = 'Page not found.')
     {
         header('HTTP/1.0 404 Not Found', true);
-        exit('404 Not Found');
+        $this->_view('uhoh', array(
+            'error' => $message,
+            'parts' => array('Uh-oh')
+        ));
+
+        exit;
     }
 
     public function indexAction()
