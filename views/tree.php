@@ -88,6 +88,13 @@ function tree($array, $parent, $parts = array(), $step = 0) {
                 tree.hide();
             }
 
+            // Sanitize the search query so it won't so easily break
+            // the :contains operator:
+            query = query
+                        .replace(/\(/g, '\\(')
+                        .replace(/\)/g, '\\)')
+                    ;
+
             // Get all nodes containing the search query (searches for all a, and returns
             // their parent nodes <li>).
             resultsTree.html(tree.find('a:containsIgnoreCase(' + query + ')').parent().clone());
