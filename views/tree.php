@@ -91,7 +91,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
         });
 
         // Handle directory-tree expansion:
-        $('#sidebar a[data-role="directory"]').on('click', function (event) {
+        $(document).on('click', '#sidebar a[data-role="directory"]', function (event) {
             event.preventDefault();
 
             var icon = $(this).children('.icon');
