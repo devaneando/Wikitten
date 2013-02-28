@@ -54,6 +54,9 @@ function tree($array, $parent, $parts = array(), $step = 0) {
             clearFilterInput = $('#tree-filter-clear-query')
         ;
 
+        // Auto-focus the search field:
+        filterInput.focus();
+
         // Cancels a filtering action and puts everything back
         // in its place:
         function cancelFilterAction()
