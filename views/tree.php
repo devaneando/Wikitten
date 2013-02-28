@@ -58,10 +58,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
         // in its place:
         function cancelFilterAction()
         {
-            filterInput
-                .val('')
-                .removeClass('active')
-            ;
+            filterInput.val('').removeClass('active');
             resultsTree.empty();
             tree.show();
         }
@@ -96,8 +93,6 @@ function tree($array, $parent, $parts = array(), $step = 0) {
         // Handle directory-tree expansion:
         $('#sidebar a[data-role="directory"]').on('click', function (event) {
             event.preventDefault();
-
-            console.log('hi?');
 
             var icon = $(this).children('.icon');
             var open = icon.hasClass(iconFolderOpenClass);
