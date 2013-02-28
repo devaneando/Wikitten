@@ -195,3 +195,26 @@ code, pre {
 #logo:hover .bubble {
     bottom: 40px;
 }
+#tree-filter {
+
+}
+#tree-filter-query {
+    box-sizing: border-box;
+    display: block;
+    padding: 14px;
+    width: 100%;
+    font-size: 12px;
+}
+#tree-filter-query:focus,
+#tree-filter-query.active {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border-color: #7B848C;
+}
+#tree-filter-clear-query {
+    float: right;
+    margin-top: -35px;
+    margin-right: 5px;
+    cursor: pointer;
+}
