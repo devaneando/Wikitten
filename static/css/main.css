@@ -218,3 +218,10 @@ code, pre {
     margin-right: 5px;
     cursor: pointer;
 }
+#tree-filter-results li.file a:focus:before {
+    content: "↪";
+    float: left;
+    margin-left: -13px;
+    font-weight: bold;
+    color: #333;
+}
