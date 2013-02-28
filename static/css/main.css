@@ -195,13 +195,12 @@ code, pre {
 #logo:hover .bubble {
     bottom: 40px;
 }
-#tree-filter {
-
-}
 #tree-filter-query {
-    box-sizing: border-box;
     display: block;
-    padding: 14px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 30px;
     width: 100%;
     font-size: 12px;
 }
