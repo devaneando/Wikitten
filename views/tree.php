@@ -77,16 +77,19 @@ function tree($array, $parent, $parts = array(), $step = 0) {
             // Add a visual cue to show that the filter function is active:
             filterInput.toggleClass('active', isActive);
 
+            // If we have no query, cleanup and bail out:
             if(!isActive) {
                 cancelFilterAction();
                 return;
             }
 
-            // Get all nodes containing the search query (searches for all a, and returns
-            // their parent nodes <li>).
+            // Hide the actual tree before displaying the fake results tree:
             if(tree.is(':visible')) {
                 tree.hide();
             }
+
+            // Get all nodes containing the search query (searches for all a, and returns
+            // their parent nodes <li>).
             resultsTree.html(tree.find('a:containsIgnoreCase(' + query + ')').parent().clone());
         });
 
