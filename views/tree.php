@@ -69,6 +69,11 @@ function tree($array, $parent, $parts = array(), $step = 0) {
         // Clear the filter input when the X to its right is clicked:
         clearFilterInput.click(cancelFilterAction);
 
+        // Same thing if the user presses ESC and the filter is active:
+        $(document).keyup(function(e) {
+            e.keyCode == 27 && filterInput.hasClass('active') && cancelFilterAction();
+        });
+
         // Perform live searches as the user types:
         // @todo: check support for 'input' event across more browsers?
         filterInput.bind('input', function() {
