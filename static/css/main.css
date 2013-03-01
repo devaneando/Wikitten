@@ -217,7 +217,8 @@ code, pre {
     margin-right: 5px;
     cursor: pointer;
 }
-#tree-filter-results li a:focus:before {
+#tree-filter-results li a:focus:before,
+#tree li a:focus:before {
     content: "↪";
     float: left;
     margin-left: -13px;
