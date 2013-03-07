@@ -71,7 +71,7 @@ class Wiki
         $page_data = $this->_default_page_data;
 
         // Extract the JSON header, if the feature is enabled:
-        if(USE_PAGE_METADATA) {
+        if (USE_PAGE_METADATA) {
             list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
             $page_data = array_merge($page_data, $meta_data);
         }
@@ -122,7 +122,7 @@ class Wiki
         $source    = ltrim($source);
         $meta_data = array();
 
-        if(preg_match($front_matter_regex, $source, $matches)) {
+        if (preg_match($front_matter_regex, $source, $matches)) {
             $json   = trim($matches[1]);
             $source = trim($matches[2]);
 
@@ -131,7 +131,7 @@ class Wiki
             // character for a bracket, so that it'll work
             // even if the user includes a hash in the last
             // line:
-            if($json[0] != '{') {
+            if ($json[0] != '{') {
                 $json = '{' . $json . '}';
             }
 
@@ -139,12 +139,12 @@ class Wiki
             $meta_data = json_decode($json, true, 512, JSON_BIGINT_AS_STRING);
 
             // Check for errors:
-            if($meta_data === null) {
+            if ($meta_data === null) {
                 $error   = json_last_error();
                 $message = 'There was an error parsing the JSON Front Matter for this page';
 
                 // todo: Better error information?
-                if($error == JSON_ERROR_SYNTAX) {
+                if ($error == JSON_ERROR_SYNTAX) {
                     $message .= ': Incorrect JSON syntax (missing comma, or double-quotes?)';
                 }
 

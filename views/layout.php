@@ -3,7 +3,6 @@
 function e($dirty) {
     return htmlspecialchars($dirty, ENT_QUOTES, 'UTF-8');
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,7 +27,7 @@ function e($dirty) {
         <meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
 
         <?php if(!empty($page['author'])): ?>
-            <meta name="author" content="<?php echo e($page['author']) ?>"
+            <meta name="author" content="<?php echo e($page['author']) ?>">
         <?php endif; ?>
 
         <script src="static/js/jquery.min.js"></script>
