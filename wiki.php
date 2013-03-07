@@ -136,7 +136,7 @@ class Wiki
             }
 
             // Decode & validate the JSON payload:
-            $meta_data = json_decode($json, true, 512, JSON_BIGINT_AS_STRING);
+            $meta_data = json_decode($json, true, 512);
 
             // Check for errors:
             if ($meta_data === null) {
