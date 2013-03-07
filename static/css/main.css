@@ -141,6 +141,10 @@ code, pre {
 .breadcrumbs .btn {
     margin-top: -3px;
 }
+.directory-path {
+    color: #7B848C;
+    font-weight: normal;
+}
 
 #logo {
     position: fixed;

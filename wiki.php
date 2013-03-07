@@ -54,14 +54,28 @@ class Wiki
         // Handle directories by showing a neat listing of its
         // contents
         if(is_dir($path)) {
-            $dir_name  = end($parts);
-            $page_data = $this->_default_page_data;
+
+            // Get a printable version of the actual folder name:
+            $dir_name   = htmlspecialchars(end($parts), ENT_QUOTES, 'UTF-8');
+
+            // Get a printable version of the rest of the path,
+            // so that we can display it with a different appearance:
+            $rest_parts = array_slice($parts, 0, count($parts) - 1);
+            $rest_parts = htmlspecialchars(join("/", $rest_parts), ENT_QUOTES, 'UTF-8');
+
+            // Pass this to the render view, cleverly disguised as just
+            // another page, so we can make use of the tree, breadcrumb,
+            // etc.
+            $page_data  = $this->_default_page_data;
             $page_data['title'] = 'Listing: ' . $dir_name;
 
             return $this->_view('render', array(
                 'parts'     => $parts,
                 'page'      => $page_data,
-                'html'      => 'hello',
+                'html'      =>
+                      "<h3><span class=\"directory-path\">$rest_parts/</span> $dir_name</h3>"
+                    . "<p>Use the tree menu on the left to select a file</p>"
+                ,
                 'is_dir'    => true
             ));
         }
