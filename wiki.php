@@ -117,7 +117,7 @@ class Wiki
      */
     protected function _extractJsonFrontMatter($source)
     {
-        static $front_matter_regex = "/^---\n(.*)\n---\n(.*)/ms";
+        static $front_matter_regex = "/^---\n(.*)\n---\n(.*)/s";
 
         $source    = ltrim($source);
         $meta_data = array();
