@@ -9,14 +9,14 @@ function tree($array, $parent, $parts = array(), $step = 0) {
 
     foreach ($array as $key => $item) {
         if (is_array($item)) {
-            $open = $step !== false && ($key == $parts[$step]);
+            $open = $step !== false && (isset($parts[$step]) && $key == $parts[$step]);
 
             $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
                 $t .= '<a href="#" data-role="directory"><i class="icon icon-folder-'. ($open ? 'open' : 'close') .'"></i> ' . $key . '</a>';
                 $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
             $t .=  '</li>';
         } else {
-            $selected = ($item == $parts[$step]);
+            $selected = (isset($paths[$step]) && $item == $parts[$step]);
             $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item.'</a></li>';
         }
     }

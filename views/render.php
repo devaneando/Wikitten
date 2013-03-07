@@ -1,5 +1,5 @@
 <div class="breadcrumbs">
-    <?php if ($html): ?>
+    <?php if ($html && isset($source)): ?>
         <div class="pull-right">
             <a href="#" class="btn btn-mini btn-inverse" id="toggle">Toggle source</a>
         </div>
@@ -45,9 +45,11 @@
     </script>
 <?php endif ?>
 
+<?php if(isset($source)): ?>
 <div id="source">
     <textarea id="editor" class="input-block-level" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
 </div>
+
 <script>
     <?php if ($html) { ?>
         CodeMirror.defineInitHook(function () {
@@ -103,3 +105,4 @@
         }
     });
 </script>
+<?php endif ?>

@@ -31,12 +31,13 @@ class Wiki
 
     protected function _render($page)
     {
+        $path  = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
+        $parts = explode('/', $page);
+
         $not_found = function () use ($page) {
             $page = htmlspecialchars($page, ENT_QUOTES);
             throw new Exception("Page '$page' was not found");
         };
-
-        $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
 
         if (!$path) {
             return $not_found();
@@ -50,12 +51,25 @@ class Wiki
             return $not_found();
         }
 
+        // Handle directories by showing a neat listing of its
+        // contents
+        if(is_dir($path)) {
+            $dir_name  = end($parts);
+            $page_data = $this->_default_page_data;
+            $page_data['title'] = 'Listing: ' . $dir_name;
+
+            return $this->_view('render', array(
+                'parts'     => $parts,
+                'page'      => $page_data,
+                'html'      => 'hello'
+            ));
+        }
+
         $finfo = finfo_open(FILEINFO_MIME);
         $mime_type = finfo_file($finfo, $path);
 
         if (substr($mime_type, 0, 4) != 'text') {
             // not an ASCII file, send it directly to the browser
-
             $file = fopen($path, 'rb');
 
             header("Content-Type: $mime_type");
@@ -80,8 +94,6 @@ class Wiki
         if ($renderer) {
             $html = $renderer($source);
         }
-
-        $parts = explode('/', $page);
 
         return $this->_view('render', array(
             'html'      => $html,
