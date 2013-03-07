@@ -17,8 +17,9 @@
             <?php $url = BASE_URL . "/" . join("/", $path) ?>
             <li>
                 <a href="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8') ?>">
-                    <?php if (++$i == count($parts)): ?>
+                    <?php if (++$i == count($parts) && !$is_dir): ?>
                         <i class="icon-file icon-white"></i>
+
                     <?php else: ?>
                         <i class="icon-folder-open icon-white"></i>
                     <?php endif ?>

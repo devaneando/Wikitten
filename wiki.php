@@ -61,7 +61,8 @@ class Wiki
             return $this->_view('render', array(
                 'parts'     => $parts,
                 'page'      => $page_data,
-                'html'      => 'hello'
+                'html'      => 'hello',
+                'is_dir'    => true
             ));
         }
 
@@ -100,7 +101,8 @@ class Wiki
             'source'    => $source,
             'extension' => $extension,
             'parts'     => $parts,
-            'page'      => $page_data
+            'page'      => $page_data,
+            'is_dir'    => false
         ));
     }
 
