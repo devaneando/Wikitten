@@ -127,7 +127,7 @@ class Wiki
         uksort($return['directories'], "strnatcasecmp");
         uksort($return['files'], "strnatcasecmp");
 
-        return array_merge($return['directories'], $return['files']);
+        return $return['directories'] + $return['files'];
     }
 
     public function dispatch()
