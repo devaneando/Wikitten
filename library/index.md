@@ -23,6 +23,37 @@ Now, there are other Markdown-powered wikis out there, and I've tried some of th
   the `config.php` file. Simply copy the `config.php.example` file found in the site root to `config.php`,
   and change the values of the constants defined inside.
 
+### JSON Front Matter (meta data)
+
+Wikitten content can also be tagged using a simple but powerful JSON Front Matter system, akin to [Jekyll's YAML Front Matter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter). Defining a custom title, tags, or other
+relevant data for a specific page is just a matter of adding a special header at the start of your files, like so:
+
+```
+---
+"title": "My Custom Page Title",
+"tags": ["my", "custom", "tags"],
+"author": "Bob"
+---
+
+# Hello, world!
+
+This is my cool wiki page.
+```
+
+Wikitten will intelligently grab this data, and use it for things like meta keywords, the
+page title, and maybe eventually search indexing. All the information provided in this
+header is passed as-is to the views, so future components and plugins may also make use of it.
+
+**Note:** The JSON header is expected to be a JSON hash, but to simplify things, Wikitten lets you leave out the starting an ending `{ }` brackets if you want. Everything else in the JSON syntax still applies:
+
+- Hash keys (i.e: `title` must be written within double quotes: `"title"`)
+- Values must be seperated with a comma character:
+
+```
+"title": "hello", // <-- comma!
+"tags" : ["hello", "world"]
+```
+
 ### Roadmap
 
 Some of the features I plan to implement next:
