@@ -11,7 +11,11 @@ if(!defined('APP_NAME')) {
 }
 
 if(!defined('LIBRARY')) {
-  define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
+    define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
+}
+
+if(!defined('USE_PAGE_METADATA')) {
+    define('USE_PAGE_METADATA', true);
 }
 
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
