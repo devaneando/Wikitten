@@ -10,6 +10,12 @@ class Wiki
 
     protected $_action;
 
+    protected $_default_page_data = array(
+        'title'       => false, // will use APP_NAME by default
+        'description' => 'Wikitten is a small, fast, PHP wiki.',
+        'tags'        => array('wikitten', 'wiki')
+    );
+
     protected function _getRenderer($extension)
     {
         if (!isset($this->_renderers[$extension])) {
@@ -62,13 +68,7 @@ class Wiki
         $source    = file_get_contents($path);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $renderer  = $this->_getRenderer($extension);
-        $page_data = array(
-            'title'       => false, // will use APP_NAME by default
-            'description' => 'Wikitten is a small, fast, PHP wiki, and the perfect '
-                            .'place to store your notes, code snippets, ideas, and so on.',
-            'tags'        => array('wikitten', 'wiki'),
-            // 'author'      => ''
-        );
+        $page_data = $this->_default_page_data;
 
         // Extract the JSON header, if the feature is enabled:
         if(USE_PAGE_METADATA) {
@@ -260,9 +260,13 @@ class Wiki
     protected function _404($message = 'Page not found.')
     {
         header('HTTP/1.0 404 Not Found', true);
+        $page_data = $this->_default_page_data;
+        $page_data['title'] = 'Not Found';
+
         $this->_view('uhoh', array(
             'error' => $message,
-            'parts' => array('Uh-oh')
+            'parts' => array('Uh-oh'),
+            'page'  => $page_data
         ));
 
         exit;
@@ -285,9 +289,13 @@ class Wiki
             return $this->_render($page);
 
         } catch (Exception $e) {
+            $page_data = $this->_default_page_data;
+            $page_data['title'] = "Uh oh...";
+
             $this->_view('uhoh', array(
                 'error' => $e->getMessage(),
-                'parts' => array('Uh-oh')
+                'parts' => array('Uh-oh'),
+                'page'  => $page_data
             ));
             exit();
         }
