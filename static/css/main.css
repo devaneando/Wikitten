@@ -132,6 +132,11 @@ code, pre {
 }
 .breadcrumbs li a {
     color: white;
+    margin-right: 15px;
+}
+.breadcrumbs li a:hover {
+    text-decoration: none;
+    text-shadow: 0 0 3px #656565;
 }
 .breadcrumbs .btn {
     margin-top: -3px;
