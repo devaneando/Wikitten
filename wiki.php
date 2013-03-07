@@ -62,6 +62,19 @@ class Wiki
         $source    = file_get_contents($path);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $renderer  = $this->_getRenderer($extension);
+        $page_data = array(
+            'title'       => false, // will use APP_NAME by default
+            'description' => 'Wikitten is a small, fast, PHP wiki, and the perfect '
+                            .'place to store your notes, code snippets, ideas, and so on.',
+            'tags'        => array('wikitten', 'wiki'),
+            // 'author'      => ''
+        );
+
+        // Extract the JSON header, if the feature is enabled:
+        if(USE_PAGE_METADATA) {
+            list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
+            $page_data = array_merge($page_data, $meta_data);
+        }
 
         $html = false;
         if ($renderer) {
@@ -71,11 +84,76 @@ class Wiki
         $parts = explode('/', $page);
 
         return $this->_view('render', array(
-            'html' => $html,
-            'source' => $source,
+            'html'      => $html,
+            'source'    => $source,
             'extension' => $extension,
-            'parts' => $parts
+            'parts'     => $parts,
+            'page'      => $page_data
         ));
+    }
+
+    /**
+     * Given a string with a page's source, attempts to locate a
+     * section of JSON Front Matter in the heading, and returns
+     * the remaining source, and an array of extracted meta data.
+     *
+     * JSON Front Matter will only be considered when present
+     * within two lines consisting of three dashes:
+     *
+     * ---
+     * { "title": "hello world" }
+     * ---
+     *
+     * Additionally, the opening and closing brackets may be dropped,
+     * and this method will still interpret the content as a hash:
+     *
+     * ---
+     * "title": "hello, world",
+     * "tags":  ["hello", "world"]
+     * ---
+     *
+     * @param  string $source
+     * @return array  array($remaining_source, $meta_data)
+     */
+    protected function _extractJsonFrontMatter($source)
+    {
+        static $front_matter_regex = "/^---\n(.*)\n---\n(.*)/ms";
+
+        $source    = ltrim($source);
+        $meta_data = array();
+
+        if(preg_match($front_matter_regex, $source, $matches)) {
+            $json   = trim($matches[1]);
+            $source = trim($matches[2]);
+
+            // Locate or append starting and ending brackets,
+            // if necessary. I lazily only check the first
+            // character for a bracket, so that it'll work
+            // even if the user includes a hash in the last
+            // line:
+            if($json[0] != '{') {
+                $json = '{' . $json . '}';
+            }
+
+            // Decode & validate the JSON payload:
+            $meta_data = json_decode($json, true, 512, JSON_BIGINT_AS_STRING);
+
+            // Check for errors:
+            if($meta_data === null) {
+                $error   = json_last_error();
+                $message = 'There was an error parsing the JSON Front Matter for this page';
+
+                // todo: Better error information?
+                if($error == JSON_ERROR_SYNTAX) {
+                    $message .= ': Incorrect JSON syntax (missing comma, or double-quotes?)';
+                }
+
+                throw new RuntimeException($message);
+            }
+
+        }
+
+        return array($source, $meta_data);
     }
 
     protected function _view($view, $variables = array())

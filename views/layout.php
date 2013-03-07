@@ -2,7 +2,13 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title><?php echo APP_NAME ?></title>
+
+        <?php if($page['title'] === false): ?>
+            <title><?php echo APP_NAME ?></title>
+        <?php else: ?>
+            <title><?php echo $page['title'] ?> - <?php echo APP_NAME ?></title>
+        <?php endif ?>
+
         <base href="<?php echo BASE_URL; ?>/">
 
         <link rel="shortcut icon" href="static/img/favicon.ico">
@@ -10,6 +16,13 @@
         <link rel="stylesheet" href="static/css/prettify.css">
         <link rel="stylesheet" href="static/css/codemirror.css">
         <link rel="stylesheet" href="static/css/main.css">
+
+        <meta name="description" content="<?php echo $page['description'] ?>">
+        <meta name="keywords" content="<?php echo join(',', $page['tags']) ?>">
+
+        <?php if(!empty($page['author'])): ?>
+            <meta name="author" content="<?php echo $page['author'] ?>"
+        <?php endif; ?>
 
         <script src="static/js/jquery.min.js"></script>
         <script src="static/js/prettify.js"></script>
