@@ -44,7 +44,7 @@ header is passed as-is to the views, so future components and plugins may also m
 
 **Note:** The JSON header is expected to be a JSON hash, but to simplify things, Wikitten lets you leave out the starting an ending `{ }` brackets if you want. Everything else in the JSON syntax still applies:
 
-- Hash keys (i.e: `title` must be written within double quotes: `"title"`)
+- Strings (i.e: `title` must be written within double quotes: `"title"`)
 - Values must be seperated with a comma character, even if its the only value in a line.
 
 ### Roadmap
