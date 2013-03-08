@@ -1,5 +1,5 @@
 <div class="breadcrumbs">
-    <?php if ($html): ?>
+    <?php if ($html && isset($source)): ?>
         <div class="pull-right">
             <a href="#" class="btn btn-mini btn-inverse" id="toggle">Toggle source</a>
         </div>
@@ -11,16 +11,20 @@
             <a href="<?php echo BASE_URL; ?>"><i class="icon-home icon-white"></i> /wiki</a>
         </li>
         <?php $i = 0; ?>
+
         <?php foreach ($parts as $part): ?>
             <?php $path[] = $part; ?>
+            <?php $url = BASE_URL . "/" . join("/", $path) ?>
             <li>
-                &nbsp;&nbsp;&nbsp;
-                <?php if (++$i == count($parts)): ?>
-                    <i class="icon-file icon-white"></i>&nbsp;
-                <?php else: ?>
-                    <i class="icon-folder-open icon-white"></i>&nbsp;
-                <?php endif ?>
-                <?php echo $part; ?>
+                <a href="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8') ?>">
+                    <?php if (++$i == count($parts) && !$is_dir): ?>
+                        <i class="icon-file icon-white"></i>
+
+                    <?php else: ?>
+                        <i class="icon-folder-open icon-white"></i>
+                    <?php endif ?>
+                    <?php echo $part; ?>
+                </a>
             </li>
         <?php endforeach ?>
     </ul>
@@ -42,9 +46,11 @@
     </script>
 <?php endif ?>
 
+<?php if(isset($source)): ?>
 <div id="source">
     <textarea id="editor" class="input-block-level" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
 </div>
+
 <script>
     <?php if ($html) { ?>
         CodeMirror.defineInitHook(function () {
@@ -100,3 +106,4 @@
         }
     });
 </script>
+<?php endif ?>

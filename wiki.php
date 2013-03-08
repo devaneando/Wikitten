@@ -31,12 +31,13 @@ class Wiki
 
     protected function _render($page)
     {
+        $path  = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
+        $parts = explode('/', $page);
+
         $not_found = function () use ($page) {
             $page = htmlspecialchars($page, ENT_QUOTES);
             throw new Exception("Page '$page' was not found");
         };
-
-        $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
 
         if (!$path) {
             return $not_found();
@@ -50,12 +51,40 @@ class Wiki
             return $not_found();
         }
 
+        // Handle directories by showing a neat listing of its
+        // contents
+        if(is_dir($path)) {
+
+            // Get a printable version of the actual folder name:
+            $dir_name   = htmlspecialchars(end($parts), ENT_QUOTES, 'UTF-8');
+
+            // Get a printable version of the rest of the path,
+            // so that we can display it with a different appearance:
+            $rest_parts = array_slice($parts, 0, count($parts) - 1);
+            $rest_parts = htmlspecialchars(join("/", $rest_parts), ENT_QUOTES, 'UTF-8');
+
+            // Pass this to the render view, cleverly disguised as just
+            // another page, so we can make use of the tree, breadcrumb,
+            // etc.
+            $page_data  = $this->_default_page_data;
+            $page_data['title'] = 'Listing: ' . $dir_name;
+
+            return $this->_view('render', array(
+                'parts'     => $parts,
+                'page'      => $page_data,
+                'html'      =>
+                      "<h3><span class=\"directory-path\">$rest_parts/</span> $dir_name</h3>"
+                    . "<p>Use the tree menu on the left to select a file</p>"
+                ,
+                'is_dir'    => true
+            ));
+        }
+
         $finfo = finfo_open(FILEINFO_MIME);
         $mime_type = finfo_file($finfo, $path);
 
         if (substr($mime_type, 0, 4) != 'text') {
             // not an ASCII file, send it directly to the browser
-
             $file = fopen($path, 'rb');
 
             header("Content-Type: $mime_type");
@@ -81,14 +110,13 @@ class Wiki
             $html = $renderer($source);
         }
 
-        $parts = explode('/', $page);
-
         return $this->_view('render', array(
             'html'      => $html,
             'source'    => $source,
             'extension' => $extension,
             'parts'     => $parts,
-            'page'      => $page_data
+            'page'      => $page_data,
+            'is_dir'    => false
         ));
     }
 
