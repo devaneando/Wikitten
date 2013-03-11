@@ -40,16 +40,8 @@ class Wiki
             throw new Exception("Page '$page' was not found");
         };
 
-        if (!$path) {
-            return $not_found();
-        }
-
-        if (strpos($path, LIBRARY) !== 0) {
-            return $not_found();
-        }
-
-        if (!file_exists($path)) {
-            return $not_found();
+        if(!$this->_pathIsSafe($path)) {
+            $not_found();
         }
 
         // Handle directories by showing a neat listing of its
@@ -122,6 +114,22 @@ class Wiki
             'page'      => $page_data,
             'is_dir'    => false
         ));
+    }
+
+    /**
+     * Given a file path, verifies if the file is safe to touch,
+     * given permissions, if it's within the library, etc.
+     *
+     * @param  string $path
+     * @return bool
+     */
+    protected function _pathIsSafe($path)
+    {
+        if($path && strpos($path, LIBRARY) === 0 && is_readable($path)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
