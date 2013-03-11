@@ -13,7 +13,8 @@ class Wiki
     protected $_default_page_data = array(
         'title'       => false, // will use APP_NAME by default
         'description' => 'Wikitten is a small, fast, PHP wiki.',
-        'tags'        => array('wikitten', 'wiki')
+        'tags'        => array('wikitten', 'wiki'),
+        'page'        => ''
     );
 
     protected function _getRenderer($extension)
@@ -39,16 +40,8 @@ class Wiki
             throw new Exception("Page '$page' was not found");
         };
 
-        if (!$path) {
-            return $not_found();
-        }
-
-        if (strpos($path, LIBRARY) !== 0) {
-            return $not_found();
-        }
-
-        if (!file_exists($path)) {
-            return $not_found();
+        if(!$this->_pathIsSafe($path)) {
+            $not_found();
         }
 
         // Handle directories by showing a neat listing of its
@@ -105,6 +98,9 @@ class Wiki
             $page_data = array_merge($page_data, $meta_data);
         }
 
+        // We need to know the source file in case editing is enabled:
+        $page_data['file'] = $page;
+
         $html = false;
         if ($renderer) {
             $html = $renderer($source);
@@ -118,6 +114,22 @@ class Wiki
             'page'      => $page_data,
             'is_dir'    => false
         ));
+    }
+
+    /**
+     * Given a file path, verifies if the file is safe to touch,
+     * given permissions, if it's within the library, etc.
+     *
+     * @param  string $path
+     * @return bool
+     */
+    protected function _pathIsSafe($path)
+    {
+        if($path && strpos($path, LIBRARY) === 0 && is_readable($path)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -300,6 +312,9 @@ class Wiki
         exit;
     }
 
+    /**
+     * /
+     */
     public function indexAction()
     {
         $request = parse_url($_SERVER['REQUEST_URI']);
@@ -327,6 +342,46 @@ class Wiki
             ));
             exit();
         }
+    }
+
+    /**
+     * /?a=edit
+     * If ENABLE_EDITING is true, handles file editing through
+     * the web interface.
+     */
+    public function editAction()
+    {
+        // Bail out early if editing isn't even enabled, or
+        // we don't get the right request method && params
+        // NOTE: $_POST['source'] may be empty if the user just deletes
+        // everything, but it should always be set.
+        if(!ENABLE_EDITING || $_SERVER['REQUEST_METHOD'] != 'POST'
+            || empty($_POST['ref']) || !isset($_POST['source'])) {
+            $this->_404();
+        }
+
+        $ref    = $_POST['ref'];
+        $source = $_POST['source'];
+        $file   = base64_decode($ref);
+        $path   = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
+
+        // Check if the file is safe to work with, otherwise just
+        // give back a generic 404 aswell, so we don't allow blind
+        // scanning of files:
+        // @todo: we CAN give back a more informative error message
+        // for files that aren't writable...
+        if(!$this->_pathIsSafe($path) && !is_writable($path)) {
+            $this->_404();
+        }
+
+        // Save the changes, and redirect back to the same page:
+        file_put_contents($path, $source);
+
+        $redirect_url = BASE_URL . "/$file";
+        header("HTTP/1.0 302 Found", true);
+        header("Location: $redirect_url");
+
+        exit();
     }
 
     /**

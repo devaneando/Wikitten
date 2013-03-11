@@ -57,6 +57,14 @@ code, pre {
 #render :last-child {
     margin-bottom: 0;
 }
+.edit-dashboard {
+    margin-top: 5px;
+    padding: 10px;
+    text-align: right;
+    background-color: #CCC;
+    border: 1px solid #BBB;
+    border-radius: 4px;
+}
 #sidebar {
     padding: 3px;
     background-color: #C1CFDC;

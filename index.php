@@ -18,6 +18,10 @@ if(!defined('USE_PAGE_METADATA')) {
     define('USE_PAGE_METADATA', true);
 }
 
+if(!defined('ENABLE_EDITING')) {
+    define('ENABLE_EDITING', false);
+}
+
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
 $request_uri = explode("/", $request_uri['path']);
 $script_name = explode("/", dirname($_SERVER['SCRIPT_NAME']));
