@@ -13,7 +13,8 @@ class Wiki
     protected $_default_page_data = array(
         'title'       => false, // will use APP_NAME by default
         'description' => 'Wikitten is a small, fast, PHP wiki.',
-        'tags'        => array('wikitten', 'wiki')
+        'tags'        => array('wikitten', 'wiki'),
+        'page'        => ''
     );
 
     protected function _getRenderer($extension)
@@ -104,6 +105,9 @@ class Wiki
             list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
             $page_data = array_merge($page_data, $meta_data);
         }
+
+        // We need to know the source file in case editing is enabled:
+        $page_data['file'] = $page;
 
         $html = false;
         if ($renderer) {
@@ -300,6 +304,9 @@ class Wiki
         exit;
     }
 
+    /**
+     * /
+     */
     public function indexAction()
     {
         $request = parse_url($_SERVER['REQUEST_URI']);
@@ -327,6 +334,16 @@ class Wiki
             ));
             exit();
         }
+    }
+
+    /**
+     * /?a=edit
+     * If ENABLE_EDITING is true, handles file editing through
+     * the web interface.
+     */
+    public function editAction()
+    {
+        var_dump($_POST);
     }
 
     /**
