@@ -7,6 +7,7 @@ class Wiki
         'htm' => 'HTML', 'html' => 'HTML'
     );
     protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
+	protected $_force_unignore = false; // always show these files (false to disable)
 
     protected $_action;
 
@@ -230,7 +231,9 @@ class Wiki
         $items = scandir($dir);
         foreach ($items as $item) {
 			if(preg_match($this->_ignore, $item)) {
-                continue;
+				if($this->_force_unignore === false || !preg_match($this->_force_unignore, $item)) {
+					continue;
+				}
             }
 
             $path = $dir . DIRECTORY_SEPARATOR . $item;
