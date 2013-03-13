@@ -6,7 +6,7 @@ class Wiki
         'md' => 'Markdown',
         'htm' => 'HTML', 'html' => 'HTML'
     );
-    protected $_ignore = array(".", "..", ".svn", ".git", ".hg", "CVS", ".sass-cache", ".bundle", ".gitignore", ".gitkeep", ".sass-cache", ".DS_Store", ".swp");
+    protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
 
     protected $_action;
 
@@ -229,7 +229,7 @@ class Wiki
 
         $items = scandir($dir);
         foreach ($items as $item) {
-            if (in_array($item, $this->_ignore)) {
+			if(preg_match($this->_ignore, $item)) {
                 continue;
             }
 
