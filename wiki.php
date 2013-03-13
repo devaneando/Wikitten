@@ -6,7 +6,8 @@ class Wiki
         'md' => 'Markdown',
         'htm' => 'HTML', 'html' => 'HTML'
     );
-    protected $_ignore = array(".", "..", ".svn", ".git", ".hg", "CVS", ".sass-cache", ".bundle", ".gitignore", ".gitkeep", ".sass-cache", ".DS_Store");
+    protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
+	protected $_force_unignore = false; // always show these files (false to disable)
 
     protected $_action;
 
@@ -229,8 +230,10 @@ class Wiki
 
         $items = scandir($dir);
         foreach ($items as $item) {
-            if (in_array($item, $this->_ignore)) {
-                continue;
+			if(preg_match($this->_ignore, $item)) {
+				if($this->_force_unignore === false || !preg_match($this->_force_unignore, $item)) {
+					continue;
+				}
             }
 
             $path = $dir . DIRECTORY_SEPARATOR . $item;
