@@ -48,7 +48,21 @@
 
 <?php if(isset($source)): ?>
 <div id="source">
-    <textarea id="editor" class="input-block-level" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
+    <?php if(ENABLE_EDITING): ?>
+        <div class="alert alert-info">
+            <i class="icon-pencil"></i> <strong>Editing is enabled</strong>. Use the "Save changes" button below the editor to commit modifications to this file.
+        </div>
+    <?php endif ?>
+    <form method="POST" action="<?php echo BASE_URL . "/?a=edit" ?>">
+        <input type="hidden" name="ref" value="<?php echo base64_encode($page['file']) ?>">
+        <textarea id="editor" name="source" class="input-block-level" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
+
+        <?php if(ENABLE_EDITING): ?>
+        <div class="edit-dashboard">
+            <input type="submit" class="btn btn-inverse" value="Save Changes">
+        </div>
+        <?php endif ?>
+    </form>
 </div>
 
 <script>
@@ -89,7 +103,9 @@
         theme: 'default',
         lineNumbers: true,
         lineWrapping: true,
+        <?php if(!ENABLE_EDITING): ?>
         readOnly: true
+        <? endif ?>
     }));
 
     $('#toggle').on('click', function (event) {
@@ -97,6 +113,7 @@
 
         var source = $('#source');
         var render = $('#render');
+        var submit = $('#submit-edit');
 
         source.toggle();
         render.toggle();
