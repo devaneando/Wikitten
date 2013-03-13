@@ -6,7 +6,7 @@ class Wiki
         'md' => 'Markdown',
         'htm' => 'HTML', 'html' => 'HTML'
     );
-    protected $_ignore = array(".", "..", ".svn", ".git", ".hg", "CVS", ".sass-cache", ".bundle", ".gitignore", ".gitkeep", ".sass-cache", ".DS_Store");
+    protected $_ignore = array(".", "..", ".svn", ".git", ".hg", "CVS", ".sass-cache", ".bundle", ".gitignore", ".gitkeep", ".sass-cache", ".DS_Store", ".swp");
 
     protected $_action;
 
