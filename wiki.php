@@ -46,7 +46,7 @@ class Wiki
 
         // Handle directories by showing a neat listing of its
         // contents
-        if(is_dir($path)) {
+        if (is_dir($path)) {
 
             // Get a printable version of the actual folder name:
             $dir_name   = htmlspecialchars(end($parts), ENT_QUOTES, 'UTF-8');
@@ -312,9 +312,6 @@ class Wiki
         exit;
     }
 
-    /**
-     * /
-     */
     public function indexAction()
     {
         $request = parse_url($_SERVER['REQUEST_URI']);
@@ -355,7 +352,7 @@ class Wiki
         // we don't get the right request method && params
         // NOTE: $_POST['source'] may be empty if the user just deletes
         // everything, but it should always be set.
-        if(!ENABLE_EDITING || $_SERVER['REQUEST_METHOD'] != 'POST'
+        if (!ENABLE_EDITING || $_SERVER['REQUEST_METHOD'] != 'POST'
             || empty($_POST['ref']) || !isset($_POST['source'])) {
             $this->_404();
         }
@@ -370,7 +367,7 @@ class Wiki
         // scanning of files:
         // @todo: we CAN give back a more informative error message
         // for files that aren't writable...
-        if(!$this->_pathIsSafe($path) && !is_writable($path)) {
+        if (!$this->_pathIsSafe($path) && !is_writable($path)) {
             $this->_404();
         }
 
