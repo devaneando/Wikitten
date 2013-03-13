@@ -58,7 +58,7 @@
             <textarea id="editor" name="source" class="input-block-level" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
 
             <?php if (ENABLE_EDITING): ?>
-                <div class="edit-dashboard">
+                <div class="form-actions">
                     <input type="submit" class="btn btn-inverse" value="Save Changes">
                 </div>
             <?php endif ?>
