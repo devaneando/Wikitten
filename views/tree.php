@@ -16,7 +16,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
                 $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
             $t .=  '</li>';
         } else {
-            $selected = (isset($paths[$step]) && $item == $parts[$step]);
+            $selected = (isset($parts[$step]) && $item == $parts[$step]);
             $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item.'</a></li>';
         }
     }
