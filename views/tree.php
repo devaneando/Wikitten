@@ -5,7 +5,8 @@ function tree($array, $parent, $parts = array(), $step = 0) {
         return '';
     }
 
-    $t = '<ul class="unstyled" id="tree">';
+    $tid = ($step == 0) ? 'id="tree"' : '';
+    $t = '<ul class="unstyled" '.$tid.'>';
 
     foreach ($array as $key => $item) {
         if (is_array($item)) {
