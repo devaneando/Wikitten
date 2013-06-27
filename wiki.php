@@ -49,6 +49,11 @@ class Wiki
         // contents
         if (is_dir($path)) {
 
+            // If exists index.md in directory, we render it
+            if (file_exists($path . DIRECTORY_SEPARATOR . 'index.md')) {
+                return $this->_render('index.md');
+            }
+		
             // Get a printable version of the actual folder name:
             $dir_name   = htmlspecialchars(end($parts), ENT_QUOTES, 'UTF-8');
 
