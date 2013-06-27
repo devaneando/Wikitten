@@ -13,5 +13,8 @@ define('APP_NAME', 'My Wiki');
 // who does what is your responsibility.
 // define('ENABLE_EDITING', true);
 
+// Enable create file if not exists
+// define('ENABLE_CREATING', true);
+
 // Enable JSON page data?
 // define('USE_PAGE_METADATA', true);

@@ -33,17 +33,50 @@ class Wiki
 
     protected function _render($page)
     {
-        $path  = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
-        $parts = explode('/', $page);
+        $fullPath   = LIBRARY . DIRECTORY_SEPARATOR . $page;
+        $path       = realpath($fullPath);
+        $parts      = explode('/', $page);
 
         $not_found = function () use ($page) {
             $page = htmlspecialchars($page, ENT_QUOTES);
             throw new Exception("Page '$page' was not found");
         };
 
-        if(!$this->_pathIsSafe($path)) {
+        if(!$this->_pathIsSafe($fullPath)) {
             $not_found();
+        }            
+
+        if (ENABLE_CREATING)
+        {
+            // if not found, we show Create button to create a new page if you want
+            if (!file_exists($fullPath))
+            {
+                // Pass this to the render view, cleverly disguised as just
+                // another page, so we can make use of the tree, breadcrumb,
+                // etc.
+                $_page              = htmlspecialchars($page, ENT_QUOTES);
+                $page_data          = $this->_default_page_data;
+                $page_data['title'] = 'Page not found: ' . $_page;
+    
+                return $this->_view('render', array(
+                    'parts'     => $parts,
+                    'page'      => $page_data,
+                    'html'      =>
+                          "<h3>Page '$_page' not found</h3>"
+                        . "<br/>"
+                        . "<form method='GET'>"
+                        . "<input type='hidden' name='a' value='create'>"
+                        . "<input type='submit' class='btn btn-primary' value='Create this page' />"
+                        . "</form>"
+                    ,
+                    'is_dir'    => false
+                ));            
+            }        
+        } else {
+            if (!is_readable($fullPath)) 
+                $not_found();
         }
+        
 
         // Handle directories by showing a neat listing of its
         // contents
@@ -53,7 +86,8 @@ class Wiki
             if (file_exists($path . DIRECTORY_SEPARATOR . 'index.md')) {
                 return $this->_render('index.md');
             }
-		
+
+
             // Get a printable version of the actual folder name:
             $dir_name   = htmlspecialchars(end($parts), ENT_QUOTES, 'UTF-8');
 
@@ -131,7 +165,7 @@ class Wiki
      */
     protected function _pathIsSafe($path)
     {
-        if($path && strpos($path, LIBRARY) === 0 && is_readable($path)) {
+        if($path && strpos($path, LIBRARY) === 0) {
             return true;
         }
 
@@ -387,6 +421,37 @@ class Wiki
         header("Location: $redirect_url");
 
         exit();
+    }
+    
+    public function createAction()
+    {
+        $request    = parse_url($_SERVER['REQUEST_URI']);
+        $page       = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
+        
+        $filepath   = LIBRARY . urldecode($request['path']);
+        $content    = "# " . htmlspecialchars($page, ENT_QUOTES, 'UTF-8');
+
+        // if feature not enabled, go to 404
+        if (!ENABLE_CREATING || file_exists($filepath)) $this->_404();
+
+
+        // Create subdirectory recursively, if neccessary
+        mkdir(dirname($filepath), 0755, true);
+        
+        // Save default content, and redirect back to the new page
+        file_put_contents($filepath, $content);
+
+        if (file_exists($filepath))
+        {
+            // Redirect to new page
+            $redirect_url = BASE_URL . "/$page";
+            header("HTTP/1.0 302 Found", true);
+            header("Location: $redirect_url");
+    
+            exit();
+        } 
+        else
+            $this->_404();
     }
 
     /**
