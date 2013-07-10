@@ -84,7 +84,7 @@ class Wiki
 
             // If exists index.md in directory, we render it
             if (file_exists($path . DIRECTORY_SEPARATOR . 'index.md')) {
-                return $this->_render('index.md');
+                return $this->_render($page . DIRECTORY_SEPARATOR . 'index.md');
             }
 
 
