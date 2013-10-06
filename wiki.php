@@ -113,8 +113,14 @@ class Wiki
             'extension' => $extension,
             'parts'     => $parts,
             'page'      => $page_data,
-            'is_dir'    => false
+            'is_dir'    => false,
+            'use_pastebin' => $this->_usePasteBin()
         ));
+    }
+
+    protected function _usePasteBin()
+    {
+        return defined('ENABLE_PASTEBIN') && ENABLE_PASTEBIN && PASTEBIN_API_KEY;
     }
 
     /**
@@ -380,6 +386,34 @@ class Wiki
         $redirect_url = BASE_URL . "/$file";
         header("HTTP/1.0 302 Found", true);
         header("Location: $redirect_url");
+
+        exit();
+    }
+
+    /**
+     * Handle createion of PasteBin pastes 
+     * 
+     * @return string JSON response 
+     */
+    public function createPasteBinAction()
+    {
+        // Only if PasteBin is enabled
+        if (!$this->_usePasteBin()) {
+            $this->_404();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST['ref'])) {
+                $file = base64_decode($_POST['ref']);
+                $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
+
+                if (!$this->_pathIsSafe($path)) {
+                    $this->_404();
+                } else {
+                    $content = file_get_contents($path);
+                }
+            }
+        }
 
         exit();
     }

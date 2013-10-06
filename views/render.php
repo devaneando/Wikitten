@@ -1,7 +1,10 @@
 <div class="breadcrumbs">
     <?php if ($html && isset($source)): ?>
         <div class="pull-right">
-            <a href="#" class="btn btn-mini btn-inverse" id="toggle">Toggle source</a>
+            <a href="javascript:;" class="btn btn-mini btn-inverse" id="toggle">Toggle source</a>
+            <?php if ($use_pastebin): ?>
+                <a href="javascript:;" class="btn btn-mini btn-inverse" id="create-pastebin" title="Create PasteBin">Create PasteBin</a>
+            <?php endif; ?>
         </div>
     <?php endif ?>
 
@@ -122,5 +125,20 @@
                 $('#editor').prop('data-editor').refresh();
             }
         });
+
+        <?php if ($use_pastebin): ?>
+        $('#create-pastebin').on('click', function (event) {
+            event.preventDefault();
+            
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo BASE_URL . '/?a=createPasteBin'; ?>',
+                data: { ref: '<?php echo base64_encode($page['file']); ?>' }
+            })
+            .done(function(response) {
+                console.log(response);
+            });
+        });
+        <?php endif; ?>
     </script>
 <?php endif ?>
