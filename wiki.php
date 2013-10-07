@@ -411,6 +411,30 @@ class Wiki
                     $this->_404();
                 } else {
                     $content = file_get_contents($path);
+                    $name = pathinfo($path, PATHINFO_BASENAME);                    
+
+                    require_once PLUGINS . DIRECTORY_SEPARATOR . 'PasteBin.php';
+                    
+                    $response = array();
+
+                    $pastebin = new PasteBin(PASTEBIN_API_KEY);
+                    
+                    /**
+                     * @todo Add/improve autodetection of file format
+                     */
+
+                    $url = $pastebin->createPaste($content, false, $name);
+                    if ($url) {
+                        $response['status'] = 'ok';
+                        $response['url'] = $url;
+                    } else {
+                        $response['status'] = 'fail';
+                        $response['error'] = $pastebin->getError();
+                    }
+
+                    header('Content-Type: application/json');
+                    echo json_encode($response);
+                    exit();
                 }
             }
         }

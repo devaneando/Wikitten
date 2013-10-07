@@ -136,7 +136,11 @@
                 data: { ref: '<?php echo base64_encode($page['file']); ?>' }
             })
             .done(function(response) {
-                console.log(response);
+                if (response.status === 'ok') {
+                    alert('Paste URL: ' + response.url);
+                } else {
+                    alert('Error: ' + response.error);
+                }
             });
         });
         <?php endif; ?>

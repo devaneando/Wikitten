@@ -27,11 +27,17 @@ class PasteBin
 	 */
 	const API_FIELD_DEV_KEY  = 'api_dev_key';
 	const API_FIELD_USER_KEY = 'api_user_key';
+	const API_FIELD_OPTION 	 = 'api_option';	
 	const API_FIELD_PASTE_CODE 		  = 'api_paste_code';	
 	const API_FIELD_PASTE_PRIVATE 	  = 'api_paste_private';	
 	const API_FIELD_PASTE_NAME 		  = 'api_paste_name';	
 	const API_FIELD_PASTE_EXPIRE_DATE = 'api_paste_expire_date';	
 	const API_FIELD_PASTE_FORMAT 	  = 'api_paste_format';			
+
+	/**
+	 * Default API option value when creating a new Paste.
+	 */
+	const API_OPTION_CREATE = 'paste';
 
 	/**
 	 * API paste expiration date values
@@ -88,13 +94,13 @@ class PasteBin
      * @var array
      */
     public static $pasteExpireTypes = array(
-    	self::PASTE_EXPIRE_NEVER => 'Never';
-	    self::PASTE_EXPIRE_10M => '10 Minutes';
-	    self::PASTE_EXPIRE_1H => '1 Hour';
-	    self::PASTE_EXPIRE_1D => '1 Day';
-	    self::PASTE_EXPIRE_1W => '1 Week';
-	    self::PASTE_EXPIRE_2W => '2 Weeks';
-	    self::PASTE_EXPIRE_1M => '1 Month';
+    	self::PASTE_EXPIRE_NEVER => 'Never',
+	    self::PASTE_EXPIRE_10M => '10 Minutes',
+	    self::PASTE_EXPIRE_1H => '1 Hour',
+	    self::PASTE_EXPIRE_1D => '1 Day',
+	    self::PASTE_EXPIRE_1W => '1 Week',
+	    self::PASTE_EXPIRE_2W => '2 Weeks',
+	    self::PASTE_EXPIRE_1M => '1 Month',
     );
 
     /**
@@ -120,7 +126,7 @@ class PasteBin
     public function __construct($_apiKey = false)
     {
     	if ($_apiKey) {
-    		$this->setApiKey;
+    		$this->setApiKey($_apiKey);
     	}
     }
 
@@ -145,6 +151,23 @@ class PasteBin
     }
 
     /**
+     * Return last call error, whether it was a cURL error or API error.
+     * If no error exists, false is returned.
+     * 
+     * @return string|boolean
+     */
+    public function getError()
+    {
+    	if ($this->curlError) {
+    		return $this->curlError;
+    	} elseif ($this->apiError) {
+    		return $this->apiError;
+    	}
+
+    	return false;
+    }
+
+    /**
      * Create a new Paste. If everything is OK the return value will be the 
      * URL of the newly created Paste. If there was an error when the request
      * was sent, the return value will be false. Check the error message if
@@ -155,18 +178,19 @@ class PasteBin
      * @param  string $_name
      * @param  string $_expire
      * @param  string $_format
-     * @return string|boolean
+     * @return string|boolean The URL for the newly created Paste
      */
     public function createPaste($_code, $_visibility = false, $_name = false, 
     							$_expire = false, $_format = false)
     {
     	$params = array(
-    		self::API_FIELD_DEV_KEY => $this->getApiKey();
-    		self::API_FIELD_PASTE_CODE => urlencode($_code),
+    		self::API_FIELD_OPTION => self::API_OPTION_CREATE,
+    		self::API_FIELD_DEV_KEY => $this->getApiKey(),
+    		self::API_FIELD_PASTE_CODE => $_code,
     		self::API_FIELD_PASTE_PRIVATE => $this->_preparePrivateValue($_visibility),
-    		self::API_FIELD_PASTE_NAME => urlencode((string)$_name),
+    		self::API_FIELD_PASTE_NAME => (string)$_name,
     		self::API_FIELD_PASTE_EXPIRE_DATE => $this->_prepareExpireValue($_expire),
-    		self::API_FIELD_PASTE_FORMAT => (string) $_format,    		
+    		self::API_FIELD_PASTE_FORMAT => $this->_prepareFormatValue($_format),    		
     	);
 
     	return $this->_makePostRequest(self::API_POST_URL, $params);
@@ -194,7 +218,7 @@ class PasteBin
      */
     protected function _makeRequest($_url, $_params, $_type = 'get') 
     {
-    	$ch = $this->_prepareRequest($_type, $_params);
+    	$ch = $this->_prepareRequest($_url, $_type, $_params);
     	
     	$result = curl_exec($ch);
     	if (!$result) {
@@ -204,7 +228,7 @@ class PasteBin
 
     	curl_close($ch);
 
-    	return $this->_parseResponse($result));
+    	return $this->_parseResponse($result);
 	}
 
 	/**
@@ -213,10 +237,12 @@ class PasteBin
 	 * @param  string $_type
 	 * @return cURL handle
 	 */
-	protected function _prepareRequest($_type, $_params = array())
+	protected function _prepareRequest($_url, $_type, $_params = array())
 	{
 		$ch = $this->_initRequest();
 		if ($ch) {
+			curl_setopt($ch, CURLOPT_URL, $_url);
+
 			switch (strtolower($_type)) {
 				case 'post':
 					curl_setopt($ch, CURLOPT_POST, 1);
@@ -236,6 +262,22 @@ class PasteBin
 	}
 
 	/**
+	 * Prepare request params to be sent through cURL.
+	 * 
+	 * @param  array $_params
+	 * @return string
+	 */
+	protected function _encodeParams(array $_params)
+	{
+		$data = array();
+		foreach ($_params as $label => $value) {
+			$data[] = $label .'=' . urlencode($value);
+		}
+
+		return implode('&', $data);
+	}
+
+	/**
 	 * Test if the privacy value is among valid ones, 
 	 * else return the default value.
 	 * 
@@ -244,7 +286,7 @@ class PasteBin
 	 */
 	protected function _preparePrivateValue($_value)
 	{
-		if (in_array($_value, array_keys(self::$pastePrivacyTypes))) {
+		if (in_array($_value, array_keys(self::$pastePrivacyTypes), true)) {
 			return $_value;
 		}
 
@@ -268,6 +310,17 @@ class PasteBin
 		// default 10 minutes
 		return self::PASTE_EXPIRE_10M; 
 	}	
+
+	/**
+	 * Set proper format of the code.
+	 * 
+	 * @param  string $_value
+	 * @return string
+	 */
+	protected function _prepareFormatValue($_value)
+	{
+		return $_value ? $_value : 'text';
+	}
 
 	/**
 	 * Initiates the cURL request used by other methods to send cURL requests.

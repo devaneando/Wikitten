@@ -22,6 +22,8 @@ if(!defined('ENABLE_EDITING')) {
     define('ENABLE_EDITING', false);
 }
 
+define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');
+
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
 $request_uri = explode("/", $request_uri['path']);
 $script_name = explode("/", dirname($_SERVER['SCRIPT_NAME']));
