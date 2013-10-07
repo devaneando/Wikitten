@@ -15,3 +15,7 @@ define('APP_NAME', 'My Wiki');
 
 // Enable JSON page data?
 // define('USE_PAGE_METADATA', true);
+// 
+// Enable PasteBin plugin ?
+// define('ENABLE_PASTEBIN', true);
+// define('PASTEBIN_API_KEY', '');
