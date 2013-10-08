@@ -1,12 +1,12 @@
-<div class="breadcrumbs">
-    <?php if ($html && isset($source)): ?>
-        <div class="pull-right">
+<div class="breadcrumbs">    
+    <div class="pull-right">
+        <?php if ($html && isset($source)): ?>
             <a href="javascript:;" class="btn btn-mini btn-inverse" id="toggle">Toggle source</a>
-            <?php if ($use_pastebin): ?>
-                <a href="javascript:;" class="btn btn-mini btn-inverse" id="create-pastebin" title="Create PasteBin">Create PasteBin</a>
-            <?php endif; ?>
-        </div>
-    <?php endif ?>
+        <?php endif ?>
+        <?php if ($use_pastebin): ?>
+            <a href="javascript:;" class="btn btn-mini btn-inverse" id="create-pastebin" title="Create public Paste on PasteBin">Create public Paste</a>
+        <?php endif; ?>
+    </div>    
 
     <?php $path = array(); ?>
     <ul class="unstyled">
@@ -34,6 +34,9 @@
 </div>
 
 <?php if ($html): ?>
+    <?php if ($use_pastebin): ?>
+    <div id="pastebin-notification" class="alert" style="display:none;"></div>
+    <?php endif; ?>
     <div id="render">
         <?php echo $html; ?>
     </div>
@@ -49,6 +52,9 @@
 <?php endif ?>
 
 <?php if (isset($source)): ?>
+    <?php if ($use_pastebin): ?>
+    <div id="pastebin-notification" class="alert" style="display:none;"></div>
+    <?php endif; ?>
     <div id="source">
         <?php if (ENABLE_EDITING): ?>
             <div class="alert alert-info">
@@ -129,17 +135,24 @@
         <?php if ($use_pastebin): ?>
         $('#create-pastebin').on('click', function (event) {
             event.preventDefault();
-            
+
+            $(this).addClass('disabled');
+
+            var notification = $('#pastebin-notification');
+            notification.removeClass('alert-info alert-error').html('').hide();
+
             $.ajax({
                 type: 'POST',
                 url: '<?php echo BASE_URL . '/?a=createPasteBin'; ?>',
-                data: { ref: '<?php echo base64_encode($page['file']); ?>' }
-            })
-            .done(function(response) {
+                data: { ref: '<?php echo base64_encode($page['file']); ?>' },
+                context: $(this)
+            }).done(function(response) {                
+                $(this).removeClass('disabled');
+
                 if (response.status === 'ok') {
-                    alert('Paste URL: ' + response.url);
+                    notification.addClass('alert-info').html('Paste URL: ' + response.url).show();
                 } else {
-                    alert('Error: ' + response.error);
+                    notification.addClass('alert-error').html('Error: ' + response.error).show();
                 }
             });
         });

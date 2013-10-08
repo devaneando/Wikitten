@@ -423,7 +423,8 @@ class Wiki
                      * @todo Add/improve autodetection of file format
                      */
 
-                    $url = $pastebin->createPaste($content, false, $name);
+                    $url = $pastebin->createPaste($content, PasteBin::PASTE_PRIVACY_PUBLIC, 
+                                                  $name, PasteBin::PASTE_EXPIRE_1W);
                     if ($url) {
                         $response['status'] = 'ok';
                         $response['url'] = $url;

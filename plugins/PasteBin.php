@@ -9,6 +9,9 @@ if (!function_exists('curl_init')) {
 
 /**
  * PasteBin API wrapper class. Can be used to create new Paste.
+ *
+ * @author Marius Barbulescu
+ * @version 0.1
  */
 class PasteBin
 {
@@ -53,9 +56,9 @@ class PasteBin
     /**
      * API paste visibility types
      */
-    const PASTE_PRIVACY_PUBLIC = 0;
-    const PASTE_PRIVACY_UNLISTED = 1;
-    const PASTE_PRIVACY_PRIVATE = 2;
+    const PASTE_PRIVACY_PUBLIC = '0';
+    const PASTE_PRIVACY_UNLISTED = '1';
+    const PASTE_PRIVACY_PRIVATE = '2';
 
     /**
      * API Developer Key needed in order to make API requests
@@ -247,7 +250,7 @@ class PasteBin
 				case 'post':
 					curl_setopt($ch, CURLOPT_POST, 1);
 
-					$postfields = http_build_query($_params, false, '&');
+					$postfields = $this->_encodeParams($_params);
 					curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
 					break;
 
@@ -286,7 +289,7 @@ class PasteBin
 	 */
 	protected function _preparePrivateValue($_value)
 	{
-		if (in_array($_value, array_keys(self::$pastePrivacyTypes), true)) {
+		if (in_array($_value, array_keys(self::$pastePrivacyTypes))) {
 			return $_value;
 		}
 
