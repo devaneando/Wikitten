@@ -331,7 +331,9 @@ class Wiki
                 return $this->_render('index.md');
             }
 
-            return $this->_view('index');
+            return $this->_view('index', array(
+            	'page' => $this->_default_page_data
+            ));
         }
 
         try {
