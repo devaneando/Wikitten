@@ -35,10 +35,11 @@ if (defined('ENABLE_AUTH')
 
 // Login passed successful?
 if (defined('ENABLE_AUTH') && ENABLE_AUTH && !$loginSuccessful){
-    header('WWW-Authenticate: Basic realm="Secret page"');
+    header('WWW-Authenticate: Basic realm="'.APP_NAME.'"');
     header('HTTP/1.0 401 Unauthorized');
 
     print "Login failed!\n";
+    exit();
 }
 
 define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');
