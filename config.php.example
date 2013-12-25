@@ -19,3 +19,8 @@ define('APP_NAME', 'My Wiki');
 // Enable PasteBin plugin ?
 // define('ENABLE_PASTEBIN', true);
 // define('PASTEBIN_API_KEY', '');
+
+// Enable Authentication?
+// define('ENABLE_AUTH', true);
+// define('USER', 'admin');
+// define('PASSWORD', 'password');

@@ -22,6 +22,25 @@ if(!defined('ENABLE_EDITING')) {
     define('ENABLE_EDITING', false);
 }
 
+// Status flag:
+$loginSuccessful = false;
+
+// Check username and password:
+if (defined('ENABLE_AUTH')
+    && defined('USER') && defined('PASSWORD')
+    && isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])
+){
+    $loginSuccessful = $_SERVER['PHP_AUTH_USER'] == USER && $_SERVER['PHP_AUTH_PW'] == PASSWORD;
+}
+
+// Login passed successful?
+if (defined('ENABLE_AUTH') && ENABLE_AUTH && !$loginSuccessful){
+    header('WWW-Authenticate: Basic realm="Secret page"');
+    header('HTTP/1.0 401 Unauthorized');
+
+    print "Login failed!\n";
+}
+
 define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');
 
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
