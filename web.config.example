@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>     
+<system.webServer>    
+     <rewrite>      
+       <rules>             
+
+
+    <rule name="for site1">
+ <match url="^.*$" ignoreCase="false" />
+ <conditions><add input="{HTTP_HOST}" pattern="^www.site1.com$|^site1.com$" /></conditions>
+ <action type="Rewrite" url="site1/{R:0}" appendQueryString="true" />
+ </rule>
+
+    <rule name="for site2(with wikitten installed)">
+ <match url="^.*$" ignoreCase="false" />
+ <conditions><add input="{HTTP_HOST}" pattern="^www.site2.com$|^site2.com$" /></conditions>
+ <action type="Rewrite" url="site2/{R:0}" appendQueryString="true" />
+ </rule>
+
+<rule name="Rule for wikitten" stopProcessing="true">
+    <match url="^site2.com*" />
+    <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+ <add input="{REQUEST_URI}" negate="true" pattern="site2/static/.*" />
+ <add input="{REQUEST_FILENAME}" negate="true" pattern="^site2/static/.*" />   
+</conditions>
+    <action type="Rewrite" url="/site2/index.php" />
+</rule>
+
+       </rules>     
+    </rewrite>    
+     <httpErrors errorMode="Detailed" />    
+     <asp scriptErrorSentToBrowser="true" />   
+  </system.webServer>   
+  <system.web>    
+     <customErrors mode="Off" />     
+    <compilation debug="true" />     
+    <identity impersonate="false" />   
+  </system.web> 
+</configuration>
