@@ -3,7 +3,7 @@
 // first rename it to `config.php`.
 
 // Custom name for your wiki:
-define('APP_NAME', 'My Wiki');
+define('APP_NAME', "John's Wiki");
 
 // Custom path to your wiki's library:
 // define('LIBRARY', '/path/to/wiki/library');
@@ -15,6 +15,7 @@ define('APP_NAME', 'My Wiki');
 
 // Enable JSON page data?
 // define('USE_PAGE_METADATA', true);
+define('USE_WIKITTEN_LOGO', false);
 // 
 // Enable PasteBin plugin ?
 // define('ENABLE_PASTEBIN', true);

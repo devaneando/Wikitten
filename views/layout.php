@@ -36,10 +36,12 @@ function e($dirty) {
     </head>
 <body>
     <div id="main">
-        <a href="http://wikitten.vizuina.com" id="logo" target="_blank" class="hidden-phone">
-            <img src="static/img/logo.png" alt="">
-            <div class="bubble">Remember to check for updates!</div>
-        </a>
+        <?php if(USE_WIKITTEN_LOGO): ?>
+            <a href="http://wikitten.vizuina.com" id="logo" target="_blank" class="hidden-phone">
+                <img src="static/img/logo.png" alt="">
+                <div class="bubble">Remember to check for updates!</div>
+            </a>
+        <?php endif; ?>
         <div class="inner">
             <div class="container-fluid">
                 <div class="row-fluid">
@@ -63,11 +65,13 @@ function e($dirty) {
         </div>
     </div>
     <script>
-        $(document).ready(function () {
-            $('#logo').delay(2000).animate({
-                left: '20px'
-            }, 600);
-        });
+        <?php if(USE_WIKITTEN_LOGO): ?>
+            $(document).ready(function () {
+                $('#logo').delay(2000).animate({
+                    left: '20px'
+                }, 600);
+            });
+        <?php endif; ?>
     </script>
 </body>
 </html>
