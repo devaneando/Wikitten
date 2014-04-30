@@ -15,6 +15,7 @@ define('APP_NAME', "John's Wiki");
 
 // Enable JSON page data?
 // define('USE_PAGE_METADATA', true);
+define('USE_WIKITTEN_LOGO', false);
 // 
 // Enable PasteBin plugin ?
 // define('ENABLE_PASTEBIN', true);
