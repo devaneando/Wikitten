@@ -22,7 +22,7 @@ Lesson Five: [Morality & Evil](05_morality.md)
 
 Lesson Six: [Religion](06_religion.md)
 
-Lesson Seven: [Deity of Christ](07_christ.md)		
+Lesson Seven: [Deity of Christ](07_christ.md)
 
 Lesson Eight: [Our Relationship with Science](08_science.md)
 
@@ -39,3 +39,9 @@ Lesson Ten: [Evolution & Postmodernism](10_postmodernism.md)
 ## Other Resources
 
 [Institute for Creation Research](http://www.icr.org/)
+
+[TrueU](http://www.trueu.org/)
+
+[Wayne Grudem](http://www.waynegrudem.com/)
+
+[The Resurgence: Apologetics](http://theresurgence.com/categories/apologetics)
