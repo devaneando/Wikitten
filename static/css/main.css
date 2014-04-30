@@ -122,6 +122,7 @@ form {
 }
 #sidebar li.file {
     font-weight: normal;
+    word-wrap: break-word;
 }
 #sidebar li li.file {
     padding-left: 10px;
