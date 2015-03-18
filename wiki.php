@@ -327,8 +327,8 @@ class Wiki
         $page    = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
 
         if (!$page) {
-            if (file_exists(LIBRARY . DIRECTORY_SEPARATOR . 'index.md')) {
-                return $this->_render('index.md');
+            if (file_exists(LIBRARY . DIRECTORY_SEPARATOR . DEFAULT_FILE)) {
+                return $this->_render(DEFAULT_FILE);
             }
 
             return $this->_view('index', array(

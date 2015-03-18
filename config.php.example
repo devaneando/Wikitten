@@ -5,6 +5,9 @@
 // Custom name for your wiki:
 define('APP_NAME', 'My Wiki');
 
+// Set the filename of the automatic homepage here
+define('DEFAULT_FILE', 'index.md');
+
 // Custom path to your wiki's library:
 // define('LIBRARY', '/path/to/wiki/library');
 
