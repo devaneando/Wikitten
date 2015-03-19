@@ -3,8 +3,10 @@
 class Wiki
 {
     protected $_renderers = array(
-        'md' => 'Markdown',
-        'htm' => 'HTML', 'html' => 'HTML'
+        'md'    => 'Markdown',
+        'htm'   => 'HTML',
+        'html'  => 'HTML',
+        'php'   => 'PHP_EVAL'
     );
     protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
 	protected $_force_unignore = false; // always show these files (false to disable)
@@ -104,7 +106,7 @@ class Wiki
 
         $html = false;
         if ($renderer) {
-            $html = $renderer($source);
+            $html = $renderer($source,$path);
         }
 
         return $this->_view('render', array(
