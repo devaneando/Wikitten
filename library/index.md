@@ -27,6 +27,7 @@ Now, there are other Markdown-powered wikis out there, and I've tried some of th
   You don't have to use the `library` directory if you don't want to, you can configure Wikitten using
   the `config.php` file. Simply copy the `config.php.example` file found in the site root to `config.php`,
   and change the values of the constants defined inside.
+  If you want to use another file as the default page (for example README.md) set the filename in the `config.php` file with the `DEFAULT_FILE` setting.
 
 ### JSON Front Matter (meta data)
 
