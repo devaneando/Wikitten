@@ -106,16 +106,15 @@
             mode = modes[extension];
         }
 
-        var editor = $('#editor');
-        editor.prop('data-editor', CodeMirror.fromTextArea(editor[0], {
-            mode: mode,
-            theme: 'default',
+        CodeMirror.fromTextArea(document.getElementById("editor"), {
             lineNumbers: true,
-            lineWrapping: true
+            lineWrapping: true,
+            theme: 'default',
+            mode: mode
             <?php if(!ENABLE_EDITING): ?>
-                ,readOnly: true
+            ,readOnly: true
             <?php endif ?>
-        }));
+        });
 
         $('#toggle').on('click', function (event) {
             event.preventDefault();
