@@ -18,8 +18,10 @@ define('DEFAULT_FILE', 'index.md');
 
 // Enable JSON page data?
 // define('USE_PAGE_METADATA', true);
-// define('USE_WIKITTEN_LOGO', true);
-// 
+
+// Disable the Wikitten logo here
+// define('USE_WIKITTEN_LOGO', false);
+
 // Enable PasteBin plugin ?
 // define('ENABLE_PASTEBIN', true);
 // define('PASTEBIN_API_KEY', '');

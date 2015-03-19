@@ -36,7 +36,7 @@ function e($dirty) {
     </head>
 <body>
     <div id="main">
-        <?php if(USE_WIKITTEN_LOGO): ?>
+        <?php if(USE_WIKITTEN_LOGO === true): ?>
             <a href="http://wikitten.vizuina.com" id="logo" target="_blank" class="hidden-phone">
                 <img src="static/img/logo.png" alt="">
                 <div class="bubble">Remember to check for updates!</div>
@@ -65,7 +65,7 @@ function e($dirty) {
         </div>
     </div>
     <script>
-        <?php if(USE_WIKITTEN_LOGO): ?>
+        <?php if(USE_WIKITTEN_LOGO === true): ?>
             $(document).ready(function () {
                 $('#logo').delay(2000).animate({
                     left: '20px'
