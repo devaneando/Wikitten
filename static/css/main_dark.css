@@ -1,0 +1,247 @@
+body {
+    background: #222;
+    font-size: 13px;
+}
+.clear {
+    clear: both;
+    font-size: 0;
+    line-height: 0;
+    display: block;
+}
+:focus {
+    outline: none !important;
+}
+::-moz-focus-inner {
+    border:0 !important;
+}
+#main > .inner {
+    padding: 20px 0;
+}
+#content {
+    border-radius: 4px;
+    padding: 3px;
+    background-color: #222;
+}
+#content .inner {
+    background: #282828;
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+.CodeMirror {
+    height: auto;
+}
+.CodeMirror-scroll {
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+code, pre {
+    font-family: monospace;
+    background: #333;
+    color: #3498db;
+}
+#render h1:first-child,
+#render h2:first-child {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+#render h3 {
+    line-height: 34px;
+    margin-top: 20px;
+}
+#render table {
+    width: auto;
+}
+#render :last-child {
+    margin-bottom: 0;
+}
+form {
+    margin-bottom: 0;
+}
+.form-actions {
+    margin: 20px -20px -20px -20px;
+    border-radius: 0 0 4px 4px;
+    text-align: right;
+}
+#submit-edits {
+    margin: 10px;
+}
+#sidebar {
+    padding: 3px;
+    background-color: #222;
+    text-shadow: 0 1px 0 #333;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+#sidebar .inner {
+    padding: 20px;
+    border: 1px solid #333;
+    background-color: #282828;
+    border-radius: 4px;
+}
+#sidebar h2, .breadcrumbs {
+    line-height: 20px;
+    background: #333;
+    margin: -21px -21px 20px -21px;
+    padding: 0 20px;
+    line-height: 30px;
+    border-radius: 4px 4px 0 0;
+}
+#sidebar h2 span {
+    border-radius: 4px 4px 0 0;
+    background: #282828;
+    font-size: 15px;
+    line-height: 18px;
+    padding: 5px 10px;
+}
+#sidebar ul {
+    margin-bottom: 0;
+}
+#sidebar li ul {
+    padding-left: 20px;
+    display: none;
+    margin-top: 5px;
+}
+#sidebar li.directory.open > ul {
+    display: block;
+}
+#sidebar li {
+    padding: 5px 0;
+}
+#sidebar ul li:last-child {
+    padding-bottom: 0;
+}
+#sidebar li.directory {
+    font-weight: bold;
+}
+#sidebar li.directory > a {
+    color: #eee;
+}
+#sidebar li.directory > a:hover {
+    text-decoration: none;
+}
+#sidebar li.file {
+    font-weight: normal;
+    word-wrap: break-word;
+}
+#sidebar li li.file {
+    padding-left: 10px;
+    word-wrap: break-word;
+}
+#sidebar li.file.active > a {
+    font-weight: bold;
+}
+#sidebar li a, #sidebar li a:hover {
+    display: block;
+    text-decoration: none;
+}
+.breadcrumb {
+    background: none;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.breadcrumbs li {
+    color: #ccc;
+}
+.breadcrumbs a {
+    color: white;
+}
+.breadcrumbs a:hover {
+    text-decoration: none;
+    text-shadow: 0 0 3px #656565;
+}
+.breadcrumbs .glyphicon {
+    font-size: 85%;
+    margin-right: 3px;
+}
+.btn-black {
+    padding: 4px 8px;
+    margin: 2px 0;
+    font-size: 85%;
+    background: #555;
+    color: #eee;
+    border-radius: 3px;
+}
+.btn-black:hover {
+    background: #333;
+    color: #eee;
+}
+.directory-path {
+    color: #7B848C;
+    font-weight: normal;
+}
+
+#logo {
+    position: fixed;
+    bottom: 20px;
+    left: -90px;
+
+    color: #444;
+}
+#logo img {
+    width: 75px;
+}
+.bubble {
+    position: absolute;
+
+    width: 150px;
+    padding: 10px;
+    background: #FFFFFF;
+    border: #7B848C solid 3px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    font-weight: bold;
+}
+.bubble:after {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: -10px;
+    border-style: solid;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #FFFFFF;
+    display: block;
+    width: 0;
+    z-index: 1;
+}
+.bubble:before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: -15px;
+    border-style: solid;
+    border-width: 12px 12px 12px 0;
+    border-color: transparent #7B848C;
+    display: block;
+    width: 0;
+    z-index: 0;
+}
+#logo .bubble {
+    right: -190px;
+    bottom: -90px;
+
+    -webkit-transition: bottom .2s;
+       -moz-transition: bottom .2s;
+         -o-transition: bottom .2s;
+            transition: bottom .2s;
+}
+#logo:hover .bubble {
+    bottom: 40px;
+}
+#tree-filter-clear-query {
+    cursor: pointer;
+}
+#tree,
+#tree-filter-results {
+    margin-top: 10px;
+}
+#tree-filter-results li a:focus:before,
+#tree li a:focus:before {
+    content: "↪";
+    float: left;
+    margin-left: -13px;
+    font-weight: bold;
+    color: #333;
+}

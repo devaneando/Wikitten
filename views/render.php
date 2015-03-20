@@ -105,29 +105,28 @@
             mode = modes[extension];
         }
 
-        CodeMirror.fromTextArea(document.getElementById("editor"), {
+        var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
             lineNumbers: true,
             lineWrapping: true,
+            <?php if (USE_DARK_THEME): ?>
+            theme: 'tomorrow-night-bright',
+            <?php else: ?>
             theme: 'default',
+            <?php endif; ?>
             mode: mode
             <?php if(!ENABLE_EDITING): ?>
             ,readOnly: true
             <?php endif ?>
         });
 
-        $('#toggle').on('click', function (event) {
+        $('#toggle').click(function (event) {
             event.preventDefault();
-
-            var source = $('#source');
-            var render = $('#render');
-            var submit = $('#submit-edit');
-
-            source.toggle();
-            render.toggle();
-
-            if (source.is(':visible')) {
-                $('#editor').prop('data-editor').refresh();
+            $('#render').toggle();
+            $('#source').toggle();
+            if ($('#source').is(':visible')) {
+                editor.refresh();
             }
+
         });
 
         <?php if ($use_pastebin): ?>

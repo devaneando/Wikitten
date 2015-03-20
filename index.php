@@ -22,6 +22,10 @@ if(!defined('USE_WIKITTEN_LOGO')) {
     define('USE_WIKITTEN_LOGO', true);
 }
 
+if(!defined('USE_DARK_THEME')) {
+    define('USE_DARK_THEME', false);
+}
+
 if(!defined('USE_PAGE_METADATA')) {
     define('USE_PAGE_METADATA', true);
 }

@@ -18,10 +18,19 @@ function e($dirty) {
         <base href="<?php echo BASE_URL; ?>/">
 
         <link rel="shortcut icon" href="static/img/favicon.ico">
-        <link rel="stylesheet" href="static/css/bootstrap.min.css">
-        <link rel="stylesheet" href="static/css/prettify.css">
-        <link rel="stylesheet" href="static/css/codemirror.css">
-        <link rel="stylesheet" href="static/css/main.css">
+
+        <?php if (USE_DARK_THEME): ?>
+            <link rel="stylesheet" href="static/css/bootstrap_dark.min.css">
+            <link rel="stylesheet" href="static/css/dark/prettify-dark.css">
+            <link rel="stylesheet" href="static/css/codemirror.css">
+            <link rel="stylesheet" href="static/css/main_dark.css">
+            <link rel="stylesheet" href="static/css/dark/codemirror-tomorrow-night-bright.css">
+        <?php else: ?>
+            <link rel="stylesheet" href="static/css/bootstrap.min.css">
+            <link rel="stylesheet" href="static/css/prettify.css">
+            <link rel="stylesheet" href="static/css/codemirror.css">
+            <link rel="stylesheet" href="static/css/main.css">
+        <?php endif; ?>
 
         <meta name="description" content="<?php echo e($page['description']) ?>">
         <meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">

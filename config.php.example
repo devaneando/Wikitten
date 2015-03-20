@@ -19,6 +19,9 @@ define('DEFAULT_FILE', 'index.md');
 // Enable JSON page data?
 // define('USE_PAGE_METADATA', true);
 
+// Enable the dark theme here
+// define('USE_DARK_THEME', true);
+
 // Disable the Wikitten logo here
 // define('USE_WIKITTEN_LOGO', false);
 
