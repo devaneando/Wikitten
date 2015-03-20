@@ -1,5 +1,5 @@
 body {
-    background: #EBEEF1 url(../img/noise.png);
+    background: #222;
     font-size: 13px;
 }
 .clear {
@@ -7,10 +7,6 @@ body {
     font-size: 0;
     line-height: 0;
     display: block;
-}
-a, a:focus {
-    color: #0068DE;
-    text-decoration: none;
 }
 :focus {
     outline: none !important;
@@ -24,13 +20,13 @@ a, a:focus {
 #content {
     border-radius: 4px;
     padding: 3px;
-    background-color: #C1CFDC;
+    background-color: #222;
 }
 #content .inner {
-    background: white;
+    background: #282828;
     padding: 20px;
     border-radius: 4px;
-    border: 1px solid #BBB;
+    border: 1px solid #333;
 }
 .CodeMirror {
     height: auto;
@@ -41,6 +37,8 @@ a, a:focus {
 }
 code, pre {
     font-family: monospace;
+    background: #333;
+    color: #3498db;
 }
 #render h1:first-child,
 #render h2:first-child {
@@ -73,29 +71,28 @@ form {
 }
 #sidebar {
     padding: 3px;
-    background-color: #C1CFDC;
-    text-shadow: 0 1px 0 #FFFFFF;
+    background-color: #222;
+    text-shadow: 0 1px 0 #333;
     border-radius: 4px;
     margin-bottom: 5px;
 }
 #sidebar .inner {
     padding: 20px;
-    border: 1px solid #BBB;
-    background-color: #EFF2F4;
+    border: 1px solid #333;
+    background-color: #282828;
     border-radius: 4px;
 }
 #sidebar h2, .breadcrumbs {
     line-height: 20px;
-    background: #7B848C;
+    background: #333;
     margin: -21px -21px 20px -21px;
     padding: 0 20px;
     line-height: 30px;
-    border: 1px solid #666;
     border-radius: 4px 4px 0 0;
 }
 #sidebar h2 span {
     border-radius: 4px 4px 0 0;
-    background: #EFF2F4;
+    background: #282828;
     font-size: 15px;
     line-height: 18px;
     padding: 5px 10px;
@@ -121,7 +118,7 @@ form {
     font-weight: bold;
 }
 #sidebar li.directory > a {
-    color: #333;
+    color: #eee;
 }
 #sidebar li.directory > a:hover {
     text-decoration: none;
@@ -148,7 +145,7 @@ form {
     padding-bottom: 0;
 }
 .breadcrumbs li {
-    color: white;
+    color: #ccc;
 }
 .breadcrumbs a {
     color: white;

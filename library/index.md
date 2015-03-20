@@ -24,10 +24,19 @@ Now, there are other Markdown-powered wikis out there, and I've tried some of th
 * After extracting the archive, drop the files somewhere in your DocumentRoot, or make a separate Apache [VirtualHost](http://httpd.apache.org/docs/2.2/mod/core.html#virtualhost) (this is the way I currently use it myself)
 * That's it. There's a `library` directory in the installation folder. Everything you place in there will be rendered by the wiki. If there's an `index.md` file (such as the one you are reading now) in that folder, it will be served by default when accessing the wiki.
 
-  You don't have to use the `library` directory if you don't want to, you can configure Wikitten using
-  the `config.php` file. Simply copy the `config.php.example` file found in the site root to `config.php`,
-  and change the values of the constants defined inside.
-  If you want to use another file as the default page (for example README.md) set the filename in the `config.php` file with the `DEFAULT_FILE` setting.
+### Configure Wikitten
+
+You are able to configure Wikitten by using the config file.
+First, copy the `config.php.example` to `config.php` and you are ready to change the settings.   
+Some options are disabled with a comment but can be enabled by removing `//` from the option line.
+
+* `define('APP_NAME', 'My Wiki');` - Set the Wiki title
+* `define('DEFAULT_FILE', 'index.md');` - Choose the file that should be loaded as the homepage, must be located in library folder
+* `define('LIBRARY', '/path/to/wiki/library');` - Set a custom path to the library
+* `define('ENABLE_EDITING', true);` - Enable the in-page editing of any files
+* `define('USE_PAGE_METADATA', true);` - Enable the JSON Front Matter (meta data), see below for more details
+* `define('USE_DARK_THEME', true);` - Enable the dark theme (see below for a screenshot)
+* `define('USE_WIKITTEN_LOGO', false);` - Disable the Wikitten logo on the left bottom
 
 ### JSON Front Matter (meta data)
 
@@ -52,6 +61,13 @@ header is passed as-is to the views, so future components and plugins may also m
 
 - Strings (i.e: `title` must be written within double quotes: `"title"`)
 - Values must be seperated with a comma character, even if its the only value in a line.
+
+### Dark Theme
+
+If you are working until midnight it can be a pain to look at bright white backgrounds. That's why Wikitten offers a Dark Theme which can be enabled in the config.php file with the `define('USE_DARK_THEME', true);` option.
+
+It looks like this:
+![Screenshot Dark Mode](static/img/screenshot_dark.png)
 
 ### Roadmap
 
