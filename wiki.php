@@ -107,7 +107,7 @@ class Wiki
             $html = $renderer($source);
         }
         if ($renderer && $renderer == 'Markdown') {
-            $html = \Michelf\Markdown::defaultTransform($source);
+            $html = \Michelf\MarkdownExtra::defaultTransform($source);
         }
 
         return $this->_view('render', array(
