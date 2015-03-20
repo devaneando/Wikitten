@@ -52,6 +52,9 @@ code, pre {
 #render table {
     width: auto;
 }
+#render img {
+    max-width: 100%;
+}
 #render :last-child {
     margin-bottom: 0;
 }
@@ -232,6 +235,12 @@ form {
 }
 #tree-filter-clear-query {
     cursor: pointer;
+}
+#tree {
+    padding: 0;
+}
+#tree li {
+    list-style: none;
 }
 #tree,
 #tree-filter-results {
