@@ -18,6 +18,14 @@ if(!defined('DEFAULT_FILE')) {
     define('DEFAULT_FILE', 'index.md');
 }
 
+if(!defined('USE_WIKITTEN_LOGO')) {
+    define('USE_WIKITTEN_LOGO', true);
+}
+
+if(!defined('USE_DARK_THEME')) {
+    define('USE_DARK_THEME', false);
+}
+
 if(!defined('USE_PAGE_METADATA')) {
     define('USE_PAGE_METADATA', true);
 }

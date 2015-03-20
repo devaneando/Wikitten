@@ -103,8 +103,11 @@ class Wiki
         $page_data['file'] = $page;
 
         $html = false;
-        if ($renderer) {
+        if ($renderer && $renderer == 'HTML') {
             $html = $renderer($source);
+        }
+        if ($renderer && $renderer == 'Markdown') {
+            $html = \Michelf\Markdown::defaultTransform($source);
         }
 
         return $this->_view('render', array(
