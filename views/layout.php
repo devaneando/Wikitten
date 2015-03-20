@@ -44,8 +44,8 @@ function e($dirty) {
         <?php endif; ?>
         <div class="inner">
             <div class="container-fluid">
-                <div class="row-fluid">
-                    <div class="span3">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3">
                         <div id="sidebar">
                             <div class="inner">
                                 <h2><span><?php echo e(APP_NAME) ?></span></h2>
@@ -53,7 +53,7 @@ function e($dirty) {
                             </div>
                         </div>
                     </div>
-                    <div class="span9">
+                    <div class="col-xs-12 col-md-9">
                         <div id="content">
                             <div class="inner">
                                 <?php echo $content; ?>

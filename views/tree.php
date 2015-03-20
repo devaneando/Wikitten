@@ -13,7 +13,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
             $open = $step !== false && (isset($parts[$step]) && $key == $parts[$step]);
 
             $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
-                $t .= '<a href="#" data-role="directory"><i class="icon icon-folder-'. ($open ? 'open' : 'close') .'"></i> ' . $key . '</a>';
+                $t .= '<a href="#" data-role="directory"><i class="glyphicon glyphicon-folder-'. ($open ? 'open' : 'close') .'"></i>&nbsp; ' . $key . '</a>';
                 $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
             $t .=  '</li>';
         } else {
@@ -28,9 +28,11 @@ function tree($array, $parent, $parts = array(), $step = 0) {
 }
 ?>
 
-<div id="tree-filter">
-    <input type="text" id="tree-filter-query" placeholder="Search file &amp; directory names.">
-    <a id="tree-filter-clear-query" title="Clear current search..."><i class="icon-remove"></i></a>
+<div id="tree-filter" class="input-group">
+    <input type="text" id="tree-filter-query" placeholder="Search file &amp; directory names." class="form-control input-sm">
+    <a id="tree-filter-clear-query" title="Clear current search..." class="input-group-addon input-sm">
+        <i class="glyphicon glyphicon-remove"></i>
+    </a>
 </div>
 <ul class="unstyled" id="tree-filter-results"></ul>
 
@@ -45,8 +47,8 @@ function tree($array, $parent, $parts = array(), $step = 0) {
     };
 
     $(document).ready(function() {
-        var iconFolderOpenClass  = 'icon-folder-open',
-            iconFolderCloseClass = 'icon-folder-close',
+        var iconFolderOpenClass  = 'glyphicon glyphicon-folder-open',
+            iconFolderCloseClass = 'glyphicon glyphicon-folder-close',
 
             // Handle live search/filtering:
             tree             = $('#tree'),
@@ -113,7 +115,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
         $(document).on('click', '#sidebar a[data-role="directory"]', function (event) {
             event.preventDefault();
 
-            var icon = $(this).children('.icon');
+            var icon = $(this).children('.glyphicon');
             var open = icon.hasClass(iconFolderOpenClass);
             var subtree = $(this).siblings('ul')[0];
 
@@ -122,7 +124,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
             if (open) {
                 if (typeof subtree != 'undefined') {
                     $(subtree).slideUp({ duration: 100 });
-                };
+                }
                 icon.addClass(iconFolderCloseClass);
             } else {
                 if (typeof subtree != 'undefined') {

@@ -65,6 +65,9 @@ form {
     border-radius: 0 0 4px 4px;
     text-align: right;
 }
+#submit-edits {
+    margin: 10px;
+}
 #sidebar {
     padding: 3px;
     background-color: #C1CFDC;
@@ -135,21 +138,37 @@ form {
     display: block;
     text-decoration: none;
 }
+.breadcrumb {
+    background: none;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
 .breadcrumbs li {
-    float: left;
-    line-height: 30px;
     color: white;
 }
-.breadcrumbs li a {
+.breadcrumbs a {
     color: white;
-    margin-right: 15px;
 }
-.breadcrumbs li a:hover {
+.breadcrumbs a:hover {
     text-decoration: none;
     text-shadow: 0 0 3px #656565;
 }
-.breadcrumbs .btn {
-    margin-top: -3px;
+.breadcrumbs .glyphicon {
+    font-size: 85%;
+    margin-right: 3px;
+}
+.btn-black {
+    padding: 4px 8px;
+    margin: 2px 0;
+    font-size: 85%;
+    background: #555;
+    color: #eee;
+    border-radius: 3px;
+}
+.btn-black:hover {
+    background: #333;
+    color: #eee;
 }
 .directory-path {
     color: #7B848C;
@@ -214,27 +233,12 @@ form {
 #logo:hover .bubble {
     bottom: 40px;
 }
-#tree-filter-query {
-    display: block;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    height: 30px;
-    width: 100%;
-    font-size: 12px;
-}
-#tree-filter-query:focus,
-#tree-filter-query.active {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    border-color: #7B848C;
-}
 #tree-filter-clear-query {
-    float: right;
-    margin-top: -35px;
-    margin-right: 5px;
     cursor: pointer;
+}
+#tree,
+#tree-filter-results {
+    margin-top: 10px;
 }
 #tree-filter-results li a:focus:before,
 #tree li a:focus:before {
