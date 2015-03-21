@@ -447,18 +447,25 @@ of a code block are interpreted literally. Markdown wraps a code block
 in both `<pre>` and `<code>` tags.
 
 To produce a code block in Markdown, simply indent every line of the
-block by at least 4 spaces or 1 tab. For example, given this input:
+block by at least 4 spaces or 1 tab or use three backticks ` ``` `. For example, given this input:
 
     This is a normal paragraph:
 
         This is a code block.
 
+or
+
+    This is a normal paragraph:
+    ```
+    This is a code block.
+    ```
+    
+
 Markdown will generate:
 
     <p>This is a normal paragraph:</p>
 
-    <pre><code>This is a code block.
-    </code></pre>
+    <pre><code>This is a code block.</code></pre>
 
 One level of indentation -- 4 spaces or 1 tab -- is removed from each
 line of the code block. For example, this:
@@ -473,9 +480,10 @@ will turn into:
 
     <p>Here is an example of AppleScript:</p>
 
-    <pre><code>tell application "Foo"
-        beep
-    end tell
+    <pre><code>
+        tell application "Foo"
+            beep
+        end tell
     </code></pre>
 
 A code block continues until it reaches a line that is not indented
@@ -749,15 +757,15 @@ The backtick delimiters surrounding a code span may include spaces --
 one after the opening, one before the closing. This allows you to place
 literal backtick characters at the beginning or end of a code span:
 
-  A single backtick in a code span: `` ` ``
+    A single backtick in a code span: `` ` ``
 
-  A backtick-delimited string in a code span: `` `foo` ``
+    A backtick-delimited string in a code span: `` `foo` ``
 
 will produce:
 
-  <p>A single backtick in a code span: <code>`</code></p>
+    <p>A single backtick in a code span: <code>`</code></p>
 
-  <p>A backtick-delimited string in a code span: <code>`foo`</code></p>
+    <p>A backtick-delimited string in a code span: <code>`foo`</code></p>
 
 With a code span, ampersands and angle brackets are encoded as HTML
 entities automatically, which makes it easy to include example HTML
