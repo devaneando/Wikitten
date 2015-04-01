@@ -34,7 +34,9 @@ function e($dirty) {
 
         <meta name="description" content="<?php echo e($page['description']) ?>">
         <meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
-
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
         <?php if(!empty($page['author'])): ?>
             <meta name="author" content="<?php echo e($page['author']) ?>">
         <?php endif; ?>
