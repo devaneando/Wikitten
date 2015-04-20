@@ -31,6 +31,7 @@ function e($dirty) {
             <link rel="stylesheet" href="static/css/codemirror.css">
             <link rel="stylesheet" href="static/css/main.css">
         <?php endif; ?>
+		<link rel="stylesheet" href="static/css/custom.css">
 
         <meta name="description" content="<?php echo e($page['description']) ?>">
         <meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
