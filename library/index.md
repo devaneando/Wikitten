@@ -18,6 +18,11 @@ Now, there are other Markdown-powered wikis out there, and I've tried some of th
 * PHP `5.3+`
 * The Apache webserver (with `mod_rewrite`)
 
+or
+
+* PHP `5.4`
+* Inbuilt webserver `php -S 0.0.0.0:8000 routing.php`
+
 ### Installation
 
 * [Download](https://github.com/victorstanciu/Wikitten/archive/master.zip) the latest version or clone the [repository on GitHub](https://github.com/victorstanciu/Wikitten)
