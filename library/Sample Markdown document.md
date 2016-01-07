@@ -20,6 +20,7 @@ Markdown: Syntax
 *   [Miscellaneous](#misc)
     *   [Backslash Escapes](#backslash)
     *   [Automatic Links](#autolink)
+    *   [\\(\rm\LaTeX\\) Mathematics](#latexmath)
 
 * * *
 
@@ -887,3 +888,26 @@ Markdown provides backslash escapes for the following characters:
     - minus sign (hyphen)
     .   dot
     !   exclamation mark
+
+<h3 id="latexmath">LaTeX Mathematics</h3>
+
+\\(\rm\LaTeX\\) is a markup language for typesetting books, reports, articles,
+presentations, and many other types of documents.
+It is popular in the quantitative sciences since it renders beautiful
+equations from relatively straightforward plaintext markup.
+\\(\rm\LaTeX\\) formatted equations can be inserted into Markdown and HTML documents;
+they will be rendered using the MathJax library.
+
+Note that the opening and closing backslashes must be escaped, but special characters
+in the equations do not need escaping. The following source:
+
+    This is an inline equation: \\({{x+y}\over{z}}=5\\).
+    This is a block equation: $${{x+y}\over{z}}=5$$
+    This is a block equation too: \\[{{x+y}\over{z}}=5\\]
+
+Renders to:
+
+This is an inline equation: \\({{x+y}\over{z}}=5\\).
+This is a block equation: $${{x+y}\over{z}}=5$$
+This is a block equation too: \\[{{x+y}\over{z}}=5\\]
+
