@@ -87,6 +87,7 @@
             'php': 'php',
             'sql': 'text/x-sql',
             'py': 'python',
+            'scm': 'scheme',
             'clj': 'clojure',
             'rb': 'ruby',
             'css': 'css',
