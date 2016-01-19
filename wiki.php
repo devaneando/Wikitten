@@ -18,7 +18,11 @@ class Wiki
         'page'        => ''
     );
 
-    protected function _getRenderer($extension)
+	/**
+	 * @param $extension
+	 * @return bool|string
+	 */
+	protected function _getRenderer($extension)
     {
         if (!isset($this->_renderers[$extension])) {
             return false;
@@ -74,8 +78,12 @@ class Wiki
             ));
         }
 
-        $finfo = finfo_open(FILEINFO_MIME);
-        $mime_type = finfo_file($finfo, $path);
+//        $finfo = finfo_open(FILEINFO_MIME);
+//        $mime_type = finfo_file($finfo, $path);
+
+require( 'mime_type_lib.php' );
+$mime_type = get_file_mime_type($path);
+
 
         if (substr($mime_type, 0, 4) != 'text') {
             // not an ASCII file, send it directly to the browser
@@ -116,14 +124,8 @@ class Wiki
             'extension' => $extension,
             'parts'     => $parts,
             'page'      => $page_data,
-            'is_dir'    => false,
-            'use_pastebin' => $this->_usePasteBin()
+            'is_dir'    => false
         ));
-    }
-
-    protected function _usePasteBin()
-    {
-        return defined('ENABLE_PASTEBIN') && ENABLE_PASTEBIN && PASTEBIN_API_KEY;
     }
 
     /**
@@ -167,7 +169,8 @@ class Wiki
      */
     protected function _extractJsonFrontMatter($source)
     {
-       static $front_matter_regex = "/^---[\r\n](.*)[\r\n]---[\r\n](.*)/s";
+        //static $front_matter_regex = "/^---\n(.*)\n---\n(.*)/s";
+		static $front_matter_regex = "/^---[\r\n](.*)[\r\n]---[\r\n](.*)/s";
 
         $source    = ltrim($source);
         $meta_data = array();
@@ -334,9 +337,7 @@ class Wiki
                 return $this->_render(DEFAULT_FILE);
             }
 
-            return $this->_view('index', array(
-            	'page' => $this->_default_page_data
-            ));
+            return $this->_view('index');
         }
 
         try {
@@ -391,59 +392,6 @@ class Wiki
         $redirect_url = BASE_URL . "/$file";
         header("HTTP/1.0 302 Found", true);
         header("Location: $redirect_url");
-
-        exit();
-    }
-
-    /**
-     * Handle createion of PasteBin pastes 
-     * 
-     * @return string JSON response 
-     */
-    public function createPasteBinAction()
-    {
-        // Only if PasteBin is enabled
-        if (!$this->_usePasteBin()) {
-            $this->_404();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (isset($_POST['ref'])) {
-                $file = base64_decode($_POST['ref']);
-                $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
-
-                if (!$this->_pathIsSafe($path)) {
-                    $this->_404();
-                } else {
-                    $content = file_get_contents($path);
-                    $name = pathinfo($path, PATHINFO_BASENAME);                    
-
-                    require_once PLUGINS . DIRECTORY_SEPARATOR . 'PasteBin.php';
-                    
-                    $response = array();
-
-                    $pastebin = new PasteBin(PASTEBIN_API_KEY);
-                    
-                    /**
-                     * @todo Add/improve autodetection of file format
-                     */
-
-                    $url = $pastebin->createPaste($content, PasteBin::PASTE_PRIVACY_PUBLIC, 
-                                                  $name, PasteBin::PASTE_EXPIRE_1W);
-                    if ($url) {
-                        $response['status'] = 'ok';
-                        $response['url'] = $url;
-                    } else {
-                        $response['status'] = 'fail';
-                        $response['error'] = $pastebin->getError();
-                    }
-
-                    header('Content-Type: application/json');
-                    echo json_encode($response);
-                    exit();
-                }
-            }
-        }
 
         exit();
     }
