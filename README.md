@@ -29,4 +29,4 @@ This will stop you having to run the above commands and just run a single one:
 docker-compose up
 ```
 
-* You will have to have docker and docker-compose installed *
+#### You will have to have docker and docker-compose installed ####
