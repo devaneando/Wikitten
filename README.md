@@ -19,7 +19,7 @@ docker run -it --name wikitten -v `pwd`:/var/www -p 9000:9000 wikitten
 
 This will build the docker container using the Dockerfile in this repository and then run the container mounting the current directory as the web root and exposing port 9000 from inside the container bac to your machine.
 
-This will enable you to go to http://localhost:9000 and view the wiki.
+This will enable you to go to [http://localhost:9000](http://localhost:9000) and view the wiki.
 
 
 Also there is a docker-composer file provided.
