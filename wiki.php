@@ -262,6 +262,9 @@ class Wiki
 
     public function dispatch()
     {
+        if (!function_exists("finfo_open")) {
+            die("<p>Please enable the PHP Extension <code style='background-color: #eee; border: 1px solid #ccc; padding: 3px; border-radius: 3px; line-height: 1;'>FileInfo.dll</code> by uncommenting or adding the following line:</p><pre style='background-color: #eee; border: 1px solid #ccc; padding: 5px; border-radius: 3px;'><code><span style='color: #999;'>;</span>extension=php_fileinfo.dll <span style='color: #999; margin-left: 25px;'># You can just uncomment by removing the semicolon (;) in the front.</span></code></pre>");
+        }
         $action = $this->_getAction();
         $actionMethod = "{$action}Action";
 
