@@ -7,17 +7,21 @@ class Wiki
         'htm' => 'HTML', 'html' => 'HTML'
     );
     protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
-	protected $_force_unignore = false; // always show these files (false to disable)
+    protected $_force_unignore = false; // always show these files (false to disable)
 
     protected $_action;
 
     protected $_default_page_data = array(
-        'title'       => false, // will use APP_NAME by default
+        'title' => false, // will use APP_NAME by default
         'description' => 'Wikitten is a small, fast, PHP wiki.',
-        'tags'        => array('wikitten', 'wiki'),
-        'page'        => ''
+        'tags' => array('wikitten', 'wiki'),
+        'page' => ''
     );
 
+    /**
+     * @param string $extension
+     * @return string|callable
+     */
     protected function _getRenderer($extension)
     {
         if (!isset($this->_renderers[$extension])) {
@@ -33,7 +37,7 @@ class Wiki
 
     protected function _render($page)
     {
-        $path  = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
+        $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
         $parts = explode('/', $page);
 
         $not_found = function () use ($page) {
@@ -41,16 +45,15 @@ class Wiki
             throw new Exception("Page '$page' was not found");
         };
 
-        if(!$this->_pathIsSafe($path)) {
+        if (!$this->_pathIsSafe($path)) {
             $not_found();
         }
 
         // Handle directories by showing a neat listing of its
         // contents
         if (is_dir($path)) {
-
             // Get a printable version of the actual folder name:
-            $dir_name   = htmlspecialchars(end($parts), ENT_QUOTES, 'UTF-8');
+            $dir_name = htmlspecialchars(end($parts), ENT_QUOTES, 'UTF-8');
 
             // Get a printable version of the rest of the path,
             // so that we can display it with a different appearance:
@@ -60,18 +63,16 @@ class Wiki
             // Pass this to the render view, cleverly disguised as just
             // another page, so we can make use of the tree, breadcrumb,
             // etc.
-            $page_data  = $this->_default_page_data;
+            $page_data = $this->_default_page_data;
             $page_data['title'] = 'Listing: ' . $dir_name;
 
-            return $this->_view('render', array(
-                'parts'     => $parts,
-                'page'      => $page_data,
-                'html'      =>
-                      "<h3><span class=\"directory-path\">$rest_parts/</span> $dir_name</h3>"
-                    . "<p>Use the tree menu on the left to select a file</p>"
-                ,
-                'is_dir'    => true
+            $this->_view('render', array(
+                'parts' => $parts,
+                'page' => $page_data,
+                'html' => "<h3><span class=\"directory-path\">$rest_parts/</span> $dir_name</h3><p>Use the tree menu on the left to select a file</p>",
+                'is_dir' => true
             ));
+            return;
         }
 
         $finfo = finfo_open(FILEINFO_MIME);
@@ -88,9 +89,9 @@ class Wiki
             exit();
         }
 
-        $source    = file_get_contents($path);
+        $source = file_get_contents($path);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $renderer  = $this->_getRenderer($extension);
+        $renderer = $this->_getRenderer($extension);
         $page_data = $this->_default_page_data;
 
         // Extract the JSON header, if the feature is enabled:
@@ -110,20 +111,20 @@ class Wiki
             $html = \Michelf\MarkdownExtra::defaultTransform($source);
         }
 
-        return $this->_view('render', array(
-            'html'      => $html,
-            'source'    => $source,
+        $this->_view('render', array(
+            'html' => $html,
+            'source' => $source,
             'extension' => $extension,
-            'parts'     => $parts,
-            'page'      => $page_data,
-            'is_dir'    => false,
+            'parts' => $parts,
+            'page' => $page_data,
+            'is_dir' => false,
             'use_pastebin' => $this->_usePasteBin()
         ));
     }
 
     protected function _usePasteBin()
     {
-        return defined('ENABLE_PASTEBIN') && ENABLE_PASTEBIN && PASTEBIN_API_KEY;
+        return defined('ENABLE_PASTEBIN') && ENABLE_PASTEBIN && defined('PASTEBIN_API_KEY') && PASTEBIN_API_KEY;
     }
 
     /**
@@ -135,7 +136,7 @@ class Wiki
      */
     protected function _pathIsSafe($path)
     {
-        if($path && strpos($path, LIBRARY) === 0 && is_readable($path)) {
+        if ($path && strpos($path, LIBRARY) === 0 && is_readable($path)) {
             return true;
         }
 
@@ -167,13 +168,13 @@ class Wiki
      */
     protected function _extractJsonFrontMatter($source)
     {
-       static $front_matter_regex = "/^---[\r\n](.*)[\r\n]---[\r\n](.*)/s";
+        static $front_matter_regex = "/^---[\r\n](.*)[\r\n]---[\r\n](.*)/s";
 
-        $source    = ltrim($source);
+        $source = ltrim($source);
         $meta_data = array();
 
         if (preg_match($front_matter_regex, $source, $matches)) {
-            $json   = trim($matches[1]);
+            $json = trim($matches[1]);
             $source = trim($matches[2]);
 
             // Locate or append starting and ending brackets,
@@ -190,7 +191,7 @@ class Wiki
 
             // Check for errors:
             if ($meta_data === null) {
-                $error   = json_last_error();
+                $error = json_last_error();
                 $message = 'There was an error parsing the JSON Front Matter for this page';
 
                 // todo: Better error information?
@@ -213,7 +214,7 @@ class Wiki
         $content = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . "$view.php";
 
         if (!isset($layout)) {
-            $layout  = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
+            $layout = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
         }
 
         if (file_exists($content)) {
@@ -239,10 +240,10 @@ class Wiki
 
         $items = scandir($dir);
         foreach ($items as $item) {
-			if(preg_match($this->_ignore, $item)) {
-				if($this->_force_unignore === false || !preg_match($this->_force_unignore, $item)) {
-					continue;
-				}
+            if (preg_match($this->_ignore, $item)) {
+                if ($this->_force_unignore === false || !preg_match($this->_force_unignore, $item)) {
+                    continue;
+                }
             }
 
             $path = $dir . DIRECTORY_SEPARATOR . $item;
@@ -268,7 +269,7 @@ class Wiki
         $action = $this->_getAction();
         $actionMethod = "{$action}Action";
 
-        if($action === null || !method_exists($this, $actionMethod)) {
+        if ($action === null || !method_exists($this, $actionMethod)) {
             $this->_404();
         }
 
@@ -292,7 +293,7 @@ class Wiki
     protected function _json($data = array())
     {
         header("Content-type: text/x-json");
-        echo (is_string($data) ? $data : json_encode($data));
+        echo(is_string($data) ? $data : json_encode($data));
         exit();
     }
 
@@ -321,7 +322,7 @@ class Wiki
         $this->_view('uhoh', array(
             'error' => $message,
             'parts' => array('Uh-oh'),
-            'page'  => $page_data
+            'page' => $page_data
         ));
 
         exit;
@@ -330,20 +331,22 @@ class Wiki
     public function indexAction()
     {
         $request = parse_url($_SERVER['REQUEST_URI']);
-        $page    = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
+        $page = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
 
         if (!$page) {
             if (file_exists(LIBRARY . DIRECTORY_SEPARATOR . DEFAULT_FILE)) {
-                return $this->_render(DEFAULT_FILE);
+                $this->_render(DEFAULT_FILE);
+                return;
             }
 
-            return $this->_view('index', array(
-            	'page' => $this->_default_page_data
+            $this->_view('index', array(
+                'page' => $this->_default_page_data
             ));
+            return;
         }
 
         try {
-            return $this->_render($page);
+            $this->_render($page);
 
         } catch (Exception $e) {
             $page_data = $this->_default_page_data;
@@ -352,7 +355,7 @@ class Wiki
             $this->_view('uhoh', array(
                 'error' => $e->getMessage(),
                 'parts' => array('Uh-oh'),
-                'page'  => $page_data
+                'page' => $page_data
             ));
             exit();
         }
@@ -370,14 +373,15 @@ class Wiki
         // NOTE: $_POST['source'] may be empty if the user just deletes
         // everything, but it should always be set.
         if (!ENABLE_EDITING || $_SERVER['REQUEST_METHOD'] != 'POST'
-            || empty($_POST['ref']) || !isset($_POST['source'])) {
+            || empty($_POST['ref']) || !isset($_POST['source'])
+        ) {
             $this->_404();
         }
 
-        $ref    = $_POST['ref'];
+        $ref = $_POST['ref'];
         $source = $_POST['source'];
-        $file   = base64_decode($ref);
-        $path   = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
+        $file = base64_decode($ref);
+        $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
 
         // Check if the file is safe to work with, otherwise just
         // give back a generic 404 aswell, so we don't allow blind
@@ -399,13 +403,11 @@ class Wiki
     }
 
     /**
-     * Handle createion of PasteBin pastes 
-     * 
-     * @return string JSON response 
+     * Handle createion of PasteBin pastes
+     * @return string JSON response
      */
     public function createPasteBinAction()
     {
-        // Only if PasteBin is enabled
         if (!$this->_usePasteBin()) {
             $this->_404();
         }
@@ -419,20 +421,19 @@ class Wiki
                     $this->_404();
                 } else {
                     $content = file_get_contents($path);
-                    $name = pathinfo($path, PATHINFO_BASENAME);                    
+                    $name = pathinfo($path, PATHINFO_BASENAME);
 
                     require_once PLUGINS . DIRECTORY_SEPARATOR . 'PasteBin.php';
-                    
+
                     $response = array();
 
                     $pastebin = new PasteBin(PASTEBIN_API_KEY);
-                    
+
                     /**
                      * @todo Add/improve autodetection of file format
                      */
 
-                    $url = $pastebin->createPaste($content, PasteBin::PASTE_PRIVACY_PUBLIC, 
-                                                  $name, PasteBin::PASTE_EXPIRE_1W);
+                    $url = $pastebin->createPaste($content, PasteBin::PASTE_PRIVACY_PUBLIC, $name, PasteBin::PASTE_EXPIRE_1W);
                     if ($url) {
                         $response['status'] = 'ok';
                         $response['url'] = $url;
