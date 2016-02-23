@@ -5,7 +5,7 @@
 
 # Hello there! Welcome to your personal wiki!
 
-`Wikitten` is a small, fast, PHP wiki that [I][1] made because I really needed a place to store my notes, snippets, ideas, and so on. I've tried a lot of personal wikis and note-taking applications in the past, but since I have peculiar needs, none of them really suited me, so I rolled my own. With [blackjack](http://youtu.be/z5tZMDBXTRQ) and whatnot.
+`Wikitten` is a small, fast, PHP wiki that [I][1] made because I really needed a place to store my notes, snippets, ideas, and so on. I've tried a lot of personal wikis and note-taking applications in the past, but since I have peculiar needs, none of them really suited me, so I rolled my own.
 
   [1]: https://github.com/victorstanciu
 
@@ -28,6 +28,8 @@ or
 * [Download](https://github.com/victorstanciu/Wikitten/archive/master.zip) the latest version or clone the [repository on GitHub](https://github.com/victorstanciu/Wikitten)
 * After extracting the archive, drop the files somewhere in your DocumentRoot, or make a separate Apache [VirtualHost](http://httpd.apache.org/docs/2.2/mod/core.html#virtualhost) (this is the way I currently use it myself)
 * That's it. There's a `library` directory in the installation folder. Everything you place in there will be rendered by the wiki. If there's an `index.md` file (such as the one you are reading now) in that folder, it will be served by default when accessing the wiki.
+
+You can also run the wiki using [Docker](https://github.com/victorstanciu/Wikitten/wiki/Docker-instructions)
 
 ### Configure Wikitten
 
