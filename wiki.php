@@ -349,15 +349,7 @@ class Wiki
             $this->_render($page);
 
         } catch (Exception $e) {
-            $page_data = $this->_default_page_data;
-            $page_data['title'] = "Uh oh...";
-
-            $this->_view('uhoh', array(
-                'error' => $e->getMessage(),
-                'parts' => array('Uh-oh'),
-                'page' => $page_data
-            ));
-            exit();
+            $this->_404($e->getMessage());
         }
     }
 
