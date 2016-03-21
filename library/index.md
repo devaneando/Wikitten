@@ -45,6 +45,35 @@ Some options are disabled with a comment but can be enabled by removing `//` fro
 * `define('USE_DARK_THEME', true);` - Enable the dark theme (see below for a screenshot)
 * `define('USE_WIKITTEN_LOGO', false);` - Disable the Wikitten logo on the left bottom
 
+### Enable Authentication for Editing
+
+You can enable authentication for editing by adding the following lines to `.htaccess` file:
+
+	#Protect editing using basic auth
+	#Based on http://stackoverflow.com/a/19500010
+	# set URI to /index.php/edit if query string is a=edit
+	RewriteCond %{QUERY_STRING} (?:^|&)a=edit [NC]
+	RewriteRule ^(index\.php)/?$ $1/edit [NC]
+
+	# set SECURED var to 1 if URI is /index.php/edit
+	SetEnvIfNoCase Request_URI "^/index\.php/edit" SECURED
+
+	# enforce auth if SECURED=1
+	AuthType Basic
+	AuthName "Login Required"
+	AuthUserFile .htpasswd
+	Require valid-user
+	Order allow,deny
+	Allow from all
+	Deny from env=SECURED
+	Satisfy any
+
+Then create `.htpasswd` on `/etc/httpd/` directory:
+
+	htpasswd -c .htpasswd <user>
+
+Replace `<user>` with your own username.
+
 ### JSON Front Matter (meta data)
 
 Wikitten content can also be tagged using a simple but powerful JSON Front Matter system, akin to [Jekyll's YAML Front Matter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter). Defining a custom title, tags, or other
