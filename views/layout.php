@@ -45,6 +45,7 @@ function e($dirty) {
         <script src="static/js/jquery.min.js"></script>
         <script src="static/js/prettify.js"></script>
         <script src="static/js/codemirror.min.js"></script>
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
     </head>
 <body>
     <div id="main">
