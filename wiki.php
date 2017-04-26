@@ -384,12 +384,11 @@ class Wiki
             $this->_404();
         }
 
-        // Save the changes, and redirect back to the same page:
+        // Save the changes
         file_put_contents($path, $source);
 
-        $redirect_url = BASE_URL . "/$file";
-        header("HTTP/1.0 302 Found", true);
-        header("Location: $redirect_url");
+        // Now show the page
+        $this->indexAction();
 
         exit();
     }
