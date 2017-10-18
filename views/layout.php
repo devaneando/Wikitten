@@ -32,7 +32,8 @@ function e($dirty) {
             <link rel="stylesheet" href="static/css/main.css">
         <?php endif; ?>
 		<link rel="stylesheet" href="static/css/custom.css">
-
+		<link rel="stylesheet" href="static/css/print.css" type="text/css" media="print">
+	    
         <meta name="description" content="<?php echo e($page['description']) ?>">
         <meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">

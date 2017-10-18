@@ -1,0 +1,45 @@
+
+.breadcrumbs {
+	display: none;
+}
+
+#render h1 {
+	background-color: #e12d2d;
+}
+
+#sidebar {
+	display: none;
+}
+
+#logo {
+	display: none;
+}
+
+body{counter-reset: h1 h2 h3;}
+h1:before {
+  content: counter(h1) "  ";
+  counter-increment: h1;
+}
+h2:before {
+  content: counter(h1) "." counter(h2) "  ";
+  counter-increment: h2;
+}
+h3:before {
+  content: counter(h1) "." counter(h2) "." counter(h3) "  ";
+  counter-increment: h3;
+}
+h1 {
+  counter-reset: h2;
+}
+h2 {
+  counter-reset: h3;
+}
+h1.unnumbered, h2.unnumbered {
+  counter-reset: none;
+}
+h1.unnumbered:before, 
+h2.unnumbered:before,
+h3.unnumbered:before{
+  content: none;
+  counter-increment: none;
+}
