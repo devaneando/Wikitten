@@ -63,6 +63,15 @@ function e($dirty) {
                                 <h2><span><?php echo e(APP_NAME) ?></span></h2>
                                 <?php include('tree.php') ?>
                             </div>
+                            <?php if (ENABLE_EDITING): ?>
+                                <div class="inner">
+                                    <i class="glyphicon glyphicon-plus"></i> Create new page:
+                                    <form method="get">
+                                        <input type="hidden" name="a" value="create">
+                                        <input type="text" name="id" placeholder="File name" class="form-control input-sm">
+                                    </form>
+                                </div>
+                            <?php endif ?>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-9">

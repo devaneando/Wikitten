@@ -445,6 +445,48 @@ class Wiki
     }
 
     /**
+     * Handle creation of new pages (if ENABLE_EDITING is true)
+     */
+    public function createAction()
+    {
+        $id = $_GET['id'];
+
+        // Stop if editing isn't enabled or bad file name
+        if (!ENABLE_EDITING || !$id || strpos($id, '..') ) {
+            $this->_404();
+        }
+
+        $path = LIBRARY . DIRECTORY_SEPARATOR . "$id.md";
+        if (!file_exists($path)) {
+            // Ensure directories exist
+            $parent = dirname($path);
+            if (!file_exists($parent)) {
+                mkdir($parent, 0777, true);
+            }
+            // Save the changes, and redirect back to the same page:
+            $content = <<<EOD
+---
+"title": "$id",
+"tags": [],
+"author": "{$_SERVER['PHP_AUTH_USER']}"
+---
+
+# $id
+
+Lorem **ipsum** dolor *sit amet*, consectetur `adipiscing` elit.
+
+EOD;
+            file_put_contents($path, $content);
+        }
+
+        $redirect_url = BASE_URL . "/$id.md";
+        header("HTTP/1.0 302 Found", true);
+        header("Location: $redirect_url");
+
+        exit();
+    }
+
+    /**
      * Singleton
      * @return Wiki
      */
