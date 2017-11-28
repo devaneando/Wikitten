@@ -384,8 +384,14 @@ class Wiki
             $this->_404();
         }
 
-        // Save the changes, and redirect back to the same page:
-        file_put_contents($path, $source);
+        // Check if empty
+        if(trim($source)){
+            // Save the changes, and redirect back to the same page
+            file_put_contents($path, $source);
+        }else{
+            // Delete file and redirect too (but it will return 404)
+            unlink($path);
+        }
 
         $redirect_url = BASE_URL . "/$file";
         header("HTTP/1.0 302 Found", true);
