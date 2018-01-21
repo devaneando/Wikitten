@@ -3,7 +3,7 @@
 class Wiki
 {
     protected $_renderers = array(
-        'md' => 'Markdown',
+        'md' => 'Markdown', 'mdown' => 'Markdown', 'markdown' => 'Markdown',
         'htm' => 'HTML', 'html' => 'HTML'
     );
     protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
