@@ -44,18 +44,20 @@ if (!defined('PASTEBIN_API_KEY')) {
 
 define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');
 
-$request_uri = parse_url($_SERVER['REQUEST_URI']);
-$request_uri = explode("/", $request_uri['path']);
-$script_name = explode("/", dirname($_SERVER['SCRIPT_NAME']));
+if (!defined('APP_DIR')) {
+    $request_uri = parse_url($_SERVER['REQUEST_URI']);
+    $request_uri = explode("/", $request_uri['path']);
+    $script_name = explode("/", dirname($_SERVER['SCRIPT_NAME']));
 
-$app_dir = array();
-foreach ($request_uri as $key => $value) {
-    if (isset($script_name[$key]) && $script_name[$key] == $value) {
-        $app_dir[] = $script_name[$key];
+    $app_dir = array();
+    foreach ($request_uri as $key => $value) {
+        if (isset($script_name[$key]) && $script_name[$key] == $value) {
+            $app_dir[] = $script_name[$key];
+        }
     }
-}
 
-define('APP_DIR', rtrim(implode('/', $app_dir), "/"));
+    define('APP_DIR', rtrim(implode('/', $app_dir), "/"));
+}
 
 $https = false;
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") {
