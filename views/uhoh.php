@@ -1,4 +1,7 @@
-<div class="breadcrumbs">    
+<?php if (!defined('APP_STARTED')) {
+    die('Forbidden!');
+} ?>
+<div class="breadcrumbs">
 
   <ul class="breadcrumb">
     <li>

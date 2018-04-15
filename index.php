@@ -1,4 +1,5 @@
 <?php
+define('APP_STARTED', true);
 
 // Conditionally load configuration from a config.php file in
 // the site root, if it exists.
@@ -66,6 +67,11 @@ define('BASE_URL', "http" . ($https ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] 
 
 unset($config_file, $request_uri, $script_name, $app_dir, $https);
 
+
+if (defined('ACCESS_USER') && defined('ACCESS_PASSWORD')) {
+    require_once __DIR__ . DIRECTORY_SEPARATOR . 'login.php';
+    Login::instance()->dispatch();
+}
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'wiki.php';
 

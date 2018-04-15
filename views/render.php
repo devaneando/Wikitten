@@ -1,5 +1,8 @@
+<?php if (!defined('APP_STARTED')) {
+    die('Forbidden!');
+} ?>
 <div class="breadcrumbs">
-    <div class="float-right">
+    <div class="pull-right">
         <?php if ($html && isset($source)): ?>
             <a href="javascript:;" class="btn-black" id="toggle">Toggle source</a>
         <?php endif ?>

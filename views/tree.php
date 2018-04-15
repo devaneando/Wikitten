@@ -1,6 +1,10 @@
 <?php
-function tree($array, $parent, $parts = array(), $step = 0) {
+if (!defined('APP_STARTED')) {
+    die('Forbidden!');
+}
 
+function tree($array, $parent, $parts = array(), $step = 0)
+{
     if (!count($array)) {
         return '';
     }

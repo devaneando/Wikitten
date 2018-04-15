@@ -1,4 +1,8 @@
 <?php
+if (!defined('APP_STARTED')) {
+    die('Forbidden!');
+}
+
 // Example configuration file for Wikitten. To use it,
 // first rename it to `config.php`.
 
@@ -28,3 +32,7 @@ define('DEFAULT_FILE', 'index.md');
 // Enable PasteBin plugin ?
 // define('ENABLE_PASTEBIN', true);
 // define('PASTEBIN_API_KEY', '');
+
+// Enable password authentication (leave this field commented to disable password)
+// define('ACCESS_USER', 'Wikitten');
+// define('ACCESS_PASSWORD', 'Wikitten');
