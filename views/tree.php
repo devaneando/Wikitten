@@ -1,6 +1,10 @@
 <?php
-function tree($array, $parent, $parts = array(), $step = 0) {
+if (!defined('APP_STARTED')) {
+    die('Forbidden!');
+}
 
+function tree($array, $parent, $parts = array(), $step = 0)
+{
     if (!count($array)) {
         return '';
     }
@@ -13,8 +17,8 @@ function tree($array, $parent, $parts = array(), $step = 0) {
             $open = $step !== false && (isset($parts[$step]) && $key == $parts[$step]);
 
             $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
-                $t .= '<a href="#" data-role="directory"><i class="glyphicon glyphicon-folder-'. ($open ? 'open' : 'close') .'"></i>&nbsp; ' . $key . '</a>';
-                $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
+            $t .= '<a href="#" data-role="directory"><i class="glyphicon glyphicon-folder-'. ($open ? 'open' : 'close') .'"></i>&nbsp; ' . $key . '</a>';
+            $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
             $t .=  '</li>';
         } else {
             $selected = (isset($parts[$step]) && $item == $parts[$step]);

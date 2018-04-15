@@ -1,4 +1,7 @@
-<div class="breadcrumbs">    
+<?php if (!defined('APP_STARTED')) {
+    die('Forbidden!');
+} ?>
+<div class="breadcrumbs">
     <div class="pull-right">
         <?php if ($html && isset($source)): ?>
             <a href="javascript:;" class="btn-black" id="toggle">Toggle source</a>
@@ -6,7 +9,7 @@
         <?php if ($use_pastebin): ?>
             <a href="javascript:;" class="btn-black" id="create-pastebin" title="Create public Paste on PasteBin">Create public Paste</a>
         <?php endif; ?>
-    </div>    
+    </div>
 
     <?php $path = array(); ?>
     <ul class="breadcrumb">
@@ -115,7 +118,7 @@
             theme: 'default',
             <?php endif; ?>
             mode: mode
-            <?php if(!ENABLE_EDITING): ?>
+            <?php if (!ENABLE_EDITING): ?>
             ,readOnly: true
             <?php endif ?>
         });
@@ -144,7 +147,7 @@
                 url: '<?php echo BASE_URL . '/?a=createPasteBin'; ?>',
                 data: { ref: '<?php echo base64_encode($page['file']); ?>' },
                 context: $(this)
-            }).done(function(response) {                
+            }).done(function(response) {
                 $(this).removeClass('disabled');
 
                 if (response.status === 'ok') {

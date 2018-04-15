@@ -1,4 +1,7 @@
 <?php
+if (!defined('APP_STARTED')) {
+    die('Forbidden!');
+}
 
 class Wiki
 {
@@ -201,7 +204,6 @@ class Wiki
 
                 throw new RuntimeException($message);
             }
-
         }
 
         return array($source, $meta_data);
@@ -347,7 +349,6 @@ class Wiki
 
         try {
             $this->_render($page);
-
         } catch (Exception $e) {
             $this->_404($e->getMessage());
         }
@@ -448,7 +449,7 @@ class Wiki
      * Singleton
      * @return Wiki
      */
-    static public function instance()
+    public static function instance()
     {
         static $instance;
         if (!($instance instanceof self)) {
@@ -456,5 +457,4 @@ class Wiki
         }
         return $instance;
     }
-
 }

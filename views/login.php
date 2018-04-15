@@ -59,38 +59,48 @@ function e($dirty)
                 <div class="bubble">Remember to check for updates!</div>
             </a>
         <?php endif; ?>
+
         <div class="inner">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-xs-12 col-md-3">
-                        <div id="sidebar">
-                            <div class="inner">
-                                <h2><span><?php echo e(APP_NAME) ?></span></h2>
-                                <?php include('tree.php') ?>
-                            </div>
-                        </div>
+                    <div class="col-xs-4 col-xs-offset-4">
+                      <div id="content">
+                          <h3><span><?php echo e(APP_NAME) ?></span></h3>
 
-                        <a href="<?php echo BASE_URL; ?>?action=logout" class="btn btn-default btn-xs">Logout</a>
-                    </div>
-                    <div class="col-xs-12 col-md-9">
-                        <div id="content">
-                            <div class="inner">
-                                <?php echo $content; ?>
-                            </div>
-                        </div>
+                          <div class="inner">
+                            <?php if (isset($error)): ?>
+                              <div class="alert alert-danger"><?php echo $error; ?></div>
+                            <?php endif; ?>
+
+                            <form action="" method="post">
+                              <div class="input-group">
+                                  <input name="username" type="text" placeholder="Enter your username" class="form-control input-sm">
+
+                                  <a title="Clear current search..." class="input-group-addon input-sm">
+                                      <i class="glyphicon glyphicon-user"></i>
+                                  </a>
+                              </div>
+
+                              <br />
+
+                              <div class="input-group">
+                                  <input name="password" type="password" placeholder="Enter your password" class="form-control input-sm">
+
+                                  <a title="Clear current search..." class="input-group-addon input-sm">
+                                      <i class="glyphicon glyphicon-lock"></i>
+                                  </a>
+                              </div>
+
+                              <br />
+
+                              <button type="submit" name="login" class="btn btn-sm btn-primary">Send!</button>
+                            </form>
+                          </div>
+                      </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        <?php if (USE_WIKITTEN_LOGO === true): ?>
-            $(document).ready(function () {
-                $('#logo').delay(2000).animate({
-                    left: '20px'
-                }, 600);
-            });
-        <?php endif; ?>
-    </script>
 </body>
 </html>
