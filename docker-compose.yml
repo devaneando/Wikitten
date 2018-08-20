@@ -4,3 +4,4 @@ wikitten:
     - 9000:9000
   volumes:
     - .:/var/www
+    - ${HOST_LIBRARY}:/var/www/library
