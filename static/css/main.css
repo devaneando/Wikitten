@@ -161,6 +161,11 @@ form {
     font-size: 85%;
     margin-right: 3px;
 }
+
+.breadcrumb-item + .breadcrumb-item::before {
+   color: white;
+}
+
 .btn-black {
     padding: 4px 8px;
     margin: 2px 0;
