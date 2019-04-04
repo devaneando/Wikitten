@@ -254,3 +254,6 @@ form {
     font-weight: bold;
     color: #333;
 }
+#tree-filter-clear-query {
+  color: white;
+}

@@ -1,35 +1,41 @@
-<div class="breadcrumbs">    
-    <div class="pull-right">
+<div class="breadcrumbs">
+    <div class="float-right">
         <?php if ($html && isset($source)): ?>
             <a href="javascript:;" class="btn-black" id="toggle">Toggle source</a>
         <?php endif ?>
         <?php if ($use_pastebin): ?>
             <a href="javascript:;" class="btn-black" id="create-pastebin" title="Create public Paste on PasteBin">Create public Paste</a>
         <?php endif; ?>
-    </div>    
+    </div>
 
     <?php $path = array(); ?>
-    <ul class="breadcrumb">
-        <li>
-            <a href="<?php echo BASE_URL; ?>"><i class="glyphicon glyphicon-home glyphicon-white"></i> /wiki</a>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="<?php echo BASE_URL; ?>">
+              <i class="fas fa-home"></i> wiki
+            </a>
         </li>
         <?php $i = 0; ?>
-
         <?php foreach ($parts as $part): ?>
             <?php $path[] = $part; ?>
-            <?php $url = BASE_URL . "/" . join("/", $path) ?>
-            <li>
+            <?php $url = BASE_URL . "/" . join("/", $path); ?>
+            <?php $i++; ?>
+            <li class="breadcrumb-item <?php echo ($i == count($parts) ? 'active' : '')?>">
                 <a href="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8') ?>">
-                    <?php if (++$i == count($parts) && !$is_dir): ?>
-                        <i class="glyphicon glyphicon-file glyphicon-white"></i>
+                    <?php if ($i == count($parts) && !$is_dir): ?>
+                        <i class="far fa-file"></i>
                     <?php else: ?>
-                        <i class="glyphicon glyphicon-folder-open glyphicon-white"></i>
+                        <i class="far fa-folder"></i>
                     <?php endif ?>
                     <?php echo $part; ?>
                 </a>
             </li>
         <?php endforeach ?>
-    </ul>
+      </ol>
+    </nav>
+
 </div>
 
 <?php if ($html): ?>
@@ -115,7 +121,7 @@
             theme: 'default',
             <?php endif; ?>
             mode: mode
-            <?php if(!ENABLE_EDITING): ?>
+            <?php if (!ENABLE_EDITING): ?>
             ,readOnly: true
             <?php endif ?>
         });
@@ -144,7 +150,7 @@
                 url: '<?php echo BASE_URL . '/?a=createPasteBin'; ?>',
                 data: { ref: '<?php echo base64_encode($page['file']); ?>' },
                 context: $(this)
-            }).done(function(response) {                
+            }).done(function(response) {
                 $(this).removeClass('disabled');
 
                 if (response.status === 'ok') {

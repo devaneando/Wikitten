@@ -22,22 +22,23 @@ function e($dirty) {
         <?php if (USE_DARK_THEME): ?>
             <link rel="stylesheet" href="static/css/bootstrap_dark.min.css">
             <link rel="stylesheet" href="static/css/dark/prettify-dark.css">
-            <link rel="stylesheet" href="static/css/codemirror.css">
             <link rel="stylesheet" href="static/css/main_dark.css">
             <link rel="stylesheet" href="static/css/dark/codemirror-tomorrow-night-bright.css">
         <?php else: ?>
             <link rel="stylesheet" href="static/css/bootstrap.min.css">
             <link rel="stylesheet" href="static/css/prettify.css">
-            <link rel="stylesheet" href="static/css/codemirror.css">
             <link rel="stylesheet" href="static/css/main.css">
         <?php endif; ?>
-		<link rel="stylesheet" href="static/css/custom.css">
+
+        <link rel="stylesheet" href="static/css/codemirror.css">
+        <link rel="stylesheet" href="static/css/all.min.css">
+        <link rel="stylesheet" href="static/css/custom.css">
 
         <meta name="description" content="<?php echo e($page['description']) ?>">
         <meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
         <?php if(!empty($page['author'])): ?>
             <meta name="author" content="<?php echo e($page['author']) ?>">
         <?php endif; ?>
