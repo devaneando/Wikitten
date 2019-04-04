@@ -70,4 +70,3 @@ unset($config_file, $request_uri, $script_name, $app_dir, $https);
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'wiki.php';
 
 Wiki::instance()->dispatch();
-
