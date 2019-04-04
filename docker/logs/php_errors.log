@@ -1,7 +1,0 @@
-[16-Oct-2019 08:35:26 Europe/Lisbon] PHP Fatal error:  Uncaught Exception: Wiki _render /var/www/html/wiki.php 41 - Add message here in /var/www/html/wiki.php:40
-Stack trace:
-#0 /var/www/html/wiki.php(341): Wiki->_render('index.md')
-#1 /var/www/html/wiki.php(279): Wiki->indexAction()
-#2 /var/www/html/index.php(72): Wiki->dispatch()
-#3 {main}
-  thrown in /var/www/html/wiki.php on line 40
