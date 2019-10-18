@@ -47,6 +47,10 @@ if (!defined('EXTERNAL_LINK_TARGET')) {
     define('EXTERNAL_LINK_TARGET', '_blank');
 }
 
+if (!defined('INTERNAL_WIKI_LINK')) {
+    define('INTERNAL_WIKI_LINK', true);
+}
+
 define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');
 
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
