@@ -7,6 +7,8 @@ class Wiki
 {
     protected $_renderers = array(
         'md' => 'Markdown',
+        'markdown' => 'Markdown',
+        'mdown' => 'Markdown',
         'htm' => 'HTML', 'html' => 'HTML'
     );
     protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
@@ -111,7 +113,7 @@ class Wiki
             $html = $renderer($source);
         }
         if ($renderer && $renderer == 'Markdown') {
-            $html = \Michelf\MarkdownExtra::defaultTransform($source);
+            $html = \Wikitten\MarkdownExtra::defaultTransform($source);
         }
 
         $this->_view('render', array(

@@ -92,6 +92,8 @@
         var mode = false;
         var modes = {
             'md': 'markdown',
+            'markdown': 'markdown',
+            'mdown': 'markdown',
             'js': 'javascript',
             'php': 'php',
             'sql': 'text/x-sql',
