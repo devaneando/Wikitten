@@ -43,6 +43,10 @@ if (!defined('PASTEBIN_API_KEY')) {
     define('PASTEBIN_API_KEY', false);
 }
 
+if (!defined('EXTERNAL_LINK_TARGET')) {
+    define('EXTERNAL_LINK_TARGET', '_blank');
+}
+
 define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');
 
 $request_uri = parse_url($_SERVER['REQUEST_URI']);

@@ -36,3 +36,6 @@ define('DEFAULT_FILE', 'index.md');
 // Enable password authentication (leave this field commented to disable password)
 // define('ACCESS_USER', 'Wikitten');
 // define('ACCESS_PASSWORD', 'Wikitten');
+
+// Use this as default target for external urls
+// define('EXTERNAL_LINK_TARGET', '_blank')
