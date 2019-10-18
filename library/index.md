@@ -32,8 +32,10 @@ or
 ### Installation
 
 - [Download](https://github.com/devaneando/Wikitten/archive/master.zip) the latest version or clone the [repository on GitHub](https://github.com/devaneando/Wikitten)
-- After extracting the archive, drop the files somewhere in your DocumentRoot, or make a separate Apache [VirtualHost](http://httpd.apache.org/docs/2.2/mod/core.html#virtualhost) (this is the way I currently use it myself)
+- After extracting the archive, drop the files somewhere in your DocumentRoot, or make a separate Apache [VirtualHost](http://httpd.apache.org/docs/2.2/mod/core.html#virtualhost).
 - That's it. There's a `library` directory in the installation folder. Everything you place in there will be rendered by the wiki. If there's an `index.md` file (such as the one you are reading now) in that folder, it will be served by default when accessing the wiki.
+
+### Docker
 
 You can also run the wiki using [Docker](https://github.com/devaneando/Wikitten/wiki/Docker-instructions)
 
@@ -50,6 +52,10 @@ Some options are disabled with a comment but can be enabled by removing `//` fro
 - `define('USE_PAGE_METADATA', true);` - Enable the JSON Front Matter (meta data), see below for more details
 - `define('USE_DARK_THEME', true);` - Enable the dark theme (see below for a screenshot)
 - `define('USE_WIKITTEN_LOGO', false);` - Disable the Wikitten logo on the left bottom
+- `define('ACCESS_USER', 'Wikitten');` - Will required to log in with to view the documents
+- `define('ACCESS_PASSWORD', 'Wikitten');` - Will required to log in with to view the documents
+- `define('EXTERNAL_LINK_TARGET', '_blank');` - Will append `target="_blank"` to all external links in markdown documents. If you want to disable this, just change the value to `self`.
+- `define('INTERNAL_WIKI_LINK', true);`- Will change markdown links to behave like a wiki so if you click a link to another markdown document, it will open in Wikitten in its real path.
 
 ### JSON Front Matter (meta data)
 

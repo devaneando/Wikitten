@@ -38,4 +38,7 @@ define('DEFAULT_FILE', 'index.md');
 // define('ACCESS_PASSWORD', 'Wikitten');
 
 // Use this as default target for external urls
-// define('EXTERNAL_LINK_TARGET', '_blank')
+// define('EXTERNAL_LINK_TARGET', '_blank');
+
+// Enable the internal wiki URL and URL fix
+// define('INTERNAL_WIKI_LINK', true);
