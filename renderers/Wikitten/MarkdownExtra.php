@@ -139,12 +139,8 @@ class MarkdownExtra extends \Michelf\MarkdownExtra
             }
         }
 
-        for ($i = $parentCount; $i >= 0; $i--) {
-            // Prevents miswritten paths
-            if (false === isset($currentUri[$i])) {
-                continue;
-            }
-            unset($currentUri[$i]);
+        for ($i = 0; $i < $parentCount; $i++) {
+            array_pop($currentUri);
         }
 
         $currentUri = join('/', $currentUri);
