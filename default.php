@@ -52,4 +52,8 @@ if (!defined('INTERNAL_WIKI_LINK')) {
     define('INTERNAL_WIKI_LINK', true);
 }
 
+if (!defined('CUSTOM_MARKDOWN_STYLESHEET')) {
+    define('CUSTOM_MARKDOWN_STYLESHEET', '');
+}
+
 define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');

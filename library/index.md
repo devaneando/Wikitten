@@ -88,6 +88,23 @@ If you are working until midnight it can be a pain to look at bright white backg
 It looks like this:
 ![Screenshot Dark Mode](static/img/screenshot_dark.png)
 
+### Customize CSS
+
+You can add a new Markdown Style by creating your custom file in the `static/css/custom-styles/` folder.
+
+The css must address to the `#render` element as shown in the `static/css/custom-styles/github.css` file.
+
+You can use the `static/css/custom-styles/github.css` file as basis to create a new customized one.
+
+After having your custom file, edit the `config.php` file and define your custom file name in `CUSTOM_MARKDOWN_STYLESHEET`.
+
+```php
+// Enable a custom stylesheet
+define('CUSTOM_MARKDOWN_STYLESHEET', 'github.css');
+```
+
+**Attention!!!** Do not use the full path to the file. Use only the filename.
+
 ### Roadmap
 
 Some of the features I plan to implement next:
