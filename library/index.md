@@ -119,3 +119,4 @@ Some of the features I plan to implement next:
 - [Marijn Haverbeke](http://marijnhaverbeke.nl/), for [CodeMirror](http://codemirror.net/), a JavaScript code editor.
 - Twitter, for the [Bootstrap](http://twitter.github.com/bootstrap/) CSS framework.
 - All Vectors, for the [free cat vector](http://www.allvectors.com/cats-vector/) silhouette I used in making the logo.
+- [Sindre Sorhus](https://sindresorhus.com/) for the Github flavored [Markdown Style](https://github.com/sindresorhus/github-markdown-css).
