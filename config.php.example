@@ -42,3 +42,6 @@ define('DEFAULT_FILE', 'index.md');
 
 // Enable the internal wiki URL and URL fix
 // define('INTERNAL_WIKI_LINK', true);
+
+// Enable a custom stylesheet
+// define('CUSTOM_MARKDOWN_STYLESHEET', '');

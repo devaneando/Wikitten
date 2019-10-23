@@ -14,7 +14,7 @@ function e($dirty)
     <head>
         <meta charset="utf-8">
 
-        <?php if ($page['title'] === false): ?>
+        <?php if ($page['title'] === false) : ?>
             <title><?php echo e(APP_NAME) ?></title>
         <?php else: ?>
             <title><?php echo e($page['title']) ?> - <?php echo e(APP_NAME) ?></title>
@@ -24,7 +24,7 @@ function e($dirty)
 
         <link rel="shortcut icon" href="static/img/favicon.ico">
 
-        <?php if (USE_DARK_THEME): ?>
+        <?php if (USE_DARK_THEME) : ?>
             <link rel="stylesheet" href="static/css/bootstrap_dark.min.css">
             <link rel="stylesheet" href="static/css/dark/prettify-dark.css">
             <link rel="stylesheet" href="static/css/main_dark.css">
@@ -32,6 +32,9 @@ function e($dirty)
         <?php else: ?>
             <link rel="stylesheet" href="static/css/bootstrap.min.css">
             <link rel="stylesheet" href="static/css/prettify.css">
+            <?php if(!empty(CUSTOM_MARKDOWN_STYLESHEET) && (file_exists(__DIR__ . '/../static/css/custom-styles/'.CUSTOM_MARKDOWN_STYLESHEET))) : ?>
+                <link rel="stylesheet" href="static/css/custom-styles/<?php echo(CUSTOM_MARKDOWN_STYLESHEET) ?>">
+            <?php endif; ?>
             <link rel="stylesheet" href="static/css/main.css">
         <?php endif; ?>
 
@@ -44,7 +47,7 @@ function e($dirty)
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <?php if (!empty($page['author'])): ?>
+        <?php if (!empty($page['author'])) : ?>
             <meta name="author" content="<?php echo e($page['author']) ?>">
         <?php endif; ?>
 
