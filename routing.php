@@ -1,5 +1,6 @@
 <?php
-if (!defined('APP_STARTED')) {
+
+if (!defined('APP_STARTED') && 0 !== strpos(php_sapi_name(), 'cli')) {
     die('Forbidden!');
 }
 
