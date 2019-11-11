@@ -81,9 +81,11 @@ class Wiki
         }
 
         $finfo = finfo_open(FILEINFO_MIME);
-        $mime_type = finfo_file($finfo, $path);
-
-        if (substr($mime_type, 0, 4) != 'text') {
+        $mime_type = trim(finfo_file($finfo, $path));
+        //die(substr($mime_type, 0, strlen('inode/x-empty')));
+        if (substr($mime_type, 0, strlen('text/plain')) != 'text/plain'
+            && substr($mime_type, 0, strlen('inode/x-empty')) != 'inode/x-empty'
+        ) {
             // not an ASCII file, send it directly to the browser
             $file = fopen($path, 'rb');
 
@@ -114,6 +116,11 @@ class Wiki
         }
         if ($renderer && $renderer == 'Markdown') {
             $html = \Wikitten\MarkdownExtra::defaultTransform($source);
+        }
+
+        if (empty(trim($html))) {
+            $html = "<h1>This page is empty</h1>\n";
+            $source = $parts[0];
         }
 
         $this->_view('render', array(
