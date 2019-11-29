@@ -12,6 +12,9 @@ define('APP_NAME', 'My Wiki');
 // Set the filename of the automatic homepage here
 define('DEFAULT_FILE', 'index.md');
 
+// You can install in a dir
+// define('APP_ROOT', '/');
+
 // Custom path to your wiki's library:
 // define('LIBRARY', '/path/to/wiki/library');
 
@@ -36,6 +39,9 @@ define('DEFAULT_FILE', 'index.md');
 // Enable password authentication (leave this field commented to disable password)
 // define('ACCESS_USER', 'Wikitten');
 // define('ACCESS_PASSWORD', 'Wikitten');
+
+// View page without login
+// define('ALLOW_EVERYONE_VIEW', false);
 
 // Use this as default target for external urls
 // define('EXTERNAL_LINK_TARGET', '_blank');
