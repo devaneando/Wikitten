@@ -121,10 +121,10 @@ class Wiki
                     'html'      =>
                           "<h3>Page '$_page' not found</h3>"
                         . "<br/>"
-                        . "<form method='GET'>"
+                        . (ifCanManage() ? "<form method='GET'>"
                         . "<input type='hidden' name='a' value='create'>"
                         . "<input type='submit' class='btn btn-primary' value='Create this page' />"
-                        . "</form>"
+                        . "</form>" : '')
                     ,
                     'is_dir'    => false
                 ));
@@ -427,7 +427,7 @@ class Wiki
         // NOTE: $_POST['source'] may be empty if the user just deletes
         // everything, but it should always be set.
         if (!ENABLE_EDITING || $_SERVER['REQUEST_METHOD'] != 'POST'
-            || empty($_POST['ref']) || !isset($_POST['source'])
+            || empty($_POST['ref']) || !isset($_POST['source']) || !ifCanManage()
         ) {
             $this->_404();
         }
@@ -468,7 +468,7 @@ class Wiki
      */
     public function createPasteBinAction()
     {
-        if (!$this->_usePasteBin()) {
+        if (!$this->_usePasteBin() || !ifCanManage()) {
             $this->_404();
         }
 
@@ -527,10 +527,14 @@ class Wiki
 
     public function createAction()
     {
+        if (!ifCanManage()) {
+            $this->_404();
+        }
         $request    = parse_url($_SERVER['REQUEST_URI']);
-        $page       = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
+        $requestPath = urldecode(str_replace(APP_ROOT, '', $request['path']));
+        $page       = str_replace("###" . APP_DIR . "/", "", "###" . $requestPath);
 
-        $filepath   = LIBRARY . urldecode($request['path']);
+        $filepath   = LIBRARY . $requestPath;
         $content    = "# " . htmlspecialchars($page, ENT_QUOTES, 'UTF-8');
         // if feature not enabled, go to 404
         if (!ENABLE_EDITING || file_exists($filepath)) {

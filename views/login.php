@@ -14,7 +14,7 @@ function e($dirty)
     <head>
         <meta charset="utf-8">
 
-        <?php if ($page['title'] === false): ?>
+        <?php if (empty($page['title'])): ?>
             <title><?php echo e(APP_NAME) ?></title>
         <?php else: ?>
             <title><?php echo e($page['title']) ?> - <?php echo e(APP_NAME) ?></title>

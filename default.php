@@ -12,6 +12,10 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'Wikitten');
 }
 
+if (!defined('APP_ROOT')) {
+    define('APP_ROOT', '/');
+}
+
 if (!defined('LIBRARY')) {
     define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
 }
@@ -42,6 +46,10 @@ if (!defined('ENABLE_PASTEBIN')) {
 
 if (!defined('PASTEBIN_API_KEY')) {
     define('PASTEBIN_API_KEY', false);
+}
+
+if (!defined('ALLOW_EVERYONE_VIEW')) {
+    define('ALLOW_EVERYONE_VIEW', false);
 }
 
 if (!defined('EXTERNAL_LINK_TARGET')) {

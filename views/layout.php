@@ -73,8 +73,20 @@ function e($dirty)
                                 <?php include('tree.php') ?>
                             </div>
                         </div>
-
-                        <a href="<?php echo BASE_URL; ?>?action=logout" class="btn btn-default btn-xs">Logout</a>
+                        <?php
+                        if (!Login::isLogged() && defined('ACCESS_USER') && defined('ACCESS_PASSWORD')):
+                        ?>
+                        <a href="<?php echo BASE_URL; ?>/?action=login" class="btn btn-default btn-xs">Login</a>
+                        <?php
+                        endif;
+                        ?>
+                        <?php
+                        if (Login::isLogged() && defined('ACCESS_USER') && defined('ACCESS_PASSWORD')):
+                        ?>
+                        <a href="<?php echo BASE_URL; ?>/?action=logout" class="btn btn-default btn-xs">logout</a>
+                        <?php
+                        endif;
+                        ?>
                     </div>
                     <div class="col-xs-12 col-md-9">
                         <div id="content">
