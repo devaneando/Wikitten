@@ -13,7 +13,7 @@ define('APP_NAME', 'My Wiki');
 define('DEFAULT_FILE', 'index.md');
 
 // You can install in a dir
-// define('APP_ROOT', '/');
+// define('APP_ROOT', '/Wiki');
 
 // Custom path to your wiki's library:
 // define('LIBRARY', '/path/to/wiki/library');

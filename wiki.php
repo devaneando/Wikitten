@@ -531,7 +531,11 @@ class Wiki
             $this->_404();
         }
         $request    = parse_url($_SERVER['REQUEST_URI']);
-        $requestPath = urldecode(str_replace(APP_ROOT, '', $request['path']));
+        if(define('APP_ROOT')){
+            $requestPath = urldecode(str_replace(APP_ROOT, '', $request['path']));
+        }else{
+            $requestPath = urldecode($request['path']);
+        }
         $page       = str_replace("###" . APP_DIR . "/", "", "###" . $requestPath);
 
         $filepath   = LIBRARY . $requestPath;
