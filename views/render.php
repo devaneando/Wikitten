@@ -2,7 +2,7 @@
     die('Forbidden!');
 } ?>
 <div class="breadcrumbs">
-    <div class="pull-right">
+    <div class="float-right">
         <?php if ($html && isset($source)): ?>
             <a href="javascript:;" class="btn-black" id="toggle">Toggle source</a>
         <?php endif ?>
