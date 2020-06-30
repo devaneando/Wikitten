@@ -51,6 +51,7 @@ function needLogin(){
     }
     return true;
 }
+
 function ifCanManage() {
     //login user can manage
     if (Login::isLogged()) {
@@ -61,6 +62,13 @@ function ifCanManage() {
         return true;
     }
     return false;
+}
+
+function isDarkTheme(){
+    if (isset($_COOKIE['ISDARK'])) {
+        return ('1' === $_COOKIE['ISDARK'])?true:false;
+    }
+    return USE_DARK_THEME;
 }
 
 if (needLogin()) {

@@ -10,3 +10,7 @@ require_once dirname(__FILE__) . '/Markdown/MarkdownInterface.php';
 require_once dirname(__FILE__) . '/Markdown/Markdown.php';
 require_once dirname(__FILE__) . '/Markdown/MarkdownExtra.php';
 require_once dirname(__FILE__) . '/Wikitten/MarkdownExtra.php';
+
+
+require_once dirname(__FILE__) . '/tp_Markdown/Markdown.php';
+require_once dirname(__FILE__) . '/tp_Markdown/HyperDown.php';

@@ -37,7 +37,7 @@ body {
 }
 code, pre {
     font-family: monospace;
-    background: #333;
+    /*background: #333;*/
     color: #3498db;
 }
 #render h1:first-child,

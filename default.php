@@ -12,6 +12,10 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'Wikitten');
 }
 
+if (!defined('APP_ROOT')) {
+    define('APP_ROOT', '/');
+}
+
 if (!defined('LIBRARY')) {
     define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
 }

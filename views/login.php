@@ -24,7 +24,7 @@ function e($dirty)
 
         <link rel="shortcut icon" href="static/img/favicon.ico">
 
-        <?php if (USE_DARK_THEME): ?>
+        <?php if (isDarkTheme()): ?>
             <link rel="stylesheet" href="static/css/bootstrap_dark.min.css">
             <link rel="stylesheet" href="static/css/dark/prettify-dark.css">
             <link rel="stylesheet" href="static/css/codemirror.css">
@@ -38,15 +38,15 @@ function e($dirty)
         <?php endif; ?>
 		<link rel="stylesheet" href="static/css/custom.css">
 
-        <meta name="description" content="<?php echo e($page['description']) ?>">
-        <meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
+<meta name="description" content="<?php echo e($page['description']) ?>">
+<meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <?php if (!empty($page['author'])): ?>
             <meta name="author" content="<?php echo e($page['author']) ?>">
         <?php endif; ?>
-
+        
         <script src="static/js/jquery.min.js"></script>
         <script src="static/js/prettify.js"></script>
         <script src="static/js/codemirror.min.js"></script>

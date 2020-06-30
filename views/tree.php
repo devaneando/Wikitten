@@ -13,6 +13,14 @@ function tree($array, $parent, $parts = array(), $step = 0)
     $t = '<ul class="unstyled" '.$tid.'>';
 
     foreach ($array as $key => $item) {
+        //首字母为_隐藏当前 仅登陆或者公开wiki可见
+        if (is_array($item)) {
+            if (substr($key, 0, 1) == '_' && !ifCanManage()){
+                continue;
+            }
+        }else if (substr($item, 0, 1) == '_' && !ifCanManage()){
+                continue;
+        }
         if (is_array($item)) {
             $open = $step !== false && (isset($parts[$step]) && $key == $parts[$step]);
 
@@ -22,7 +30,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
             $t .=  '</li>';
         } else {
             $selected = (isset($parts[$step]) && $item == $parts[$step]);
-            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item.'</a></li>';
+            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.str_replace('.md','',$item).'</a></li>';
         }
     }
 
