@@ -98,7 +98,8 @@ class Wiki
                 'parts' => $parts,
                 'page' => $page_data,
                 'html' => $list,
-                'is_dir' => true
+                'is_dir' => true,
+                'use_pastebin' => $this->_usePasteBin()
             ));
             return;
         }
@@ -126,7 +127,8 @@ class Wiki
                         . "<input type='submit' class='btn btn-primary' value='Create this page' />"
                         . "</form>"
                     ,
-                    'is_dir'    => false
+                    'is_dir'    => false,
+                    'use_pastebin' => $this->_usePasteBin()
                 ));
             }
         } else {
@@ -529,9 +531,17 @@ class Wiki
     {
         $request    = parse_url($_SERVER['REQUEST_URI']);
         $page       = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
+        $filepath   = LIBRARY . DIRECTORY_SEPARATOR . urldecode($page);
 
-        $filepath   = LIBRARY . urldecode($request['path']);
         $content    = "# " . htmlspecialchars($page, ENT_QUOTES, 'UTF-8');
+        if (USE_PAGE_METADATA) {
+        	$content    = 
+        	  "---\n\"title\": \"" .
+        	  htmlspecialchars($page, ENT_QUOTES, 'UTF-8') .
+        	  "\"\n---\n\n" .
+        	  $content;
+        }
+
         // if feature not enabled, go to 404
         if (!ENABLE_EDITING || file_exists($filepath)) {
             $this->_404();
