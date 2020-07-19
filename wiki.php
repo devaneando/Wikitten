@@ -149,13 +149,14 @@ class Wiki
         }
 
         $source = file_get_contents($path);
+        $contents = $source;
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $renderer = $this->_getRenderer($extension);
         $page_data = $this->_default_page_data;
 
         // Extract the JSON header, if the feature is enabled:
         if (USE_PAGE_METADATA) {
-            list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
+            list($contents, $meta_data) = $this->_extractJsonFrontMatter($source);
             $page_data = array_merge($page_data, $meta_data);
         }
 
@@ -164,15 +165,14 @@ class Wiki
 
         $html = false;
         if ($renderer && $renderer == 'HTML') {
-            $html = $renderer($source);
+            $html = $renderer($contents);
         }
         if ($renderer && $renderer == 'Markdown') {
-            $html = \Wikitten\MarkdownExtra::defaultTransform($source);
+            $html = \Wikitten\MarkdownExtra::defaultTransform($contents);
         }
 
         if (empty(trim($html))) {
             $html = "<h1>This page is empty</h1>\n";
-            $source = $parts[0];
         }
 
         $this->_view('render', array(
