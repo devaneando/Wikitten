@@ -20,3 +20,6 @@ Session.vim
 *.ori
 *.backup
 .DS_Store
+library/*
+config.php.production
+env_vars.sh

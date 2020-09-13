@@ -49,7 +49,7 @@ class Wiki
 
         $not_found = function () use ($page) {
             $page = htmlspecialchars($page, ENT_QUOTES);
-            throw new Exception("Page '$page' was not found");
+            // throw new Exception("Page '$page' was not found");
         };
 
         if (!$this->_pathIsSafe($fullPath)) {
@@ -135,9 +135,11 @@ class Wiki
 
         $finfo = finfo_open(FILEINFO_MIME);
         $mime_type = trim(finfo_file($finfo, $path));
+
         if (substr($mime_type, 0, strlen('text/plain')) != 'text/plain'
             && substr($mime_type, 0, strlen('inode/x-empty')) != 'inode/x-empty'
         ) {
+            echo ('pass through: '.$mime_type);
             // not an ASCII file, send it directly to the browser
             $file = fopen($path, 'rb');
 
@@ -152,7 +154,7 @@ class Wiki
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $renderer = $this->_getRenderer($extension);
         $page_data = $this->_default_page_data;
-
+        // var_dump($source);
         // Extract the JSON header, if the feature is enabled:
         if (USE_PAGE_METADATA) {
             list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
@@ -262,7 +264,7 @@ class Wiki
                 if ($error == JSON_ERROR_SYNTAX) {
                     $message .= ': Incorrect JSON syntax (missing comma, or double-quotes?)';
                 }
-
+                echo $message;
                 throw new RuntimeException($message);
             }
         }
@@ -436,7 +438,7 @@ class Wiki
         $source = $_POST['source'];
         $file = base64_decode($ref);
         $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
-
+        echo $ref.":".$source.":".$path;
         // Check if the file is safe to work with, otherwise just
         // give back a generic 404 aswell, so we don't allow blind
         // scanning of files:
@@ -448,6 +450,7 @@ class Wiki
 
         // Check if empty
         if(trim($source)){
+            echo "put the contents";
             // Save the changes, and redirect back to the same page
             file_put_contents($path, $source);
         }else{
@@ -455,9 +458,9 @@ class Wiki
             unlink($path);
         }
 
-        $redirect_url = BASE_URL . "/$file";
-        header("HTTP/1.0 302 Found", true);
-        header("Location: $redirect_url");
+        // $redirect_url = BASE_URL . "/$file";
+        // header("HTTP/1.0 302 Found", true);
+        // header("Location: $redirect_url");
 
         exit();
     }
