@@ -1,0 +1,39 @@
+{
+  "name": "@lilplaytime/notes",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost/projects/wikitten2/",
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "editor.md": "^1.5.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.3",
+    "wrap-md-editor": "^0.2.20"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+
+    "kill": "ps ax| grep react-scripts | grep -v grep | awk '{print $1}'| xargs kill -9    "
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
