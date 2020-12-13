@@ -133,6 +133,7 @@ form {
 }
 #sidebar li.file.active > a {
     font-weight: bold;
+    color: burlywood;
 }
 #sidebar li a, #sidebar li a:hover {
     display: block;
@@ -248,7 +249,7 @@ form {
 }
 #tree-filter-results li a:focus:before,
 #tree li a:focus:before {
-    content: "↪";
+    content: "â†ª";
     float: left;
     margin-left: -13px;
     font-weight: bold;
