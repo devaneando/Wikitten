@@ -5,7 +5,12 @@ if (!defined('APP_STARTED')) {
 
 class Wiki
 {
+    //不同后缀对应的处理器 对应renderers中的文件
     protected $_renderers = array(
+        'go' => 'showcode',
+        'c' => 'showcode',
+        'js' => 'showcode',
+        'json' => 'showcode',
         'md' => 'Markdown',
         'markdown' => 'Markdown',
         'mdown' => 'Markdown',
@@ -173,6 +178,11 @@ class Wiki
             // 换markdown引擎
             $html = \tp_Markdown\Markdown::convert($source);
             // $html = \Wikitten\MarkdownExtra::defaultTransform($source);
+        }
+        //默认的代码展示方法
+        if (false === $html){
+            require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "showcode.php";
+            $html = showcode($source, $extension);
         }
 
         if (empty(trim($html))) {
