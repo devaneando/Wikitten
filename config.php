@@ -35,7 +35,7 @@ define('USE_WIKITTEN_LOGO', false);
 
 // Enable PasteBin plugin ?
 // define('ENABLE_PASTEBIN', true);
-// define('PASTEBIN_API_KEY', '76c7756d24fe6d5204b81a3c8c4a055f');
+// define('PASTEBIN_API_KEY', '');
 
 // Enable password authentication (leave this field commented to disable password)
 define('ACCESS_USER', 'user');
