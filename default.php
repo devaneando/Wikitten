@@ -13,7 +13,7 @@ if (!defined('APP_NAME')) {
 }
 
 if (!defined('APP_ROOT')) {
-    define('APP_ROOT', '/');
+    define('APP_ROOT', dirname($_SERVER['PHP_SELF']));
 }
 
 if (!defined('LIBRARY')) {

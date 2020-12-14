@@ -548,20 +548,22 @@ class Wiki
             $this->_404();
         }
         $request    = parse_url($_SERVER['REQUEST_URI']);
-        if(defined('APP_ROOT')){
+        //过滤wiki当前目录
+        if(defined('APP_ROOT') && '/' !== APP_ROOT){
             $requestPath = urldecode(str_replace(APP_ROOT, '', $request['path']));
         }else{
             $requestPath = urldecode($request['path']);
         }
-        $page       = str_replace("###" . APP_DIR . "/", "", "###" . $requestPath);
-
+        //页面标题
+        $title = trim($requestPath, "\//");
+        //文档路径
         $filepath   = LIBRARY . $requestPath;
-        $content    = "# " . htmlspecialchars($page, ENT_QUOTES, 'UTF-8') . "\n\n```\ncode here\n```";
+        //默认内容
+        $content    = "## " . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . "\n\n```\ncode here\n```";
         // if feature not enabled, go to 404
         if (!ENABLE_EDITING || file_exists($filepath)) {
             $this->_404($filepath);
         }
-
         // Create subdirectory recursively, if neccessary
         if(!file_exists(dirname($filepath))){
             mkdir(dirname($filepath), 0755, true);
@@ -571,7 +573,7 @@ class Wiki
         file_put_contents($filepath, $content);
         if (file_exists($filepath)) {
             // Redirect to new page
-            $redirect_url = BASE_URL . "/$page";
+            $redirect_url = BASE_URL . $requestPath;
             header("HTTP/1.0 302 Found", true);
             header("Location: $redirect_url");
 
