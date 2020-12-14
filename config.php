@@ -38,8 +38,8 @@ define('USE_WIKITTEN_LOGO', false);
 // define('PASTEBIN_API_KEY', '76c7756d24fe6d5204b81a3c8c4a055f');
 
 // Enable password authentication (leave this field commented to disable password)
-define('ACCESS_USER', 'moozik');
-define('ACCESS_PASSWORD', '.52aoyun');
+define('ACCESS_USER', 'user');
+define('ACCESS_PASSWORD', 'pass');
 
 //view page without login
 define('ALLOW_EVERYONE_VIEW', true);
