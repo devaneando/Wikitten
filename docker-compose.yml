@@ -1,6 +1,9 @@
-wikitten:
-  build: .
-  ports:
-    - 9000:9000
-  volumes:
-    - .:/var/www
+version: '3'
+
+services:
+    wikitten:
+        build: .
+        ports:
+            - 9000:9000
+        volumes:
+            - .:/var/www
