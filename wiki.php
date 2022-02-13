@@ -84,19 +84,27 @@ class Wiki
             // another page, so we can make use of the tree, breadcrumb,
             // etc.
             $page_data = $this->_default_page_data;
-            $page_data['title'] = 'Listing: ' . $dir_name;
+            $page_data['title'] = '目录: ' . $dir_name;
 
             $files = scandir($path);
-            $list = "<h2>I'm just an empty folder</h2>\n";
+            $filesCount = count($files);
+            uasort($files, "strnatcasecmp");
+            $list = "<h2>404</h2>\n";
             if (2 < count($files)) {
-                $list = "<h2>I'm a folder and I have</h2><ul>\n";
-                foreach ($files as $file) {
-                    if (preg_match('/^\..*$/', $file)) {
-                        continue;
+                //排除隐藏目录
+                if (substr($dir_name, 0, 1) != "_"){
+                    $list = "<h2>目录:{$page}</h2><h5>文件总数:{$filesCount}</h5><ul>\n";
+                    foreach ($files as $file) {
+                        //忽略.开头文件
+                        if (preg_match('/^\..*$/', $file)) {
+                            continue;
+                        }
+                        $list .= "<li><a href=\"". $_SERVER['REQUEST_URI'] ."/${file}\">${file}</a></li>\n";
                     }
-                    $list .= "<li><a href=\"". $_SERVER['REQUEST_URI'] ."/${file}\">${file}</a></li>\n";
+                    $list .= "</ul>\n";
                 }
-                $list .= "</ul>\n";
+            }else{
+                rmdir($path);
             }
 
             $this->_view('render', array(
@@ -141,7 +149,8 @@ class Wiki
 
         $finfo = finfo_open(FILEINFO_MIME);
         $mime_type = trim(finfo_file($finfo, $path));
-        if (substr($mime_type, 0, strlen('text')) != 'text'
+        if (substr($mime_type, 0, strlen('application/json')) != 'application/json'
+        && substr($mime_type, 0, strlen('text')) != 'text'
             && substr($mime_type, 0, strlen('inode/x-empty')) != 'inode/x-empty'
         ) {
             // not an ASCII file, send it directly to the browser
@@ -162,10 +171,10 @@ class Wiki
         $page_data = $this->_default_page_data;
 
         // Extract the JSON header, if the feature is enabled:
-        if (USE_PAGE_METADATA) {
-            list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
-            $page_data = array_merge($page_data, $meta_data);
-        }
+        // if (USE_PAGE_METADATA) {
+        //     list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
+        //     $page_data = array_merge($page_data, $meta_data);
+        // }
 
         // We need to know the source file in case editing is enabled:
         $page_data['file'] = $page;
@@ -291,7 +300,7 @@ class Wiki
     {
         extract($variables);
 
-        $content = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . "$view.php";
+        $content = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . "{$view}.php";
 
         if (!isset($layout)) {
             $layout = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
