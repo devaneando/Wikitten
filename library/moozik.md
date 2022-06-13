@@ -21,7 +21,7 @@
 <h6 id="country" style="color:red;"></h5>
 
 
-[https://moozik.cn](https://moozik.cn)
+[https://m00zik.com](https://m00zik.com)
 **我的博客已运行**
 <h6 id="blog" style="color:orange;"></h5>
 

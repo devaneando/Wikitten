@@ -2,6 +2,7 @@
 require_once __DIR__ . '/default.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'login.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'wiki.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'util.php';
 session_start();
 
 $request_uri = parse_url($_SERVER['REQUEST_URI']);
@@ -25,51 +26,6 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") {
 define('BASE_URL', "http" . ($https ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . APP_DIR);
 
 unset($config_file, $request_uri, $script_name, $app_dir, $https);
-
-
-
-function needLogin(){
-    //login page
-    if (isset($_GET['action']) && ($_GET['action'] === 'login' || $_GET['action'] === 'logout')) {
-        return true;
-    }
-    //login check
-    if (isset($_POST['username']) && isset($_POST['password'])) {
-        return true;
-    }
-    //private wiki
-    if (defined('ACCESS_USER') && defined('ACCESS_PASSWORD') && ALLOW_EVERYONE_VIEW === false) {
-        return true;
-    }
-    //public wiki
-    if (!defined('ACCESS_USER') || !defined('ACCESS_PASSWORD')) {
-        return false;
-    }
-    //protected
-    if (defined('ACCESS_USER') && defined('ACCESS_PASSWORD') && ALLOW_EVERYONE_VIEW === true) {
-        return false;
-    }
-    return true;
-}
-
-function ifCanManage() {
-    //login user can manage
-    if (Login::isLogged()) {
-        return true;
-    }
-    //public wiki
-    if ((!defined('ACCESS_USER') || !defined('ACCESS_PASSWORD')) && ENABLE_EDITING) {
-        return true;
-    }
-    return false;
-}
-
-function isDarkTheme(){
-    if (isset($_COOKIE['ISDARK'])) {
-        return ('1' === $_COOKIE['ISDARK'])?true:false;
-    }
-    return USE_DARK_THEME;
-}
 
 if (needLogin()) {
     Login::instance()->dispatch();

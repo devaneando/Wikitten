@@ -10,6 +10,12 @@ if (!defined('APP_STARTED')) {
  */
 class Login
 {
+    protected $_default_page_data = array(
+        'title' => false, // will use APP_NAME by default
+        'description' => 'Wikitten is a small, fast, PHP wiki.',
+        'tags' => array('wikitten', 'wiki'),
+        'page' => ''
+    );
     /**
      * Constructor
      */

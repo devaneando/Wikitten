@@ -14,7 +14,7 @@ define('APP_NAME', '魔力之所wiki');
 // define('APP_ROOT', '');
 
 // Set the filename of the automatic homepage here
-define('DEFAULT_FILE', '魔力之所.md');
+define('DEFAULT_FILE', 'index.md');
 
 // Custom path to your wiki's library:
 define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');

@@ -104,12 +104,12 @@ code, pre {
                         <?php
                         if (!Login::isLogged() && defined('ACCESS_USER') && defined('ACCESS_PASSWORD')):
                         ?>
-                        <a href="<?php echo BASE_URL; ?>/?action=login" class="btn btn-secondary btn-xs">Login</a>
+                        <a href="<?php echo BASE_URL; ?>/?action=login" class="btn btn-secondary btn-xs">登录</a>
                         <?php
                         endif;
                         if (Login::isLogged() && defined('ACCESS_USER') && defined('ACCESS_PASSWORD')):
                         ?>
-                        <a href="<?php echo BASE_URL; ?>/?action=logout" class="btn btn-secondary btn-xs">logout</a>
+                        <a href="<?php echo BASE_URL; ?>/?action=logout" class="btn btn-secondary btn-xs">登出</a>
                         <?php
                         endif;
                         ?>
@@ -118,11 +118,11 @@ code, pre {
                         <?php
                         if (isDarkTheme()):
                         ?>
-                        <a href="javascript:SetCookie('ISDARK',0);location.reload();" class="btn btn-light btn-xs" style="color: #212529;background-color: #f8f9fa;border-color: #f8f9fa;">light</a>
+                        <a href="javascript:SetCookie('ISDARK',0);location.reload();" class="btn btn-light btn-xs" style="color: #212529;background-color: #f8f9fa;border-color: #f8f9fa;">白背景</a>
                         <?php
                         else:
                         ?>
-                        <a href="javascript:SetCookie('ISDARK',1);location.reload();" class="btn btn-dark btn-xs">dark</a>
+                        <a href="javascript:SetCookie('ISDARK',1);location.reload();" class="btn btn-dark btn-xs">黑背景</a>
                         <?php
                         endif;
                         ?>

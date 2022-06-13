@@ -8,6 +8,14 @@ class Wiki
     //不同后缀对应的处理器 对应renderers中的文件
     protected $_renderers = array(
         'go' => 'showcode',
+        'php' => 'showcode',
+        'sh' => 'showcode',
+        'css' => 'showcode',
+        'py' => 'showcode',
+        'rb' => 'showcode',
+        'sql' => 'showcode',
+        'scm' => 'showcode',
+        'xml' => 'showcode',
         'c' => 'showcode',
         'js' => 'showcode',
         'json' => 'showcode',
@@ -89,20 +97,22 @@ class Wiki
             $files = scandir($path);
             $filesCount = count($files);
             uasort($files, "strnatcasecmp");
-            $list = "<h2>404</h2>\n";
+            $list = "";
             if (2 < count($files)) {
                 //排除隐藏目录
-                if (substr($dir_name, 0, 1) != "_"){
-                    $list = "<h2>目录:{$page}</h2><h5>文件总数:{$filesCount}</h5><ul>\n";
-                    foreach ($files as $file) {
-                        //忽略.开头文件
-                        if (preg_match('/^\..*$/', $file)) {
-                            continue;
-                        }
-                        $list .= "<li><a href=\"". $_SERVER['REQUEST_URI'] ."/${file}\">${file}</a></li>\n";
-                    }
-                    $list .= "</ul>\n";
+                if (!ifCanShow($dir_name)){
+                    //隐藏目录报错
+                    $not_found();
                 }
+                $list = "<h2>目录:{$page}</h2><h5>文件总数:{$filesCount}</h5><ul>\n";
+                foreach ($files as $file) {
+                    //忽略.开头文件
+                    if (preg_match('/^\..*$/', $file)) {
+                        continue;
+                    }
+                    $list .= "<li><a href=\"". $_SERVER['REQUEST_URI'] ."/${file}\">${file}</a></li>\n";
+                }
+                $list .= "</ul>\n";
             }else{
                 rmdir($path);
             }
@@ -161,6 +171,11 @@ class Wiki
 
             fpassthru($file);
             exit();
+        }
+        foreach($parts as $fItem){
+            if(!ifCanShow($fItem)){
+                $not_found();
+            }
         }
 
         $source = file_get_contents($path);

@@ -37,9 +37,6 @@ function e($dirty)
             <link rel="stylesheet" href="static/css/main.css">
         <?php endif; ?>
 		<link rel="stylesheet" href="static/css/custom.css">
-
-<meta name="description" content="<?php echo e($page['description']) ?>">
-<meta name="keywords" content="<?php echo e(join(',', $page['tags'])) ?>">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -74,7 +71,7 @@ function e($dirty)
 
                             <form action="" method="post">
                               <div class="input-group">
-                                  <input name="username" type="text" placeholder="Enter your username" class="form-control input-sm">
+                                  <input name="username" type="text" placeholder="输入用户名" class="form-control input-sm">
 
                                   <a title="Clear current search..." class="input-group-addon input-sm">
                                       <i class="glyphicon glyphicon-user"></i>
@@ -84,7 +81,7 @@ function e($dirty)
                               <br />
 
                               <div class="input-group">
-                                  <input name="password" type="password" placeholder="Enter your password" class="form-control input-sm">
+                                  <input name="password" type="password" placeholder="输入密码" class="form-control input-sm">
 
                                   <a title="Clear current search..." class="input-group-addon input-sm">
                                       <i class="glyphicon glyphicon-lock"></i>
