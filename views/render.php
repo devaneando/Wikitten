@@ -1,14 +1,13 @@
-<?php if (!defined('APP_STARTED')) {
+<?php
+if (!defined('APP_STARTED')) {
     die('Forbidden!');
-} ?>
+}
+?>
 <div class="breadcrumbs">
     <div class="pull-right">
         <?php if ($html && isset($source)): ?>
             <a href="javascript:;" class="btn-black" id="toggle">源码</a>
         <?php endif ?>
-        <?php if (isset($use_pastebin) && $use_pastebin): ?>
-            <a href="javascript:;" class="btn-black" id="create-pastebin" title="Create public Paste on PasteBin">Create public Paste</a>
-        <?php endif; ?>
     </div>
 
     <?php $path = array(); ?>
@@ -47,9 +46,6 @@
 </div>
 
 <?php if ($html): ?>
-    <?php if (isset($use_pastebin) && $use_pastebin): ?>
-    <div id="pastebin-notification" class="alert" style="display:none;"></div>
-    <?php endif; ?>
     <div id="render">
         <?php echo $html; ?>
     </div>
@@ -65,24 +61,21 @@
 <?php endif ?>
 
 <?php if (isset($source)): ?>
-    <?php if ($use_pastebin): ?>
-    <div id="pastebin-notification" class="alert" style="display:none;"></div>
-    <?php endif; ?>
     <div id="source">
-        <?php if (ENABLE_EDITING && ifCanManage()): ?>
+        <?php if (ifCanEdit($parts)): ?>
             <div class="alert alert-info">
                 <i class="fa fa-pencil-alt"></i> <strong>修改模式</strong> 使用保存按钮提交你的修改
             </div>
         <?php endif ?>
 
         <form method="POST" action="<?php echo BASE_URL . "/?a=edit" ?>">
-            <?php if (ENABLE_EDITING && ifCanManage()): ?>
+            <?php if (ifCanEdit($parts)): ?>
                     <input type="submit" class="btn btn-warning btn-sm" id="submit-edits" value="保存">
             <?php endif ?>
             <input type="hidden" name="ref" value="<?php echo base64_encode($page['file']) ?>">
             <textarea id="editor" name="source" class="form-control" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
 
-            <?php if (ENABLE_EDITING && ifCanManage()): ?>
+            <?php if (ifCanEdit($parts)): ?>
                 <div class="form-actions">
                     <input type="submit" class="btn btn-warning btn-sm" id="submit-edits" value="保存">
                 </div>
@@ -129,7 +122,7 @@
             lineWrapping: true,
             theme: '<?=USE_DARK_THEME?'tomorrow-night-bright':'default'?>',
             mode: mode,
-            <?=ENABLE_EDITING?'':'readOnly: true'?>
+            <?=ifCanEdit($parts)?'':'readOnly: true'?>
         };
         var editor = CodeMirror.fromTextArea(document.getElementById('editor'), codeConfig);
         
@@ -142,31 +135,5 @@
             }
 
         });
-
-        <?php if ($use_pastebin): ?>
-        $('#create-pastebin').on('click', function (event) {
-            event.preventDefault();
-
-            $(this).addClass('disabled');
-
-            var notification = $('#pastebin-notification');
-            notification.removeClass('alert-info alert-error').html('').hide();
-
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo BASE_URL . '/?a=createPasteBin'; ?>',
-                data: { ref: '<?php echo base64_encode($page['file']); ?>' },
-                context: $(this)
-            }).done(function(response) {
-                $(this).removeClass('disabled');
-
-                if (response.status === 'ok') {
-                    notification.addClass('alert-info').html('Paste URL: ' + response.url).show();
-                } else {
-                    notification.addClass('alert-error').html('Error: ' + response.error).show();
-                }
-            });
-        });
-        <?php endif; ?>
     </script>
 <?php endif ?>

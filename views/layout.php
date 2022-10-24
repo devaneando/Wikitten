@@ -25,25 +25,19 @@ function e($dirty)
         <link rel="shortcut icon" href="static/img/favicon.ico">
 
         <?php if(isDarkTheme()) : ?>
-            <link rel="stylesheet" href="static/css/bootstrap_dark.min.css">
-            <link rel="stylesheet" href="static/css/dark/prettify-dark.css">
-            <link rel="stylesheet" href="static/css/main_dark.css">
-            <!--<link rel="stylesheet" href="static/css/dark/codemirror-tomorrow-night-bright.css">-->
-            <link href="https://cdn.bootcss.com/codemirror/5.48.4/theme/tomorrow-night-bright.css" rel="stylesheet">
+            <link href="<?=staticPath("cdn.jsdelivr.net/npm/bootswatch@4.3.1/dist/darkly/bootstrap.min.css")?>" rel="stylesheet" >
+            <link href="static/css/darkly/main.css" rel="stylesheet">
+            <link href="static/css/darkly/prettify-dark.css" rel="stylesheet">
+            <link href="<?=staticPath("cdn.bootcss.com/codemirror/5.48.4/theme/tomorrow-night-bright.css")?>" rel="stylesheet">
         <?php else: ?>
-            <!--<link rel="stylesheet" href="static/css/bootstrap.min.css">-->
-            <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+            <link href="<?=staticPath("cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css")?>" rel="stylesheet">
             <link rel="stylesheet" href="static/css/prettify.css">
-            <?php if(!empty(CUSTOM_MARKDOWN_STYLESHEET) && (file_exists(__DIR__ . '/../static/css/custom-styles/'.CUSTOM_MARKDOWN_STYLESHEET))) : ?>
-                <link rel="stylesheet" href="static/css/custom-styles/<?php echo(CUSTOM_MARKDOWN_STYLESHEET) ?>">
-            <?php endif; ?>
-            <link rel="stylesheet" href="static/css/main.css">
+            <link href="static/css/main.css" rel="stylesheet">
         <?php endif; ?>
 
-        <!--<link rel="stylesheet" href="static/css/codemirror.css">-->
-        <link href="https://cdn.bootcss.com/codemirror/5.48.4/codemirror.min.css" rel="stylesheet">
-        <!--<link rel="stylesheet" href="static/css/all.min.css">-->
-        <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+
+        <link href="<?=staticPath("cdn.bootcss.com/codemirror/5.48.4/codemirror.min.css")?>" rel="stylesheet">
+        <link href="<?=staticPath("cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css")?>" rel="stylesheet">
         <link rel="stylesheet" href="static/css/custom.css">
 
         <meta name="description" content="<?php echo e($page['description']) ?>">
@@ -55,42 +49,17 @@ function e($dirty)
             <meta name="author" content="<?php echo e($page['author']) ?>">
         <?php endif; ?>
 
-        <!--<script src="static/js/jquery.min.js"></script>-->
-        <script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+        <script src="<?=staticPath("cdn.bootcss.com/jquery/1.11.2/jquery.min.js")?>"></script>
         <script src="static/js/prettify.js"></script>
-        <!--<script src="static/js/codemirror.min.js"></script>-->
-        <script src="https://cdn.bootcss.com/codemirror/5.48.4/codemirror.min.js"></script>
-        <script src="https://cdn.bootcss.com/codemirror/5.48.4/mode/markdown/markdown.min.js"></script>
-        <!--<script src="https://cdn.bootcss.com/marked/0.7.0/marked.min.js"></script>-->
+        <script src="<?=staticPath("cdn.bootcss.com/codemirror/5.48.4/codemirror.min.js")?>"></script>
+        <script src="<?=staticPath("cdn.bootcss.com/codemirror/5.48.4/mode/markdown/markdown.min.js")?>"></script>
+        <script src="static/js/diy.js"></script>
+
 <style>
-.CodeMirror {
-    height: auto;
-}
-p code{
-padding: 2px;
-border-radius: 5px;
-background-color: sienna;
-color: white;
-}
-.CodeMirror-scroll {
-overflow: auto;
-}
-hr{
-border-top: 2px solid rgba(255, 255, 255, 0.4);
-}
-code, pre {
-    font-family: consolas;
-}
 </style>
     </head>
 <body>
     <div id="main">
-        <?php if (USE_WIKITTEN_LOGO === true): ?>
-            <a href="http://wikitten.vizuina.com" id="logo" target="_blank" class="hidden-phone">
-                <img src="static/img/logo.png" alt="">
-                <div class="bubble">Remember to check for updates!</div>
-            </a>
-        <?php endif; ?>
         <div class="inner">
             <div class="container-fluid">
                 <div class="row">
@@ -140,13 +109,6 @@ code, pre {
         </div>
     </div>
     <script>
-        <?php if (USE_WIKITTEN_LOGO === true): ?>
-            $(document).ready(function () {
-                $('#logo').delay(2000).animate({
-                    left: '20px'
-                }, 600);
-            });
-        <?php endif; ?>
     function SetCookie(name, value) {
         var exp = new Date();
         exp.setTime(exp.getTime() + 30 * 24 * 60 * 60 * 1000); //3天过期

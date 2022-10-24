@@ -10,12 +10,6 @@ if (!defined('APP_STARTED')) {
  */
 class Login
 {
-    protected $_default_page_data = array(
-        'title' => false, // will use APP_NAME by default
-        'description' => 'Wikitten is a small, fast, PHP wiki.',
-        'tags' => array('wikitten', 'wiki'),
-        'page' => ''
-    );
     /**
      * Constructor
      */
@@ -33,7 +27,7 @@ class Login
      * Check if the user is logged
      * @return boolean
      */
-    public static function isLogged()
+    public static function isLogged(): bool
     {
         if (isset($_COOKIE['token']) && $_COOKIE['token'] === md5(ACCESS_USER.ACCESS_PASSWORD)){
             return true;
@@ -50,12 +44,12 @@ class Login
 
     /**
      * Do the login
-     * @param  string $ip       IP address
-     * @param  string $username Username
-     * @param  string $password Password
+     * @param string $ip       IP address
+     * @param string $username Username
+     * @param string $password Password
      * @return boolean
      */
-    private function doLogin($ip, $username, $password)
+    private function doLogin(string $ip, string $username, string $password): bool
     {
         // Check the access to this function, using logs and ip
         //--> to be implemented
@@ -73,21 +67,20 @@ class Login
 
     /**
      * Logout from the password protected area
-     * @return boolean Always true
+     * @return void
      */
-    private function doLogout()
+    private function doLogout(): void
     {
         $_SESSION['ACCESS_USER'] = '';
         $_SESSION['ACCESS_PASSWORD'] = '';
         setcookie("token",'', time()-1);
-        return true;
     }
 
     /**
      * Get the IP address of the visitor
      * @return string
      */
-    private function getRealIpAddr()
+    private function getRealIpAddress(): string
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {   //check ip from share internet
             return $_SERVER['HTTP_CLIENT_IP'];
@@ -109,7 +102,7 @@ class Login
             return true;
         }
 
-        $ip = $this->getRealIpAddr();
+        $ip = $this->getRealIpAddress();
 
         $username = isset($_POST['username']) ? htmlspecialchars($_POST['username']) : null;
         $password = isset($_POST['password']) ? htmlspecialchars($_POST['password']) : null;
@@ -137,7 +130,7 @@ class Login
      * Singleton
      * @return Login
      */
-    public static function instance()
+    public static function instance(): Login
     {
         static $instance;
         if (!($instance instanceof self)) {

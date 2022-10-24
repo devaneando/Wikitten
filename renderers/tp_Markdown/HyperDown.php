@@ -216,7 +216,7 @@ class HyperDown
     private function releaseHolder($text, $clearHolders = true)
     {
         $deep = 0;
-        while (strpos($text, "\r") !== false && $deep < 10) {
+        while (str_contains($text, "\r") && $deep < 10) {
             $text = str_replace(array_keys($this->_holders), array_values($this->_holders), $text);
             $deep ++;
         }
@@ -763,7 +763,7 @@ class HyperDown
                             $this->startBlock('normal', $key);
                         }
                     } else if ($this->isBlock('table')) {
-                        if (false !== strpos($line, '|')) {
+                        if (str_contains($line, '|')) {
                             $block[3][2] ++;
                             $this->setBlock($key, $block[3]);
                         } else {
@@ -995,7 +995,7 @@ class HyperDown
         foreach ($lines as $key => $line) {
             if (preg_match("/^(\s*)((?:[0-9a-z]+\.?)|\-|\+|\*)(\s+)(.*)$/", $line, $matches)) {
                 $space = strlen($matches[1]);
-                $type = false !== strpos('+-*', $matches[2]) ? 'ul' : 'ol';
+                $type = str_contains('+-*', $matches[2]) ? 'ul' : 'ol';
                 $minSpace = min($space, $minSpace);
 
                 $rows[] = array($space, $type, $line, $matches[4]);

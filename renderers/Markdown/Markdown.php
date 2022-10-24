@@ -1714,7 +1714,7 @@ class Markdown implements MarkdownInterface {
 				// roughly 10% raw, 45% hex, 45% dec
 				// '@' *must* be encoded. I insist.
 				// '"' and '>' have to be encoded inside the attribute
-				if ($r > 90 && strpos('@"&>', $char) === false) {
+				if ($r > 90 && !str_contains('@"&>', $char)) {
 					/* do nothing */
 				} else if ($r < 45) {
 					$chars[$key] = '&#x'.dechex($ord).';';

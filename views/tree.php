@@ -11,14 +11,12 @@ function tree($array, $parent, $parts = array(), $step = 0)
 
     $tid = ($step == 0) ? 'id="tree"' : '';
     $t = '<ul class="unstyled" '.$tid.'>';
-
     foreach ($array as $key => $item) {
-        //首字母为_隐藏当前 仅登陆或者公开wiki可见
         if (is_array($item)) {
-            if (substr($key, 0, 1) == '_' && !ifCanManage()){
+            if (!ifCanShow([$key])){
                 continue;
             }
-        }else if (substr($item, 0, 1) == '_' && !ifCanManage()){
+        }else if (!ifCanShow([$item])){
                 continue;
         }
         if (is_array($item)) {
@@ -30,7 +28,14 @@ function tree($array, $parent, $parts = array(), $step = 0)
             $t .=  '</li>';
         } else {
             $selected = (isset($parts[$step]) && $item == $parts[$step]);
-            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.str_replace('.md','',$item).'</a></li>';
+
+            $t .= '<li class="file'. ($selected ? ' active' : '') .'">';
+            if (str_ends_with($item, '.json')) {
+                $t .= '<a target="_blank" href="'. $parent .'/'. $item . '">'.$item.'</a>';
+            } else {
+                $t .= '<a href="'. $parent .'/'. $item . '">'.str_replace('.md','',$item).'</a>';
+            }
+            $t .='</li>';
         }
     }
 
@@ -41,7 +46,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
 ?>
 
 <div id="tree-filter" class="input-group">
-  <input type="text" id="tree-filter-query" class="form-control" placeholder="Search file &amp; directory names." aria-label="Search" aria-describedby="search-addon">
+  <input type="text" id="tree-filter-query" class="form-control" placeholder="搜索文件或目录名." aria-label="Search" aria-describedby="search-addon">
   <div class="input-group-append">
     <button type="button" id="tree-filter-clear-query" class="btn  btn-outline-secondary" title="Clear current search..." disabled>
       <i class="fas fa-times"></i>
@@ -51,7 +56,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
 
 <ul class="unstyled" id="tree-filter-results"></ul>
 
-<?php echo tree($this->_getTree(), BASE_URL, isset($parts) ? $parts : array()); ?>
+<?php echo tree($this->_getTree(), BASE_URL, $parts ?? array()); ?>
 
 <script>
     // Case-insensitive alternative to :contains():
