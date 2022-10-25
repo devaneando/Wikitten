@@ -23,7 +23,8 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") {
     $https = true;
 }
 
-define('BASE_URL', "http" . ($https ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . APP_DIR);
+//define('BASE_URL', "http" . ($https ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . APP_DIR);
+define('BASE_URL', APP_DIR);
 
 unset($config_file, $request_uri, $script_name, $app_dir, $https);
 

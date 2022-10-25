@@ -22,14 +22,27 @@ class Wiki
         'c' => 'showcode',
         'js' => 'showcode',
         'json' => 'showcode',
+        'puml' => 'showcode',
+        'lua' => 'showcode',
         'md' => 'Markdown',
         'markdown' => 'Markdown',
         'mdown' => 'Markdown',
         'htm' => 'HTML',
         'html' => 'HTML'
     );
-    protected string $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
-    protected bool $_force_unignore = false; // always show these files (false to disable)
+    /**
+     * 用于判断是否为文件
+     *
+     * @var array|bool[]
+     */
+    protected array $_file_ext = array(
+        "jpg" => true,
+        "jpeg" => true,
+        "png" => true,
+        "webp" => true,
+        "woff" => true,
+        "woff2" => true,
+    );
 
     protected string $_action;
 
@@ -39,6 +52,29 @@ class Wiki
         'tags' => array('wikitten', 'wiki'),
         'page' => ''
     );
+
+    const DIR_KEY = 0;
+    const FILE_KEY = 1;
+    /**
+     * Singleton
+     * @return Wiki
+     */
+    public static function instance(): Wiki
+    {
+        static $instance;
+        if (!($instance instanceof self)) {
+            $instance = new Wiki();
+        }
+        return $instance;
+    }
+
+    public function __construct() {
+        $this->_file_ext = array_merge($this->_file_ext, $this->_renderers);
+    }
+
+    protected function ifShowHide() {
+
+    }
 
     /**
      * @param string $extension
@@ -342,31 +378,42 @@ class Wiki
         exit;
     }
 
-    protected function _getTree($dir = LIBRARY)
+    /**
+     * 获取目录递归结构
+     * @param string $dir
+     * @return array
+     */
+    protected function _getTree(string $dir = LIBRARY)
     {
-        $return = array('directories' => array(), 'files' => array());
+        $return = array(self::DIR_KEY => array(), self::FILE_KEY => array());
 
         $items = scandir($dir);
-        foreach ($items as $item) {
-            if (preg_match($this->_ignore, $item)) {
-                if ($this->_force_unignore === false || !preg_match($this->_force_unignore, $item)) {
-                    continue;
-                }
-            }
 
-            $path = $dir . DIRECTORY_SEPARATOR . $item;
-            if (is_dir($path)) {
-                $return['directories'][$item] = $this->_getTree($path);
+        foreach ($items as $item) {
+            if (str_starts_with($item, '.') || str_starts_with($item, 'CVS')) {
+                continue;
+            }
+            //不展示隐藏文件
+            if (!ifCanShow([$item])) {
                 continue;
             }
 
-            $return['files'][$item] = $item;
+            //优先通过后缀判断是文件还是目录
+            if (array_key_exists(pathinfo($item, PATHINFO_EXTENSION), $this->_file_ext)) {
+                $return[self::FILE_KEY][] = $item;
+                continue;
+            }
+            $path = $dir . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($path)) {
+                $return[self::DIR_KEY][$item] = $this->_getTree($path);
+                continue;
+            }
+            $return[self::FILE_KEY][] = $item;
         }
+        uksort($return[self::DIR_KEY], "strnatcasecmp");
+        uksort($return[self::FILE_KEY], "strnatcasecmp");
 
-        uksort($return['directories'], "strnatcasecmp");
-        uksort($return['files'], "strnatcasecmp");
-
-        return $return['directories'] + $return['files'];
+        return $return;
     }
 
     public function dispatch(): void
@@ -507,19 +554,6 @@ class Wiki
         header("Location: $redirect_url");
 
         exit();
-    }
-
-    /**
-     * Singleton
-     * @return Wiki
-     */
-    public static function instance(): Wiki
-    {
-        static $instance;
-        if (!($instance instanceof self)) {
-            $instance = new self();
-        }
-        return $instance;
     }
 
     public function createAction(): void

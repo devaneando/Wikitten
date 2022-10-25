@@ -10,6 +10,7 @@ if (!defined('APP_STARTED')) {
  */
 class Login
 {
+    private static ?bool $is_logged = null;
     /**
      * Constructor
      */
@@ -29,17 +30,23 @@ class Login
      */
     public static function isLogged(): bool
     {
+        if (self::$is_logged != null) {
+            return self::$is_logged;
+        }
         if (isset($_COOKIE['token']) && $_COOKIE['token'] === md5(ACCESS_USER.ACCESS_PASSWORD)){
-            return true;
+            self::$is_logged = true;
+            return self::$is_logged;
         }
         if (empty($_SESSION['ACCESS_USER']) || empty($_SESSION['ACCESS_PASSWORD'])) {
-            return false;
+            self::$is_logged = false;
+            return self::$is_logged;
         }
         if ($_SESSION['ACCESS_USER'] !== ACCESS_USER || $_SESSION['ACCESS_PASSWORD'] !== ACCESS_PASSWORD) {
-            return false;
+            self::$is_logged = false;
+            return self::$is_logged;
         }
-
-        return true;
+        self::$is_logged = true;
+        return self::$is_logged;
     }
 
     /**

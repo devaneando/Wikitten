@@ -1,9 +1,9 @@
 version: "3.7"
 services:
     wikitten:
-        pid: wikitten-7.4
-        container_name: wikitten-7.4
-        image: wikitten-7.4
+        pid: wikitten
+        container_name: wikitten-8.1
+        image: wikitten-8.1
         build:
             context: ./
             dockerfile: Dockerfile

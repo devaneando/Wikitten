@@ -3,42 +3,28 @@ if (!defined('APP_STARTED')) {
     die('Forbidden!');
 }
 
-function tree($array, $parent, $parts = array(), $step = 0)
+function tree($array, $parent, $parts = array(), $step = 0): string
 {
-    if (!count($array)) {
-        return '';
+    if (count($array) == 0) {
+        return '<ul></ul>';
     }
 
     $tid = ($step == 0) ? 'id="tree"' : '';
     $t = '<ul class="unstyled" '.$tid.'>';
-    foreach ($array as $key => $item) {
-        if (is_array($item)) {
-            if (!ifCanShow([$key])){
-                continue;
-            }
-        }else if (!ifCanShow([$item])){
-                continue;
-        }
-        if (is_array($item)) {
-            $open = $step !== false && (isset($parts[$step]) && $key == $parts[$step]);
+    //目录
+    foreach ($array[0] as $key => $item) {
+        $open = $step !== false && (isset($parts[$step]) && $key === $parts[$step]);
 
-            $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
-                $t .= '<a href="#" data-role="directory"><i class="far fa-folder'. ($open ? '-open' : '') .'"></i>&nbsp; ' . $key . '</a>';
-                $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
-            $t .=  '</li>';
-        } else {
-            $selected = (isset($parts[$step]) && $item == $parts[$step]);
-
-            $t .= '<li class="file'. ($selected ? ' active' : '') .'">';
-            if (str_ends_with($item, '.json')) {
-                $t .= '<a target="_blank" href="'. $parent .'/'. $item . '">'.$item.'</a>';
-            } else {
-                $t .= '<a href="'. $parent .'/'. $item . '">'.str_replace('.md','',$item).'</a>';
-            }
-            $t .="</li>\n";
-        }
+        $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
+        $t .= '<a href="#" data-role="directory"><i class="far fa-folder'. ($open ? '-open' : '') .'"></i>' . $key . '</a>';
+        $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
+        $t .=  '</li>';
     }
-
+    //文件
+    foreach ($array[1] as $item) {
+        $selected = (isset($parts[$step]) && $item === $parts[$step]);
+        $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item."</a></li>\n";
+    }
     $t .= "</ul>\n\n";
 
     return $t;
@@ -153,7 +139,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
             var open = icon.hasClass(iconFolderOpenClass);
             var subtree = $(this).siblings('ul')[0];
 
-            icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+            // icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
 
             if (open) {
                 if (typeof subtree != 'undefined') {
