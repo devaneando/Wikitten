@@ -31,7 +31,7 @@ class Wiki
     protected string $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
     protected bool $_force_unignore = false; // always show these files (false to disable)
 
-    protected mixed $_action;
+    protected string $_action;
 
     protected array $_default_page_data = array(
         'title' => false, // will use APP_NAME by default
@@ -44,7 +44,7 @@ class Wiki
      * @param string $extension
      * @return string|callable
      */
-    protected function _getRenderer(string $extension): callable|bool|string
+    protected function _getRenderer(string $extension)
     {
         if (!isset($this->_renderers[$extension])) {
             return false;
@@ -128,12 +128,13 @@ class Wiki
             ));
             return;
         }
+        //后缀
+        $extension = substr($fullPath, strrpos($fullPath, '.') + 1, 20);
         if (empty($path)) {
             //$path为空代表文件没找到
             if (!ifCanEdit($parts)) {
                 $not_found();
             }
-            $extension = substr($fullPath, strrpos($fullPath, '.') + 1, 20);
             if (false === $this->_getRenderer($extension)) {
                 $not_found();
             } elseif (!file_exists($fullPath)) {
@@ -164,14 +165,20 @@ class Wiki
         $finfo = finfo_open(FILEINFO_MIME);
         $mime_type = trim(finfo_file($finfo, $path));
         if (
-            //!str_starts_with($mime_type, 'application/json') &&
+            (!str_starts_with($mime_type, 'application/json') &&
         !str_starts_with($mime_type, 'text')
-            && !str_starts_with($mime_type, 'inode/x-empty')
+            && !str_starts_with($mime_type, 'inode/x-empty')) || array_key_exists("raw", $_GET)
         ) {
             // not an ASCII file, send it directly to the browser
             $file = fopen($path, 'rb');
-
-            header("Content-Type: $mime_type");
+            switch ($extension){
+                case "json": $mime_type = "application/json"; break;
+                case "js": $mime_type = "application/javascript"; break;
+                case "html": $mime_type = "text/html"; break;
+                case "txt":
+                case "md": $mime_type = "text/plain"; break;
+            }
+            header("Content-Type: {$mime_type}; charset=utf-8");
             header("Content-Length: " . filesize($path));
 
             fpassthru($file);
@@ -528,7 +535,7 @@ class Wiki
             $this->_404();
         }
         //页面标题
-        $title = trim($requestPath, "\//");
+        $title = trim($requestPath, "\/");
         //文档路径
         $filepath   = LIBRARY . $requestPath;
         //默认内容

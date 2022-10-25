@@ -1,17 +1,14 @@
-## 源码
-**修改自**
+### 感谢开源代码Wikitten
 
-https://github.com/devaneando/Wikitten
+**github**：https://github.com/devaneando/Wikitten
+**示例**：https://wikitten.vizuina.com/
 
-**本项目源码**
+### 当前wiki源码
 
-https://github.com/moozik/Wikitten
+**github**: https://github.com/moozik/Wikitten
+**示例**: https://wiki.moozik.com/
 
-**效果预览**
-
-https://wiki.m00zik.com/
-
-## 我做了一些修改
+### 改动
 
 1. dark、light按钮用来切换两个皮肤
 2. 隐藏了md后缀
@@ -19,19 +16,12 @@ https://wiki.m00zik.com/
 4. 换了一套markdown解析程序（typecho的解析器），支持在markdown中插入html片段
 5. 显示文件修改时间
 6. 细化权限管理方式
-7. 迁移php8.1
+7. 支持php7.4~php8.1
 8. 通过配置切换是否优先使用本地静态资源
 
 ---
 
-## 添加代码
-```
-//你的代码
-```
-
----
-
-## 添加js特效
+### 添加js特效
 
 <h5 class="wikiTimer" data-pre="距离中华民族伟大复兴还有：" data-downtime='2050-10-01 00:00:00' style="color:orange;"></h5>
 

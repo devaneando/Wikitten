@@ -24,10 +24,6 @@ if (!defined('DEFAULT_FILE')) {
     define('DEFAULT_FILE', 'index.md');
 }
 
-if (!defined('USE_DARK_THEME')) {
-    define('USE_DARK_THEME', true);
-}
-
 if (!defined('ACCESS_USER')) {
     define('ACCESS_USER', 'user');
 }

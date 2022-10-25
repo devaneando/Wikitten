@@ -35,11 +35,11 @@ function tree($array, $parent, $parts = array(), $step = 0)
             } else {
                 $t .= '<a href="'. $parent .'/'. $item . '">'.str_replace('.md','',$item).'</a>';
             }
-            $t .='</li>';
+            $t .="</li>\n";
         }
     }
 
-    $t .= '</ul>';
+    $t .= "</ul>\n\n";
 
     return $t;
 }
@@ -81,7 +81,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
 
             // Handle live search/filtering:
             tree             = $('#tree'),
-            resultsTree      = $('#tree-filter-results')
+            resultsTree      = $('#tree-filter-results'),
             filterInput      = $('#tree-filter-query'),
             clearFilterInput = $('#tree-filter-clear-query')
         ;
@@ -106,7 +106,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
 
         // Same thing if the user presses ESC and the filter is active:
         $(document).keyup(function(e) {
-            e.keyCode == 27 && filterInput.hasClass('active') && cancelFilterAction();
+            e.keyCode === 27 && filterInput.hasClass('active') && cancelFilterAction();
         });
 
         // Perform live searches as the user types:
@@ -114,7 +114,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
         filterInput.bind('input', function() {
             var value         = filterInput.val(),
                 query         = $.trim(value),
-                isActive      = value != ''
+                isActive      = value !== ''
             ;
 
             // Add a visual cue to show that the filter function is active:

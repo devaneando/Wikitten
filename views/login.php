@@ -10,7 +10,7 @@ function e($dirty): string
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="zh">
     <head>
         <meta charset="utf-8">
 
@@ -22,7 +22,7 @@ function e($dirty): string
 
         <base href="<?php echo BASE_URL; ?>/">
 
-        <link rel="shortcut icon" href="static/img/favicon.ico">
+        <link rel="shortcut icon" href="static/img/favicon.png">
 
         <?php if (isDarkTheme()): ?>
             <link href="<?=staticPath("cdn.jsdelivr.net/npm/bootswatch@4.3.1/dist/darkly/bootstrap.min.css")?>" rel="stylesheet" >

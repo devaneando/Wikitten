@@ -6,7 +6,8 @@ if (!defined('APP_STARTED')) {
 <div class="breadcrumbs">
     <div class="pull-right">
         <?php if ($html && isset($source)): ?>
-            <a href="javascript:;" class="btn-black" id="toggle">源码</a>
+            <a href="javascript:" class="btn-black" id="toggle">源码</a>
+            <a href="javascript:window.open(document.location.pathname + '?raw');" class="btn-black">raw link</a>
         <?php endif ?>
     </div>
 
@@ -120,7 +121,7 @@ if (!defined('APP_STARTED')) {
         var codeConfig = {
             lineNumbers: true,
             lineWrapping: true,
-            theme: '<?=USE_DARK_THEME?'tomorrow-night-bright':'default'?>',
+            theme: '<?=isDarkTheme()?'tomorrow-night-bright':'default'?>',
             mode: mode,
             <?=ifCanEdit($parts)?'':'readOnly: true'?>
         };

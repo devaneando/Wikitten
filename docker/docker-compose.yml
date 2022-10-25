@@ -1,9 +1,9 @@
 version: "3.7"
 services:
     wikitten:
-        pid: wikitten
-        container_name: wikitten
-        image: wikitten
+        pid: wikitten-7.4
+        container_name: wikitten-7.4
+        image: wikitten-7.4
         build:
             context: ./
             dockerfile: Dockerfile
@@ -15,3 +15,4 @@ services:
             - ./logs:/var/log/php/
         env_file:
             - .env
+        restart: always

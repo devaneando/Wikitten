@@ -133,6 +133,28 @@ function isDarkTheme(): bool
     if (isset($_COOKIE['ISDARK'])) {
         return '1' === $_COOKIE['ISDARK'];
     }
-    return USE_DARK_THEME;
+    return true;
 }
 
+if (!function_exists('str_starts_with')) {
+    function str_starts_with($haystack, $needle): bool
+    {
+        $len = mb_strlen($needle);
+        return mb_substr($haystack, 0, $len) === $needle;
+    }
+}
+
+if (!function_exists('str_ends_with')) {
+    function str_ends_with($haystack, $needle): bool
+    {
+        $len = mb_strlen($needle);
+        return mb_substr($haystack, -1, $len) === $needle;
+    }
+}
+
+if (!function_exists('str_contains')) {
+    function str_contains(string $haystack, string $needle): bool
+    {
+        return '' === $needle || false !== strpos($haystack, $needle);
+    }
+}
