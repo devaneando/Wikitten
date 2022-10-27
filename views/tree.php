@@ -100,8 +100,7 @@ function tree($array, $parent, $parts = array(), $step = 0): string
         filterInput.bind('input', function() {
             var value         = filterInput.val(),
                 query         = $.trim(value),
-                isActive      = value !== ''
-            ;
+                isActive      = value !== '';
 
             // Add a visual cue to show that the filter function is active:
             filterInput.toggleClass('active', isActive);
@@ -133,13 +132,15 @@ function tree($array, $parent, $parts = array(), $step = 0): string
 
         // Handle directory-tree expansion:
         $(document).on('click', '#sidebar a[data-role="directory"]', function (event) {
+            //取消原本的点击事件
             event.preventDefault();
 
-            var icon = $(this).children('.far');
-            var open = icon.hasClass(iconFolderOpenClass);
-            var subtree = $(this).siblings('ul')[0];
+            const icon = $(this).children('.far');
+            const open = icon.hasClass(iconFolderOpenClass);
+            const subtree = $(this).siblings('ul')[0];
 
-            // icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+            //移除当前所有icon
+            icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
 
             if (open) {
                 if (typeof subtree != 'undefined') {
