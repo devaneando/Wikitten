@@ -22,3 +22,5 @@ Session.vim
 *.backup
 .DS_Store
 test.php
+
+config.php

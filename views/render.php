@@ -62,7 +62,7 @@ if (!defined('APP_STARTED')) {
 <?php endif ?>
 
 <?php if (isset($source)): ?>
-    <div id="source">
+    <div id="source" style="display: none;">
         <?php if (ifCanEdit($parts)): ?>
             <div class="alert alert-info">
                 <i class="fa fa-pencil-alt"></i> <strong>修改模式</strong> 使用保存按钮提交你的修改

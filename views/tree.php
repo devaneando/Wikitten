@@ -3,48 +3,33 @@ if (!defined('APP_STARTED')) {
     die('Forbidden!');
 }
 
-function tree($array, $parent, $parts = array(), $step = 0): string
-{
-    if (count($array) == 0) {
-        return '<ul></ul>';
-    }
-
-    $tid = ($step == 0) ? 'id="tree"' : '';
-    $t = '<ul class="unstyled" '.$tid.'>';
-    //目录
-    foreach ($array[0] as $key => $item) {
-        $open = $step !== false && (isset($parts[$step]) && $key === $parts[$step]);
-
-        $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
-        $t .= '<a href="#" data-role="directory"><i class="far fa-folder'. ($open ? '-open' : '') .'"></i>' . $key . '</a>';
-        $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
-        $t .=  '</li>';
-    }
-    //文件
-    foreach ($array[1] as $item) {
-        $selected = (isset($parts[$step]) && $item === $parts[$step]);
-        $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item."</a></li>\n";
-    }
-    $t .= "</ul>\n\n";
-
-    return $t;
-}
 ?>
 
-<div id="tree-filter" class="input-group">
-  <input type="text" id="tree-filter-query" class="form-control" placeholder="搜索文件或目录名." aria-label="Search" aria-describedby="search-addon">
-  <div class="input-group-append">
-    <button type="button" id="tree-filter-clear-query" class="btn  btn-outline-secondary" title="Clear current search..." disabled>
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-</div>
+<!--<div id="tree-filter" class="input-group">-->
+<!--  <input type="text" id="tree-filter-query" class="form-control" placeholder="搜索文件或目录名." aria-label="Search" aria-describedby="search-addon">-->
+<!--  <div class="input-group-append">-->
+<!--    <button type="button" id="tree-filter-clear-query" class="btn  btn-outline-secondary" title="Clear current search..." disabled>-->
+<!--      <i class="fas fa-times"></i>-->
+<!--    </button>-->
+<!--  </div>-->
+<!--</div>-->
 
 <ul class="unstyled" id="tree-filter-results"></ul>
 
-<?php echo tree($this->_getTree(), BASE_URL, $parts ?? array()); ?>
+<?php echo $treeHTML; ?>
 
 <script>
+    //打开文档
+    // document.getElementById("tree").onclick = function(e){
+    //     if (!e.path[0].dataset.hasOwnProperty('d')){
+    //         return;
+    //     }
+    //     var fileUrl = e.path[0].dataset.d + "/" + e.path[0].innerText;
+    //     console.log(fileUrl);
+    //     $.get(fileUrl,function (htmlData) {
+    //         document.querySelector("#content > div").innerHTML = htmlData;
+    //     })
+    // };
     // Case-insensitive alternative to :contains():
     // All credit to Mina Gabriel:
     // http://stackoverflow.com/a/15033857/443373
@@ -142,6 +127,12 @@ function tree($array, $parent, $parts = array(), $step = 0): string
             //移除当前所有icon
             icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
 
+            if (event.target.nextSibling.childNodes.length === 0) {
+                //按需加载目录
+                $.get(event.target.href, function(data){
+                    event.target.nextSibling.innerHTML = data;
+                });
+            }
             if (open) {
                 if (typeof subtree != 'undefined') {
                     $(subtree).slideUp({ duration: 100 });

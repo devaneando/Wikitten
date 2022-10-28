@@ -72,10 +72,6 @@ class Wiki
         $this->_file_ext = array_merge($this->_file_ext, $this->_renderers);
     }
 
-    protected function ifShowHide() {
-
-    }
-
     /**
      * @param string $extension
      * @return string|callable
@@ -97,6 +93,7 @@ class Wiki
     {
         $fullPath = LIBRARY . DIRECTORY_SEPARATOR . $page;
         $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
         $parts = explode('/', trim($page,'/'));
         $not_found = function () use ($page) {
             $page = htmlspecialchars($page, ENT_QUOTES);
@@ -165,7 +162,6 @@ class Wiki
             return;
         }
         //后缀
-        $extension = substr($fullPath, strrpos($fullPath, '.') + 1, 20);
         if (empty($path)) {
             //$path为空代表文件没找到
             if (!ifCanEdit($parts)) {
@@ -227,7 +223,6 @@ class Wiki
         $source = file_get_contents($path);
         // File edited time
         $time = filemtime($path);
-        $extension = pathinfo($path, PATHINFO_EXTENSION);
         $renderer = $this->_getRenderer($extension);
         $page_data = $this->_default_page_data;
 
@@ -256,13 +251,12 @@ class Wiki
         }
 
         if (empty(trim($html))) {
-            $html = "<h1>This page is empty</h1>\n";
+            $html = "<h1>此页面木有东西</h1>\n";
             $source = $parts[0];
         }
         $page_data['title'] = $parts[count($parts) - 1];
         $this->_view('render', array(
             'time' => date('Y-m-d H:i:s',$time),
-            //'isMarkdown' => isset($isMarkdown)?true:false,
             'html' => $html,
             'source' => $source,
             'extension' => $extension,
@@ -350,44 +344,52 @@ class Wiki
         return array($source, $meta_data);
     }
 
+    protected function _buildHTML($view, $variables = array()): string
+    {
+        extract($variables);
+        $content = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . "{$view}.php";
+        if (file_exists($content)) {
+            ob_start();
+            include($content);
+            $htmlContent = ob_get_contents();
+            ob_end_clean();
+            return $htmlContent;
+        }
+        return "null";
+    }
+
     protected function _view($view, $variables = array()): void
     {
         extract($variables);
-
-        $content = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . "{$view}.php";
+        $treeData = $this->_getTree($variables['parts']??[]);
+        $treeHTML = self::buildTreeUl($treeData, BASE_URL, $parts ?? array());
 
         if (!isset($layout)) {
             $layout = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
         }
-
-        if (file_exists($content)) {
-            ob_start();
-
-            include($content);
-            $content = ob_get_contents();
-            ob_end_clean();
-
-            if ($layout) {
-                include $layout;
-            } else {
-                echo $content;
-            }
+        $content = $this->_buildHTML($view, $variables);
+        if ($layout) {
+            include $layout;
         } else {
-            throw new Exception("View $view not found");
+            echo $content;
         }
         exit;
     }
 
     /**
      * 获取目录递归结构
-     * @param string $dir
+     *
+     * @param array $tPath 目标路径
+     * @param array $dir 当前遍历路径
+     * @param int $deep 当前目录深度
      * @return array
      */
-    protected function _getTree(string $dir = LIBRARY)
+    protected function _getTree(array $tPath, array $dir = [], int $deep = 0): array
     {
         $return = array(self::DIR_KEY => array(), self::FILE_KEY => array());
-
-        $items = scandir($dir);
+        // 当前目录
+        $targetPath = LIBRARY . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $dir);
+        $items = scandir($targetPath);
 
         foreach ($items as $item) {
             if (str_starts_with($item, '.') || str_starts_with($item, 'CVS')) {
@@ -403,9 +405,14 @@ class Wiki
                 $return[self::FILE_KEY][] = $item;
                 continue;
             }
-            $path = $dir . DIRECTORY_SEPARATOR . $item;
-            if (is_dir($path)) {
-                $return[self::DIR_KEY][$item] = $this->_getTree($path);
+            //判断是否为目录
+            if (is_dir(LIBRARY . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, array_merge($dir, [$item])))) {
+                //命中当前目录子目录，展开
+                if (array_key_exists($deep, $tPath) && $tPath[$deep] == $item) {
+                    $return[self::DIR_KEY][$item] = $this->_getTree($tPath, array_merge($dir, [$item]), $deep+1);
+                    continue;
+                }
+                $return[self::DIR_KEY][$item] = [];
                 continue;
             }
             $return[self::FILE_KEY][] = $item;
@@ -416,6 +423,40 @@ class Wiki
         return $return;
     }
 
+    protected static function buildTreeUl($array, $parent, $parts = array(), $step = 0): string
+    {
+        if (count($array) == 0) {
+            return '<ul></ul>';
+        }
+
+        $tid = ($step === 0) ? 'id="tree"' : '';
+        $t = '<ul class="unstyled" '.$tid.'>';
+        if ($step === false){
+            return $t . "</ul>\n\n";
+        }
+        $t .= self::buildTreeLiList($array, $parent, $parts, $step);
+        $t .= "</ul>\n\n";
+
+        return $t;
+    }
+    protected static function buildTreeLiList($array, $parent, $parts = array(), $step = 0): string
+    {
+        $t = "";
+        foreach ($array[0] as $key => $item) {
+            $open = $step !== false && (isset($parts[$step]) && $key === $parts[$step]);
+
+            $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
+            $t .= '<a href="/?a=tree&dir=' . urlencode(trim("{$parent}/{$key}", "/")) . '" data-role="directory"><i class="far fa-folder'. ($open ? '-open' : '') .'"></i>' . $key . '</a>';
+            $t .= self::buildTreeUl($item, "$parent/$key", $parts, $open ? $step + 1 : false);
+            $t .=  '</li>';
+        }
+        //文件
+        foreach ($array[1] as $item) {
+            $selected = (isset($parts[$step]) && $item === $parts[$step]);
+            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item."</a></li>\n";
+        }
+        return $t;
+    }
     public function dispatch(): void
     {
         if (!function_exists("finfo_open")) {
@@ -452,21 +493,13 @@ class Wiki
 //        exit();
 //    }
 //
-//    protected function _isXMLHttpRequest()
-//    {
-//        if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-//            return true;
-//        }
-//
-//        if (function_exists('apache_request_headers')) {
-//            $headers = apache_request_headers();
-//            if ($headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
+    protected function _isXMLHttpRequest(): bool
+    {
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            return true;
+        }
+        return false;
+    }
 
     protected function _404($message = 'Page not found.'): void
     {
@@ -505,6 +538,17 @@ class Wiki
         }
     }
 
+    /**
+     * 构造树形结构
+     * @return void
+     */
+    public function treeAction(): void
+    {
+        $dir = $_GET['dir'];
+        $tPath = explode('/', $dir);
+        $treeArray = $this->_getTree($tPath, $tPath, count($tPath));
+        echo self::buildTreeLiList($treeArray, BASE_URL .'/'. $dir, $tPath, count($tPath));
+    }
     /**
      * /?a=edit
      * If ENABLE_EDITING is true, handles file editing through
