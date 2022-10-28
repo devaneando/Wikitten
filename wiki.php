@@ -28,7 +28,26 @@ class Wiki
         'markdown' => 'Markdown',
         'mdown' => 'Markdown',
         'htm' => 'HTML',
-        'html' => 'HTML'
+        'html' => 'HTML',
+    );
+
+    /**
+     * 二进制文件后缀列表
+     * @var array|string[]
+     */
+    protected array $_bin_file_ext = array(
+        'png' => 'image_show',
+        'jpg' => 'image_show',
+        'jpep' => 'image_show',
+        'gif' => 'image_show',
+        'image' => 'image_show',
+
+        'zip' => 'download_link',
+        'rar' => 'download_link',
+        'gz' => 'download_link',
+        'docx' => 'download_link',
+        'pdf' => 'download_link',
+        'xlsx' => 'download_link',
     );
     /**
      * 用于判断是否为文件
@@ -36,10 +55,6 @@ class Wiki
      * @var array|bool[]
      */
     protected array $_file_ext = array(
-        "jpg" => true,
-        "jpeg" => true,
-        "png" => true,
-        "webp" => true,
         "woff" => true,
         "woff2" => true,
     );
@@ -69,6 +84,7 @@ class Wiki
     }
 
     public function __construct() {
+        $this->_renderers = $this->_renderers + $this->_bin_file_ext;
         $this->_file_ext = array_merge($this->_file_ext, $this->_renderers);
     }
 
@@ -196,11 +212,17 @@ class Wiki
 
         $finfo = finfo_open(FILEINFO_MIME);
         $mime_type = trim(finfo_file($finfo, $path));
-        if (
-            (!str_starts_with($mime_type, 'application/json') &&
-        !str_starts_with($mime_type, 'text')
-            && !str_starts_with($mime_type, 'inode/x-empty')) || array_key_exists("raw", $_GET)
-        ) {
+        if (str_contains($mime_type, 'image')) {
+            //图片文件的后缀名都设置为image
+            $extension = 'image';
+        }
+
+        $time = filemtime($path);
+        $renderer = $this->_getRenderer($extension);
+        //(!str_starts_with($mime_type, 'application/json') &&
+        //    !str_starts_with($mime_type, 'text')
+        //    && !str_starts_with($mime_type, 'inode/x-empty'))
+        if (($renderer === false && !str_starts_with($mime_type, 'text')) || array_key_exists("raw", $_GET)) {
             // not an ASCII file, send it directly to the browser
             $file = fopen($path, 'rb');
             switch ($extension){
@@ -209,6 +231,12 @@ class Wiki
                 case "html": $mime_type = "text/html"; break;
                 case "txt":
                 case "md": $mime_type = "text/plain"; break;
+                case "jpg":
+                case "png":
+                case "gif":
+                case "webp": $mime_type = "image/*"; break;
+                default:
+                    $mime_type = "";
             }
             header("Content-Type: {$mime_type}; charset=utf-8");
             header("Content-Length: " . filesize($path));
@@ -220,10 +248,9 @@ class Wiki
             $not_found();
         }
 
-        $source = file_get_contents($path);
-        // File edited time
-        $time = filemtime($path);
-        $renderer = $this->_getRenderer($extension);
+
+
+
         $page_data = $this->_default_page_data;
 
         // Extract the JSON header, if the feature is enabled:
@@ -232,22 +259,32 @@ class Wiki
         //     $page_data = array_merge($page_data, $meta_data);
         // }
 
-        // We need to know the source file in case editing is enabled:
         $page_data['file'] = $page;
 
         $html = false;
+        $source = false;
+
+        if ($renderer === 'image_show') {
+            require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "image_show.php";
+            $html = image_show($page);
+        }
+        if ($renderer === 'download_link') {
+            require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "download_link.php";
+            $html = download_link($page);
+        }
+
         if ($renderer == 'HTML') {
-            $html = HTML($source);
+            $html = HTML(file_get_contents($path));
         }
         if ($renderer == 'Markdown') {
             // 换markdown引擎
-            $html = \tp_Markdown\Markdown::convert($source);
+            $html = \tp_Markdown\Markdown::convert(file_get_contents($path));
             // $html = \Wikitten\MarkdownExtra::defaultTransform($source);
         }
         //默认的代码展示方法
         if (false === $html){
             require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "showcode.php";
-            $html = showcode($source, $extension);
+            $html = showcode(file_get_contents($path), $extension);
         }
 
         if (empty(trim($html))) {
@@ -423,7 +460,7 @@ class Wiki
         return $return;
     }
 
-    protected static function buildTreeUl($array, $parent, $parts = array(), $step = 0): string
+    protected function buildTreeUl($array, $parent, $parts = array(), $step = 0): string
     {
         if (count($array) == 0) {
             return '<ul></ul>';
@@ -434,12 +471,12 @@ class Wiki
         if ($step === false){
             return $t . "</ul>\n\n";
         }
-        $t .= self::buildTreeLiList($array, $parent, $parts, $step);
+        $t .= $this->buildTreeLiList($array, $parent, $parts, $step);
         $t .= "</ul>\n\n";
 
         return $t;
     }
-    protected static function buildTreeLiList($array, $parent, $parts = array(), $step = 0): string
+    protected function buildTreeLiList($array, $parent, $parts = array(), $step = 0): string
     {
         $t = "";
         foreach ($array[0] as $key => $item) {
@@ -447,13 +484,19 @@ class Wiki
 
             $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
             $t .= '<a href="/?a=tree&dir=' . urlencode(trim("{$parent}/{$key}", "/")) . '" data-role="directory"><i class="far fa-folder'. ($open ? '-open' : '') .'"></i>' . $key . '</a>';
-            $t .= self::buildTreeUl($item, "$parent/$key", $parts, $open ? $step + 1 : false);
+            $t .= $this->buildTreeUl($item, "$parent/$key", $parts, $open ? $step + 1 : false);
             $t .=  '</li>';
         }
         //文件
         foreach ($array[1] as $item) {
             $selected = (isset($parts[$step]) && $item === $parts[$step]);
-            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item."</a></li>\n";
+
+            $tail = "";
+            $extension = pathinfo($item, PATHINFO_EXTENSION);
+            if (array_key_exists($extension, $this->_bin_file_ext)) {
+                $tail = '?frame';
+            }
+            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . $tail . '">'.$item."</a></li>\n";
         }
         return $t;
     }

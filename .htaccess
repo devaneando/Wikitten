@@ -1,19 +1,17 @@
 RewriteEngine On
 
-# 二进制类型文件直接访问
-RewriteCond %{THE_REQUEST} !^GET\ /.*?static/(css|js|img)
-RewriteCond %{THE_REQUEST} ^GET\ /(.*\.(png|jpg|jpeg|gif|zip|rar|tag|gz|docx|xlsx))
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /library/$1 [L,QSA]
-
 # 禁止直接访问php文件
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteCond %{REQUEST_FILENAME} ^(.+)\.php
 RewriteRule ^(.*)$ index.php [L,QSA]
 
+# frame
+RewriteCond %{QUERY_STRING} ^frame
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php [L,QSA]
+
 # 重定向到php入口
 RewriteCond %{THE_REQUEST} !^GET\ /.*?static/(css|js|img)
-RewriteCond %{THE_REQUEST} !^GET\ /.*\.(png|jpg|jpeg|gif)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L,QSA]
