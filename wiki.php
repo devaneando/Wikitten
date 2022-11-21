@@ -439,7 +439,7 @@ class Wiki
 
             //优先通过后缀判断是文件还是目录
             if (array_key_exists(pathinfo($item, PATHINFO_EXTENSION), $this->_file_ext)) {
-                $return[self::FILE_KEY][] = $item;
+                $return[self::FILE_KEY][$item] = $item;
                 continue;
             }
             //判断是否为目录
@@ -452,7 +452,7 @@ class Wiki
                 $return[self::DIR_KEY][$item] = [];
                 continue;
             }
-            $return[self::FILE_KEY][] = $item;
+            $return[self::FILE_KEY][$item] = $item;
         }
         uksort($return[self::DIR_KEY], "strnatcasecmp");
         uksort($return[self::FILE_KEY], "strnatcasecmp");
