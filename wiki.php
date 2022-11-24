@@ -247,17 +247,7 @@ class Wiki
         if(!ifCanShow($parts)){
             $not_found();
         }
-
-
-
-
         $page_data = $this->_default_page_data;
-
-        // Extract the JSON header, if the feature is enabled:
-        // if (USE_PAGE_METADATA) {
-        //     list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
-        //     $page_data = array_merge($page_data, $meta_data);
-        // }
 
         $page_data['file'] = $page;
 
@@ -275,16 +265,19 @@ class Wiki
 
         if ($renderer == 'HTML') {
             $html = HTML(file_get_contents($path));
+            $source = file_get_contents($path);
         }
         if ($renderer == 'Markdown') {
             // 换markdown引擎
             $html = \tp_Markdown\Markdown::convert(file_get_contents($path));
+            $source = file_get_contents($path);
             // $html = \Wikitten\MarkdownExtra::defaultTransform($source);
         }
         //默认的代码展示方法
         if (false === $html){
             require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "showcode.php";
             $html = showcode(file_get_contents($path), $extension);
+            $source = file_get_contents($path);
         }
 
         if (empty(trim($html))) {
@@ -381,6 +374,12 @@ class Wiki
         return array($source, $meta_data);
     }
 
+    /**
+     * render内容
+     * @param $view
+     * @param $variables
+     * @return string
+     */
     protected function _buildHTML($view, $variables = array()): string
     {
         extract($variables);
@@ -400,16 +399,9 @@ class Wiki
         extract($variables);
         $treeData = $this->_getTree($variables['parts']??[]);
         $treeHTML = self::buildTreeUl($treeData, BASE_URL, $parts ?? array());
-
-        if (!isset($layout)) {
-            $layout = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
-        }
+        $layout = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
         $content = $this->_buildHTML($view, $variables);
-        if ($layout) {
-            include $layout;
-        } else {
-            echo $content;
-        }
+        include $layout;
         exit;
     }
 
