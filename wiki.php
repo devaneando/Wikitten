@@ -25,8 +25,6 @@ class Wiki
         'puml' => 'showcode',
         'lua' => 'showcode',
         'md' => 'Markdown',
-        'markdown' => 'Markdown',
-        'mdown' => 'Markdown',
         'htm' => 'HTML',
         'html' => 'HTML',
     );
@@ -109,8 +107,12 @@ class Wiki
     {
         $fullPath = LIBRARY . DIRECTORY_SEPARATOR . $page;
         $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
-        $extension = pathinfo($path, PATHINFO_EXTENSION);
         $parts = explode('/', trim($page,'/'));
+        $extension = "";
+        $isMatched = preg_match('/\.([a-z]{1,4})$/', $page, $matches);
+        if ($isMatched) {
+            $extension = $matches[1];
+        }
         $not_found = function () use ($page) {
             $page = htmlspecialchars($page, ENT_QUOTES);
             throw new Exception("页面'$page'未找到.");
