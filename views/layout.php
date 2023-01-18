@@ -57,6 +57,7 @@ function e($dirty)
     <script src="static/js/prettify.js"></script>
     <script src="<?= staticPath("cdn.bootcss.com/codemirror/5.48.4/codemirror.min.js") ?>"></script>
     <script src="<?= staticPath("cdn.bootcss.com/codemirror/5.48.4/mode/markdown/markdown.min.js") ?>"></script>
+    <script src="//unpkg.com/lunar-javascript@1.2.37/lunar.js"></script>
     <script src="static/js/diy.js"></script>
 
     <style>

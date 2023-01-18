@@ -2,7 +2,7 @@ function timeLoop(){
     Array.from(document.getElementsByClassName("wikiTimer")).forEach(e => {
         if("downtime" in e.dataset){
             e.innerHTML = e.dataset.pre + TimeDown(e.dataset.downtime)
-        }else{
+        }else if("time" in e.dataset){
             e.innerHTML = e.dataset.pre + TimeUp(e.dataset.time)
         }
     })
@@ -12,6 +12,12 @@ window.onload=function(){
         timeLoop()
         setInterval(timeLoop,1000);
     }
+    const today = new Date();
+    Array.from(document.getElementsByClassName("wikiTimer")).forEach(e => {
+        if("lunarBirth" in e.dataset) {
+            LunarBirthDay(today, e)
+        }
+    })
 }
 function TimeDown(endDateStr) {
     //结束时间
@@ -40,6 +46,7 @@ function TimeDown(endDateStr) {
     //输出到页面
     return days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
 }
+
 function TimeUp(startDateStr) {
     //起始时间
     var startDate = new Date(startDateStr);
@@ -71,4 +78,32 @@ function TimeUp(startDateStr) {
         ret = ret + " 距周年:" + nextDay + "天";
     }
     return ret;
+}
+
+function LunarBirthDay(todaySolar, e){
+    const tmp = e.dataset.lunarBirth.match(/\d+/g);
+    if(tmp.length < 2) {
+        return "";
+    }
+    const todayLunar = Lunar.fromDate(todaySolar);
+    let lunarYear = todayLunar.getYear();
+    const lunarMonth = parseInt(tmp[0]);
+    const lunarDay = parseInt(tmp[1]);
+    if(Math.abs(todayLunar.getMonth()) > lunarMonth || (Math.abs(todayLunar.getMonth()) === lunarMonth && todayLunar.getDay() > lunarDay)) {
+        lunarYear = todayLunar.getYear() + 1;
+    }
+    //下次农历生日
+    const birthLunar = Lunar.fromYmd(lunarYear, lunarMonth, lunarDay);
+    //下次农历生日的公历日期
+    const birthSolar = birthLunar.getSolar();
+
+    //下次周年
+    const nextDay = Math.floor(parseInt((new Date(birthSolar.toString()) - todaySolar) / 1000)  / (60 * 60 * 24));
+
+    if(nextDay <= 100) {
+        e.style.color= "rgb(179,125,18)";
+    } else {
+        e.style.color= "rgb(31, 189, 166)";
+    }
+    e.innerHTML = e.dataset.pre + "【" + birthLunar.toString() + "】【" + birthSolar.toString() + "】【" + nextDay + "天】"
 }
