@@ -39,13 +39,9 @@ function TimeDown(endDateStr) {
     var seconds = modulo % 60;
     //输出到页面
     return days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
-    //延迟一秒执行自己
-    //setTimeout(function () {
-    //    TimeDown(id, endDateStr);
-    //}, 1000)
 }
 function TimeUp(startDateStr) {
-    //结束时间
+    //起始时间
     var startDate = new Date(startDateStr);
     //当前时间
     var nowDate = new Date();
@@ -62,10 +58,17 @@ function TimeUp(startDateStr) {
     var minutes = Math.floor(modulo / 60);
     //秒
     var seconds = modulo % 60;
-    //输出到页面
-    return days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
-    //延迟一秒执行自己
-    //setTimeout(function () {
-    //    TimeUp(id, startDate);
-    //}, 1000)
+
+    var ret = days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
+    //下次周年
+    var nextDay;
+    startDate.setYear(nowDate.getFullYear());
+    if(startDate < nowDate) {
+        startDate.setYear(nowDate.getFullYear() + 1);
+    }
+    nextDay = Math.floor(parseInt((startDate - nowDate) / 1000) / (60 * 60 * 24));
+    if(nextDay <= 100) {
+        ret = ret + " 距周年:" + nextDay + "天";
+    }
+    return ret;
 }
