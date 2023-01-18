@@ -89,10 +89,17 @@ function LunarBirthDay(todaySolar, e){
     let lunarYear = todayLunar.getYear();
     const lunarMonth = parseInt(tmp[0]);
     const lunarDay = parseInt(tmp[1]);
-    if(Math.abs(todayLunar.getMonth()) > lunarMonth || (Math.abs(todayLunar.getMonth()) === lunarMonth && todayLunar.getDay() > lunarDay)) {
-        lunarYear = todayLunar.getYear() + 1;
+    if(Math.abs(todayLunar.getMonth()) > lunarMonth
+        || (Math.abs(todayLunar.getMonth()) === lunarMonth && todayLunar.getDay() > lunarDay))
+    {
+        lunarYear += 1;
     }
     //下次农历生日
+    for(let i=0;i<10;i++){
+        if(LunarYear.fromYear(lunarYear).getMonth(lunarMonth).getDayCount() < lunarDay) {
+            lunarYear += 1;
+        }
+    }
     const birthLunar = Lunar.fromYmd(lunarYear, lunarMonth, lunarDay);
     //下次农历生日的公历日期
     const birthSolar = birthLunar.getSolar();
