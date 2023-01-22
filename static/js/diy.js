@@ -89,6 +89,14 @@ function LunarBirthDay(todaySolar, e){
     let lunarYear = todayLunar.getYear();
     const lunarMonth = parseInt(tmp[0]);
     const lunarDay = parseInt(tmp[1]);
+    //生日当天
+    if((Math.abs(todayLunar.getMonth()) === lunarMonth && todayLunar.getDay() === lunarDay))
+    {
+        e.style.color= "rgb(179,18,171)";
+        e.innerHTML = e.dataset.pre + "【" + Lunar.fromYmd(lunarYear, lunarMonth, lunarDay).toString() + "】【生日快乐！】";
+        return;
+    }
+
     if(Math.abs(todayLunar.getMonth()) > lunarMonth
         || (Math.abs(todayLunar.getMonth()) === lunarMonth && todayLunar.getDay() > lunarDay))
     {
