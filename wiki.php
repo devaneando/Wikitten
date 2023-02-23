@@ -24,6 +24,8 @@ class Wiki
         'json' => 'showcode',
         'puml' => 'showcode',
         'lua' => 'showcode',
+        'yml' => 'showcode',
+        'toml' => 'showcode',
         'md' => 'Markdown',
         'htm' => 'HTML',
         'html' => 'HTML',
