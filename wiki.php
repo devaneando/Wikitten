@@ -632,9 +632,10 @@ class Wiki
             unlink($path);
         }
 
-        $redirect_url = BASE_URL . "/$file";
-        header("HTTP/1.0 302 Found", true);
-        header("Location: $redirect_url");
+//        $redirect_url = BASE_URL . "/$file";
+//        header("HTTP/1.0 302 Found", true);
+//        header("Location: $redirect_url");
+        echo "<script>window.history.go(-1);</script>";
 
         exit();
     }
