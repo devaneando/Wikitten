@@ -1,16 +1,18 @@
-function timeLoop(){
+function timeLoop(flag){
     Array.from(document.getElementsByClassName("wikiTimer")).forEach(e => {
         if("downtime" in e.dataset){
-            e.innerHTML = e.dataset.pre + TimeDown(e.dataset.downtime)
+            TimeDown(e, flag);
         }else if("time" in e.dataset){
-            e.innerHTML = e.dataset.pre + TimeUp(e.dataset.time)
+            TimeUp(e, flag);
         }
     })
 }
 window.onload=function(){
     if(document.getElementsByClassName("wikiTimer").length > 0){
-        timeLoop()
-        setInterval(timeLoop,1000);
+        timeLoop(true);
+        setInterval(function () {
+            timeLoop(false);
+        },1000);
     }
     const today = new Date();
     Array.from(document.getElementsByClassName("wikiTimer")).forEach(e => {
@@ -18,10 +20,13 @@ window.onload=function(){
             LunarBirthDay(today, e)
         }
     })
+    Notification.requestPermission((result)=>{
+        console.log(result);
+    });
 }
-function TimeDown(endDateStr) {
+function TimeDown(e,flag) {
     //结束时间
-    var endDate = new Date(endDateStr);
+    var endDate = new Date(e.dataset.downtime);
     //当前时间
     var nowDate = new Date();
     //相差的总秒数
@@ -29,7 +34,8 @@ function TimeDown(endDateStr) {
     //天数
     var days = Math.floor(totalSeconds / (60 * 60 * 24));
     if(days < 0){
-        return "时间到!";
+        e.innerHTML = e.title+ '['+e.dataset.downtime+' 时间到]';
+        return;
     }
     //取模（余数）
     var modulo = totalSeconds % (60 * 60 * 24);
@@ -39,17 +45,20 @@ function TimeDown(endDateStr) {
     //分钟
     var minutes = Math.floor(modulo / 60);
     if(minutes < 0){
-        return "时间到!";
+        e.innerHTML = e.title+ '['+e.dataset.downtime+' 时间到]';
+        return;
     }
     //秒
     var seconds = modulo % 60;
-    //输出到页面
-    return days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
+    e.innerHTML = e.title+ '['+days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒"+']';
+    if (flag) {
+        dayCheckAlert("倒计时提醒",e.title, days);
+    }
 }
 
-function TimeUp(startDateStr) {
+function TimeUp(e,flag) {
     //起始时间
-    var startDate = new Date(startDateStr);
+    var startDate = new Date(e.dataset.time);
     //当前时间
     var nowDate = new Date();
     //相差的总秒数
@@ -74,10 +83,14 @@ function TimeUp(startDateStr) {
         startDate.setYear(nowDate.getFullYear() + 1);
     }
     nextDay = Math.floor(parseInt((startDate - nowDate) / 1000) / (60 * 60 * 24));
-    if(nextDay <= 100) {
-        ret = ret + " 距周年:" + nextDay + "天";
+    if (flag) {
+        dayCheckAlert("周年提醒",e.title, nextDay);
     }
-    return ret;
+    if (nextDay < 100) {
+        e.innerHTML = e.title+ '['+ret+']['+"*"+nextDay+'天]';
+    }else{
+        e.innerHTML = e.title+ '['+ret+']'
+    }
 }
 
 function LunarBirthDay(todaySolar, e){
@@ -93,7 +106,7 @@ function LunarBirthDay(todaySolar, e){
     if((Math.abs(todayLunar.getMonth()) === lunarMonth && todayLunar.getDay() === lunarDay))
     {
         e.style.color= "rgb(179,18,171)";
-        e.innerHTML = e.dataset.pre + "【" + Lunar.fromYmd(lunarYear, lunarMonth, lunarDay).toString() + "】【生日快乐！】";
+        e.innerHTML = e.title + "【" + Lunar.fromYmd(lunarYear, lunarMonth, lunarDay).toString() + "】【生日快乐！】";
         return;
     }
 
@@ -113,12 +126,40 @@ function LunarBirthDay(todaySolar, e){
     const birthSolar = birthLunar.getSolar();
 
     //下次周年
-    const nextDay = Math.floor(parseInt((new Date(birthSolar.toString()) - todaySolar) / 1000)  / (60 * 60 * 24));
-
+    const nextDay = Math.ceil(parseInt((new Date(birthSolar.toString()) - todaySolar) / 1000)  / (60 * 60 * 24));
     if(nextDay <= 100) {
         e.style.color= "rgb(179,125,18)";
     } else {
         e.style.color= "rgb(31, 189, 166)";
     }
-    e.innerHTML = e.dataset.pre + "【" + birthLunar.toString() + "】【" + birthSolar.toString() + "】【" + nextDay + "天】"
+    dayCheckAlert("生日提醒",e.title, nextDay);
+    e.innerHTML = e.title + "【" + birthLunar.toString() + "】【" + birthSolar.toString() + "】【" + nextDay + "天】"
+}
+
+function dayCheckAlert(title,body,day) {
+    console.log(title,body,day);
+    if (day > 100) {
+        return;
+    }
+    if (day === 0) {
+        desktopAlert(title, body + "【时间到】")
+        return;
+    }
+    if (day === 30 || day <= 7) {
+        desktopAlert(title, body + "【"+day+"天】")
+    }
+}
+function desktopAlert(title,body) {
+    Notification.requestPermission((result)=>{
+        // 只有当result为granted时，才会执行下方的new Notification代码，denied和default不会执行
+        const notification = new Notification(title,{
+            dir: "ltr",
+            body: body,
+            icon: "https://wiki.m00zik.com/static/img/favicon.png",
+            image: "https://m00zik.com/usr/uploads/logo3.jpg",
+            sticky: true,
+            requireInteraction: true,
+            renotify: false,
+        });
+    });
 }
