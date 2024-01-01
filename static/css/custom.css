@@ -1,3 +1,28 @@
 /*
  *	Place your custom CSS styles here, they will override all existing styles
  */
+.CodeMirror {
+    height: auto;
+}
+p code{
+    padding: 2px;
+    border-radius: 5px;
+    background-color: sienna;
+    color: white;
+}
+.CodeMirror-scroll {
+    overflow: auto;
+}
+hr{
+    border-top: 2px solid rgba(255, 255, 255, 0.4);
+}
+code, pre {
+    font-family: consolas;
+}
+b{
+    background: black;
+    color: black;
+}
+b:hover{
+    color:red;
+}

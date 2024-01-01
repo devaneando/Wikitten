@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set("Asia/Shanghai");
 if (!defined('APP_STARTED')) {
     die('Forbidden!');
 }
@@ -7,41 +8,49 @@ if (!defined('APP_STARTED')) {
 // first rename it to `config.php`.
 
 // Custom name for your wiki:
-define('APP_NAME', 'My Wiki');
+const APP_NAME = '魔力之所Wiki';
 
-// Set the filename of the automatic homepage here
-define('DEFAULT_FILE', 'index.md');
+// You can install in a dir
+//const APP_ROOT = 'Wikitten';
 
 // Custom path to your wiki's library:
-// define('LIBRARY', '/path/to/wiki/library');
+// markdown文件目录
+const LIBRARY = './library';
 
-// Enable editing files through the interface?
-// NOTE: There's currently no authentication built into Wikitten, controlling
-// who does what is your responsibility.
-// define('ENABLE_EDITING', true);
+// Set the filename of the automatic homepage here
+// 默认首页文件
+const DEFAULT_FILE = 'index.md';
 
-// Enable JSON page data?
-// define('USE_PAGE_METADATA', true);
+// 护眼模式
+const USE_DARK_THEME = true;
 
-// Enable the dark theme here
-// define('USE_DARK_THEME', true);
+// 默认账号密码
+const ACCESS_USER = 'user';
+const ACCESS_PASSWORD = 'pass';
 
-// Disable the Wikitten logo here
-// define('USE_WIKITTEN_LOGO', false);
+/**
+ * 浏览权限级别设置
+ * 0: 所有人可以查看，包括隐藏文件
+ * 1: 所有人可以查看，除了隐藏文件，登录后可以查看隐藏文件
+ * 2: 不登录无法查看文件，登录后可以查看所有文件
+ * 3: 禁止所有人查看
+ */
+const ALLOW_VIEW_LEVEL = 1;
 
-// Enable PasteBin plugin ?
-// define('ENABLE_PASTEBIN', true);
-// define('PASTEBIN_API_KEY', '');
+/**
+ * 修改权限级别设置
+ * 0: 所有人可以修改，包括隐藏文件
+ * 1: 所有人可以修改，除了隐藏文件，登录后可以修改隐藏文件
+ * 2: 不登录无法修改文件，登录后可以修改所有
+ * 3: 禁止所有人修改
+ */
+const ALLOW_EDIT_LEVEL = 2;
 
-// Enable password authentication (leave this field commented to disable password)
-// define('ACCESS_USER', 'Wikitten');
-// define('ACCESS_PASSWORD', 'Wikitten');
+// 优先使用本地静态资源
+const USE_LOCAL_RESOURCE = true;
 
 // Use this as default target for external urls
-// define('EXTERNAL_LINK_TARGET', '_blank');
+const EXTERNAL_LINK_TARGET = '_blank';
 
 // Enable the internal wiki URL and URL fix
-// define('INTERNAL_WIKI_LINK', true);
-
-// Enable a custom stylesheet
-// define('CUSTOM_MARKDOWN_STYLESHEET', '');
+const INTERNAL_WIKI_LINK = true;

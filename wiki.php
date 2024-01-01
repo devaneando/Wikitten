@@ -1,34 +1,98 @@
 <?php
+
+use JetBrains\PhpStorm\NoReturn;
+
 if (!defined('APP_STARTED')) {
     die('Forbidden!');
 }
 
 class Wiki
 {
-    protected $_renderers = array(
+    //不同后缀对应的处理器 对应renderers中的文件
+    protected array $_renderers = array(
+        'go' => 'showcode',
+        'php' => 'showcode',
+        'sh' => 'showcode',
+        'css' => 'showcode',
+        'py' => 'showcode',
+        'rb' => 'showcode',
+        'sql' => 'showcode',
+        'scm' => 'showcode',
+        'xml' => 'showcode',
+        'c' => 'showcode',
+        'js' => 'showcode',
+        'json' => 'showcode',
+        'puml' => 'showcode',
+        'lua' => 'showcode',
+        'yml' => 'showcode',
+        'toml' => 'showcode',
         'md' => 'Markdown',
-        'markdown' => 'Markdown',
-        'mdown' => 'Markdown',
         'htm' => 'HTML',
-        'html' => 'HTML'
+        'html' => 'HTML',
     );
-    protected $_ignore = "/^\..*|^CVS$/"; // Match dotfiles and CVS
-    protected $_force_unignore = false; // always show these files (false to disable)
 
-    protected $_action;
+    /**
+     * 二进制文件后缀列表
+     * @var array|string[]
+     */
+    protected array $_bin_file_ext = array(
+        'png' => 'image_show',
+        'jpg' => 'image_show',
+        'jpep' => 'image_show',
+        'gif' => 'image_show',
+        'image' => 'image_show',
 
-    protected $_default_page_data = array(
+        'zip' => 'download_link',
+        'rar' => 'download_link',
+        'gz' => 'download_link',
+        'docx' => 'download_link',
+        'pdf' => 'download_link',
+        'xlsx' => 'download_link',
+    );
+    /**
+     * 用于判断是否为文件
+     *
+     * @var array|bool[]
+     */
+    protected array $_file_ext = array(
+        "woff" => true,
+        "woff2" => true,
+    );
+
+    protected string $_action;
+
+    protected array $_default_page_data = array(
         'title' => false, // will use APP_NAME by default
         'description' => 'Wikitten is a small, fast, PHP wiki.',
         'tags' => array('wikitten', 'wiki'),
         'page' => ''
     );
 
+    const DIR_KEY = 0;
+    const FILE_KEY = 1;
+    /**
+     * Singleton
+     * @return Wiki
+     */
+    public static function instance(): Wiki
+    {
+        static $instance;
+        if (!($instance instanceof self)) {
+            $instance = new Wiki();
+        }
+        return $instance;
+    }
+
+    public function __construct() {
+        $this->_renderers = $this->_renderers + $this->_bin_file_ext;
+        $this->_file_ext = array_merge($this->_file_ext, $this->_renderers);
+    }
+
     /**
      * @param string $extension
      * @return string|callable
      */
-    protected function _getRenderer($extension)
+    protected function _getRenderer(string $extension)
     {
         if (!isset($this->_renderers[$extension])) {
             return false;
@@ -41,15 +105,19 @@ class Wiki
         return $renderer;
     }
 
-    protected function _render($page)
+    protected function _render($page): void
     {
         $fullPath = LIBRARY . DIRECTORY_SEPARATOR . $page;
         $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $page);
-        $parts = explode('/', $page);
-
+        $parts = explode('/', trim($page,'/'));
+        $extension = "";
+        $isMatched = preg_match('/\.([a-z]{1,4})$/', $page, $matches);
+        if ($isMatched) {
+            $extension = $matches[1];
+        }
         $not_found = function () use ($page) {
             $page = htmlspecialchars($page, ENT_QUOTES);
-            throw new Exception("Page '$page' was not found");
+            throw new Exception("页面'$page'未找到.");
         };
 
         if (!$this->_pathIsSafe($fullPath)) {
@@ -64,7 +132,8 @@ class Wiki
             }
 
             if (file_exists($path . DIRECTORY_SEPARATOR . 'index.md')) {
-                return $this->_render('index.md');
+                $this->_render(implode('/', $parts) . DIRECTORY_SEPARATOR . 'index.md');
+                return;
             }
 
             // Get a printable version of the actual folder name:
@@ -79,19 +148,29 @@ class Wiki
             // another page, so we can make use of the tree, breadcrumb,
             // etc.
             $page_data = $this->_default_page_data;
-            $page_data['title'] = 'Listing: ' . $dir_name;
+            $page_data['title'] = '目录: ' . $dir_name;
 
             $files = scandir($path);
-            $list = "<h2>I'm just an empty folder</h2>\n";
+            $filesCount = count($files);
+            uasort($files, "strnatcasecmp");
+            $list = "";
             if (2 < count($files)) {
-                $list = "<h2>I'm a folder and I have</h2><ul>\n";
+                //排除隐藏目录
+                if (!ifCanShow([$dir_name])){
+                    //隐藏目录报错
+                    $not_found();
+                }
+                $list = "<h2>目录:{$page}</h2><h5>文件总数:{$filesCount}</h5><ul>\n";
                 foreach ($files as $file) {
+                    //忽略.开头文件
                     if (preg_match('/^\..*$/', $file)) {
                         continue;
                     }
                     $list .= "<li><a href=\"". $_SERVER['REQUEST_URI'] ."/${file}\">${file}</a></li>\n";
                 }
                 $list .= "</ul>\n";
+            }else{
+                rmdir($path);
             }
 
             $this->_view('render', array(
@@ -102,12 +181,16 @@ class Wiki
             ));
             return;
         }
-
-        if (ENABLE_EDITING) {
-            $extension = substr($fullPath, strrpos($fullPath, '.') + 1, 20);
-            if (false === $extension || false === $this->_getRenderer($extension)) {
+        //后缀
+        if (empty($path)) {
+            //$path为空代表文件没找到
+            if (!ifCanEdit($parts)) {
+                $not_found();
+            }
+            if (false === $this->_getRenderer($extension)) {
                 $not_found();
             } elseif (!file_exists($fullPath)) {
+
                 // Pass this to the render view, cleverly disguised as just
                 // another page, so we can make use of the tree, breadcrumb,
                 // etc.
@@ -115,95 +198,120 @@ class Wiki
                 $page_data          = $this->_default_page_data;
                 $page_data['title'] = 'Page not found: ' . $_page;
 
-                return $this->_view('render', array(
+                $this->_view('render', array(
                     'parts'     => $parts,
                     'page'      => $page_data,
                     'html'      =>
-                          "<h3>Page '$_page' not found</h3>"
+                        "<h3>Page '$_page' not found.</h3>"
                         . "<br/>"
-                        . "<form method='GET'>"
-                        . "<input type='hidden' name='a' value='create'>"
-                        . "<input type='submit' class='btn btn-primary' value='Create this page' />"
-                        . "</form>"
-                    ,
+                        . (ifCanEdit($parts) ? "<form method='GET'>"
+                            . "<input type='hidden' name='a' value='create'>"
+                            . "<input type='submit' class='btn btn-primary' value='新建文件' />"
+                            . "</form>" : ''),
                     'is_dir'    => false
                 ));
+                return;
             }
-        } else {
-            $not_found();
         }
 
         $finfo = finfo_open(FILEINFO_MIME);
         $mime_type = trim(finfo_file($finfo, $path));
-        if (substr($mime_type, 0, strlen('text/plain')) != 'text/plain'
-            && substr($mime_type, 0, strlen('inode/x-empty')) != 'inode/x-empty'
-        ) {
+        if (str_contains($mime_type, 'image')) {
+            //图片文件的后缀名都设置为image
+            $extension = 'image';
+        }
+
+        $time = filemtime($path);
+        $renderer = $this->_getRenderer($extension);
+        //(!str_starts_with($mime_type, 'application/json') &&
+        //    !str_starts_with($mime_type, 'text')
+        //    && !str_starts_with($mime_type, 'inode/x-empty'))
+        if (($renderer === false && !str_starts_with($mime_type, 'text')) || array_key_exists("raw", $_GET)) {
             // not an ASCII file, send it directly to the browser
             $file = fopen($path, 'rb');
-
-            header("Content-Type: $mime_type");
+            switch ($extension){
+                case "json": $mime_type = "application/json"; break;
+                case "js": $mime_type = "application/javascript"; break;
+                case "html": $mime_type = "text/html"; break;
+                case "txt":
+                case "md": $mime_type = "text/plain"; break;
+                case "jpg":
+                case "png":
+                case "gif":
+                case "webp": $mime_type = "image/*"; break;
+                default:
+                    $mime_type = "";
+            }
+            header("Content-Type: {$mime_type}; charset=utf-8");
             header("Content-Length: " . filesize($path));
 
             fpassthru($file);
             exit();
         }
-
-        $source = file_get_contents($path);
-        $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $renderer = $this->_getRenderer($extension);
+        if(!ifCanShow($parts)){
+            $not_found();
+        }
         $page_data = $this->_default_page_data;
 
-        // Extract the JSON header, if the feature is enabled:
-        if (USE_PAGE_METADATA) {
-            list($source, $meta_data) = $this->_extractJsonFrontMatter($source);
-            $page_data = array_merge($page_data, $meta_data);
-        }
-
-        // We need to know the source file in case editing is enabled:
         $page_data['file'] = $page;
 
         $html = false;
-        if ($renderer && $renderer == 'HTML') {
-            $html = $renderer($source);
+        $source = false;
+
+        if ($renderer === 'image_show') {
+            require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "image_show.php";
+            $html = image_show($page);
         }
-        if ($renderer && $renderer == 'Markdown') {
-            $html = \Wikitten\MarkdownExtra::defaultTransform($source);
+        if ($renderer === 'download_link') {
+            require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "download_link.php";
+            $html = download_link($page);
+        }
+
+        if ($renderer == 'HTML') {
+            $html = HTML(file_get_contents($path));
+            $source = file_get_contents($path);
+        }
+        if ($renderer == 'Markdown') {
+            // 换markdown引擎
+            $html = \tp_Markdown\Markdown::convert(file_get_contents($path));
+            $source = file_get_contents($path);
+            // $html = \Wikitten\MarkdownExtra::defaultTransform($source);
+        }
+        //默认的代码展示方法
+        if (false === $html){
+            require_once __DIR__ . DIRECTORY_SEPARATOR . 'renderers' . DIRECTORY_SEPARATOR . "showcode.php";
+            $html = showcode(file_get_contents($path), $extension);
+            $source = file_get_contents($path);
         }
 
         if (empty(trim($html))) {
-            $html = "<h1>This page is empty</h1>\n";
+            $html = "<h1>此页面木有东西</h1>\n";
             $source = $parts[0];
         }
-
+        $page_data['title'] = $parts[count($parts) - 1];
         $this->_view('render', array(
+            'time' => date('Y-m-d H:i:s',$time),
             'html' => $html,
             'source' => $source,
             'extension' => $extension,
             'parts' => $parts,
             'page' => $page_data,
             'is_dir' => false,
-            'use_pastebin' => $this->_usePasteBin()
         ));
-    }
-
-    protected function _usePasteBin()
-    {
-        return defined('ENABLE_PASTEBIN') && ENABLE_PASTEBIN && defined('PASTEBIN_API_KEY') && PASTEBIN_API_KEY;
     }
 
     /**
      * Given a file path, verifies if the file is safe to touch,
      * given permissions, if it's within the library, etc.
      *
-     * @param  string $path
+     * @param string $path
      * @return bool
      */
-    protected function _pathIsSafe($path)
+    protected function _pathIsSafe(string $path): bool
     {
-        if ($path && strpos($path, LIBRARY) === 0) {
+        if ($path && str_starts_with($path, LIBRARY)) {
             return true;
         }
-
         return false;
     }
 
@@ -227,10 +335,10 @@ class Wiki
      * "tags":  ["hello", "world"]
      * ---
      *
-     * @param  string $source
+     * @param string $source
      * @return array  array($remaining_source, $meta_data)
      */
-    protected function _extractJsonFrontMatter($source)
+    protected function _extractJsonFrontMatter(string $source): array
     {
         static $front_matter_regex = "/^---[\r\n](.*)[\r\n]---[\r\n](.*)/s";
 
@@ -270,61 +378,125 @@ class Wiki
         return array($source, $meta_data);
     }
 
-    protected function _view($view, $variables = array())
+    /**
+     * render内容
+     * @param $view
+     * @param $variables
+     * @return string
+     */
+    protected function _buildHTML($view, $variables = array()): string
     {
         extract($variables);
-
-        $content = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . "$view.php";
-
-        if (!isset($layout)) {
-            $layout = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
-        }
-
+        $content = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . "{$view}.php";
         if (file_exists($content)) {
             ob_start();
-
             include($content);
-            $content = ob_get_contents();
+            $htmlContent = ob_get_contents();
             ob_end_clean();
-
-            if ($layout) {
-                include $layout;
-            } else {
-                echo $content;
-            }
-        } else {
-            throw new Exception("View $view not found");
+            return $htmlContent;
         }
+        return "null";
     }
 
-    protected function _getTree($dir = LIBRARY)
+    protected function _view($view, $variables = array()): void
     {
-        $return = array('directories' => array(), 'files' => array());
+        extract($variables);
+        $treeData = $this->_getTree($variables['parts']??[]);
+        $treeHTML = self::buildTreeUl($treeData, BASE_URL, $parts ?? array());
+        $layout = __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'layout.php';
+        $content = $this->_buildHTML($view, $variables);
+        include $layout;
+        exit;
+    }
 
-        $items = scandir($dir);
+    /**
+     * 获取目录递归结构
+     *
+     * @param array $tPath 目标路径
+     * @param array $dir 当前遍历路径
+     * @param int $deep 当前目录深度
+     * @return array
+     */
+    protected function _getTree(array $tPath, array $dir = [], int $deep = 0): array
+    {
+        $return = array(self::DIR_KEY => array(), self::FILE_KEY => array());
+        // 当前目录
+        $targetPath = LIBRARY . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $dir);
+        $items = scandir($targetPath);
+
         foreach ($items as $item) {
-            if (preg_match($this->_ignore, $item)) {
-                if ($this->_force_unignore === false || !preg_match($this->_force_unignore, $item)) {
-                    continue;
-                }
+            if (str_starts_with($item, '.') || str_starts_with($item, 'CVS')) {
+                continue;
             }
-
-            $path = $dir . DIRECTORY_SEPARATOR . $item;
-            if (is_dir($path)) {
-                $return['directories'][$item] = $this->_getTree($path);
+            //不展示隐藏文件
+            if (!ifCanShow([$item])) {
                 continue;
             }
 
-            $return['files'][$item] = $item;
+            //优先通过后缀判断是文件还是目录
+            if (array_key_exists(pathinfo($item, PATHINFO_EXTENSION), $this->_file_ext)) {
+                $return[self::FILE_KEY][$item] = $item;
+                continue;
+            }
+            //判断是否为目录
+            if (is_dir(LIBRARY . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, array_merge($dir, [$item])))) {
+                //命中当前目录子目录，展开
+                if (array_key_exists($deep, $tPath) && $tPath[$deep] == $item) {
+                    $return[self::DIR_KEY][$item] = $this->_getTree($tPath, array_merge($dir, [$item]), $deep+1);
+                    continue;
+                }
+                $return[self::DIR_KEY][$item] = [];
+                continue;
+            }
+            $return[self::FILE_KEY][$item] = $item;
         }
+        uksort($return[self::DIR_KEY], "strnatcasecmp");
+        uksort($return[self::FILE_KEY], "strnatcasecmp");
 
-        uksort($return['directories'], "strnatcasecmp");
-        uksort($return['files'], "strnatcasecmp");
-
-        return $return['directories'] + $return['files'];
+        return $return;
     }
 
-    public function dispatch()
+    protected function buildTreeUl($array, $parent, $parts = array(), $step = 0): string
+    {
+        if (count($array) == 0) {
+            return '<ul></ul>';
+        }
+
+        $tid = ($step === 0) ? 'id="tree"' : '';
+        $t = '<ul class="unstyled" '.$tid.'>';
+        if ($step === false){
+            return $t . "</ul>\n\n";
+        }
+        $t .= $this->buildTreeLiList($array, $parent, $parts, $step);
+        $t .= "</ul>\n\n";
+
+        return $t;
+    }
+    protected function buildTreeLiList($array, $parent, $parts = array(), $step = 0): string
+    {
+        $t = "";
+        foreach ($array[0] as $key => $item) {
+            $open = $step !== false && (isset($parts[$step]) && $key === $parts[$step]);
+
+            $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
+            $t .= '<a href="/?a=tree&dir=' . urlencode(trim("{$parent}/{$key}", "/")) . '" data-role="directory"><i class="far fa-folder'. ($open ? '-open' : '') .'"></i>' . $key . '</a>';
+            $t .= $this->buildTreeUl($item, "$parent/$key", $parts, $open ? $step + 1 : false);
+            $t .=  '</li>';
+        }
+        //文件
+        foreach ($array[1] as $item) {
+            $selected = (isset($parts[$step]) && $item === $parts[$step]);
+
+            $tail = "";
+            $extension = pathinfo($item, PATHINFO_EXTENSION);
+            if (array_key_exists($extension, $this->_bin_file_ext)) {
+                $tail = '?frame';
+            }
+            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . $tail . '">'.$item."</a></li>\n";
+        }
+        return $t;
+    }
+    public function dispatch(): void
     {
         if (!function_exists("finfo_open")) {
             die("<p>Please enable the PHP Extension <code style='background-color: #eee; border: 1px solid #ccc; padding: 3px; border-radius: 3px; line-height: 1;'>FileInfo.dll</code> by uncommenting or adding the following line:</p><pre style='background-color: #eee; border: 1px solid #ccc; padding: 5px; border-radius: 3px;'><code><span style='color: #999;'>;</span>extension=php_fileinfo.dll <span style='color: #999; margin-left: 25px;'># You can just uncomment by removing the semicolon (;) in the front.</span></code></pre>");
@@ -353,30 +525,22 @@ class Wiki
         return $this->_action;
     }
 
-    protected function _json($data = array())
+//    protected function _json($data = array())
+//    {
+//        header("Content-type: text/x-json");
+//        echo(is_string($data) ? $data : json_encode($data));
+//        exit();
+//    }
+//
+    protected function _isXMLHttpRequest(): bool
     {
-        header("Content-type: text/x-json");
-        echo(is_string($data) ? $data : json_encode($data));
-        exit();
-    }
-
-    protected function _isXMLHttpRequest()
-    {
-        if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
             return true;
         }
-
-        if (function_exists('apache_request_headers')) {
-            $headers = apache_request_headers();
-            if ($headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-                return true;
-            }
-        }
-
         return false;
     }
 
-    protected function _404($message = 'Page not found.')
+    protected function _404($message = 'Page not found.'): void
     {
         header('HTTP/1.0 404 Not Found', true);
         $page_data = $this->_default_page_data;
@@ -387,27 +551,25 @@ class Wiki
             'parts' => array('Uh-oh'),
             'page' => $page_data
         ));
-
         exit;
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $request = parse_url($_SERVER['REQUEST_URI']);
         $page = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
-
         if (!$page) {
             if (file_exists(LIBRARY . DIRECTORY_SEPARATOR . DEFAULT_FILE)) {
                 $this->_render(DEFAULT_FILE);
                 return;
             }
-
+            
             $this->_view('index', array(
                 'page' => $this->_default_page_data
             ));
             return;
         }
-
+        
         try {
             $this->_render($page);
         } catch (Exception $e) {
@@ -416,17 +578,28 @@ class Wiki
     }
 
     /**
+     * 构造树形结构
+     * @return void
+     */
+    public function treeAction(): void
+    {
+        $dir = $_GET['dir'];
+        $tPath = explode('/', $dir);
+        $treeArray = $this->_getTree($tPath, $tPath, count($tPath));
+        echo self::buildTreeLiList($treeArray, BASE_URL .'/'. $dir, $tPath, count($tPath));
+    }
+    /**
      * /?a=edit
      * If ENABLE_EDITING is true, handles file editing through
      * the web interface.
      */
-    public function editAction()
+    public function editAction(): void
     {
         // Bail out early if editing isn't even enabled, or
         // we don't get the right request method && params
         // NOTE: $_POST['source'] may be empty if the user just deletes
         // everything, but it should always be set.
-        if (!ENABLE_EDITING || $_SERVER['REQUEST_METHOD'] != 'POST'
+        if ($_SERVER['REQUEST_METHOD'] != 'POST'
             || empty($_POST['ref']) || !isset($_POST['source'])
         ) {
             $this->_404();
@@ -436,6 +609,10 @@ class Wiki
         $source = $_POST['source'];
         $file = base64_decode($ref);
         $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
+
+        if (!ifCanEdit(explode('/', trim($path,'/')))) {
+            $this->_404();
+        }
 
         // Check if the file is safe to work with, otherwise just
         // give back a generic 404 aswell, so we don't allow blind
@@ -455,96 +632,46 @@ class Wiki
             unlink($path);
         }
 
-        $redirect_url = BASE_URL . "/$file";
-        header("HTTP/1.0 302 Found", true);
-        header("Location: $redirect_url");
+//        $redirect_url = BASE_URL . "/$file";
+//        header("HTTP/1.0 302 Found", true);
+//        header("Location: $redirect_url");
+        echo "<script>window.history.go(-1);</script>";
 
         exit();
     }
 
-    /**
-     * Handle createion of PasteBin pastes
-     * @return string JSON response
-     */
-    public function createPasteBinAction()
-    {
-        if (!$this->_usePasteBin()) {
-            $this->_404();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (isset($_POST['ref'])) {
-                $file = base64_decode($_POST['ref']);
-                $path = realpath(LIBRARY . DIRECTORY_SEPARATOR . $file);
-
-                if (!$this->_pathIsSafe($path)) {
-                    $this->_404();
-                } else {
-                    $content = file_get_contents($path);
-                    $name = pathinfo($path, PATHINFO_BASENAME);
-
-                    require_once PLUGINS . DIRECTORY_SEPARATOR . 'PasteBin.php';
-
-                    $response = array();
-
-                    $pastebin = new PasteBin(PASTEBIN_API_KEY);
-
-                    /**
-                     * @todo Add/improve autodetection of file format
-                     */
-
-                    $url = $pastebin->createPaste($content, PasteBin::PASTE_PRIVACY_PUBLIC, $name, PasteBin::PASTE_EXPIRE_1W);
-                    if ($url) {
-                        $response['status'] = 'ok';
-                        $response['url'] = $url;
-                    } else {
-                        $response['status'] = 'fail';
-                        $response['error'] = $pastebin->getError();
-                    }
-
-                    header('Content-Type: application/json');
-                    echo json_encode($response);
-                    exit();
-                }
-            }
-        }
-
-        exit();
-    }
-
-    /**
-     * Singleton
-     * @return Wiki
-     */
-    public static function instance()
-    {
-        static $instance;
-        if (!($instance instanceof self)) {
-            $instance = new self();
-        }
-        return $instance;
-    }
-
-    public function createAction()
+    public function createAction(): void
     {
         $request    = parse_url($_SERVER['REQUEST_URI']);
-        $page       = str_replace("###" . APP_DIR . "/", "", "###" . urldecode($request['path']));
-
-        $filepath   = LIBRARY . urldecode($request['path']);
-        $content    = "# " . htmlspecialchars($page, ENT_QUOTES, 'UTF-8');
-        // if feature not enabled, go to 404
-        if (!ENABLE_EDITING || file_exists($filepath)) {
+        //过滤wiki当前目录
+        if(defined('APP_ROOT') && '/' !== APP_ROOT){
+            $requestPath = urldecode(str_replace(APP_ROOT, '', $request['path']));
+        }else{
+            $requestPath = urldecode($request['path']);
+        }
+        if (!ifCanEdit(explode($requestPath, '/'))) {
             $this->_404();
         }
-
+        //页面标题
+        $title = trim($requestPath, "\/");
+        //文档路径
+        $filepath   = LIBRARY . $requestPath;
+        //默认内容
+        $content    = "## " . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . "\n\n```\ncode here\n```";
+        // if feature not enabled, go to 404
+        if (file_exists($filepath)) {
+            $this->_404($filepath);
+        }
         // Create subdirectory recursively, if neccessary
-        mkdir(dirname($filepath), 0755, true);
+        if(!file_exists(dirname($filepath))){
+            mkdir(dirname($filepath), 0755, true);
+        }
 
         // Save default content, and redirect back to the new page
         file_put_contents($filepath, $content);
         if (file_exists($filepath)) {
             // Redirect to new page
-            $redirect_url = BASE_URL . "/$page";
+            $redirect_url = BASE_URL . $requestPath;
             header("HTTP/1.0 302 Found", true);
             header("Location: $redirect_url");
 

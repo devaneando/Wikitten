@@ -1,6 +1,6 @@
 <?php
 
-define('APP_STARTED', true);
+const APP_STARTED = true;
 
 // Conditionally load configuration from a config.php file in
 // the site root, if it exists.
@@ -12,6 +12,10 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'Wikitten');
 }
 
+if (!defined('APP_ROOT')) {
+    define('APP_ROOT', dirname($_SERVER['PHP_SELF']));
+}
+
 if (!defined('LIBRARY')) {
     define('LIBRARY', __DIR__ . DIRECTORY_SEPARATOR . 'library');
 }
@@ -20,28 +24,16 @@ if (!defined('DEFAULT_FILE')) {
     define('DEFAULT_FILE', 'index.md');
 }
 
-if (!defined('USE_WIKITTEN_LOGO')) {
-    define('USE_WIKITTEN_LOGO', true);
+if (!defined('ACCESS_USER')) {
+    define('ACCESS_USER', 'user');
 }
 
-if (!defined('USE_DARK_THEME')) {
-    define('USE_DARK_THEME', false);
+if (!defined('ACCESS_PASSWORD')) {
+    define('ACCESS_PASSWORD', 'pass');
 }
 
-if (!defined('USE_PAGE_METADATA')) {
-    define('USE_PAGE_METADATA', true);
-}
-
-if (!defined('ENABLE_EDITING')) {
-    define('ENABLE_EDITING', false);
-}
-
-if (!defined('ENABLE_PASTEBIN')) {
-    define('ENABLE_PASTEBIN', false);
-}
-
-if (!defined('PASTEBIN_API_KEY')) {
-    define('PASTEBIN_API_KEY', false);
+if (!defined('EXTERNAL_LINK_TARGET')) {
+    define('EXTERNAL_LINK_TARGET', '_blank');
 }
 
 if (!defined('EXTERNAL_LINK_TARGET')) {
@@ -52,8 +44,16 @@ if (!defined('INTERNAL_WIKI_LINK')) {
     define('INTERNAL_WIKI_LINK', true);
 }
 
-if (!defined('CUSTOM_MARKDOWN_STYLESHEET')) {
-    define('CUSTOM_MARKDOWN_STYLESHEET', '');
+if (!defined('ALLOW_VIEW_LEVEL')) {
+    define('ALLOW_VIEW_LEVEL', 1);
+}
+
+if (!defined('ALLOW_EDIT_LEVEL')) {
+    define('ALLOW_EDIT_LEVEL', 2);
+}
+
+if (!defined('USE_LOCAL_RESOURCE')) {
+    define('USE_LOCAL_RESOURCE', true);
 }
 
 define('PLUGINS', __DIR__ . DIRECTORY_SEPARATOR . 'plugins');

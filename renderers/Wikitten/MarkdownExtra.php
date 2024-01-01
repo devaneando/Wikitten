@@ -67,7 +67,7 @@ class MarkdownExtra extends \Michelf\MarkdownExtra
         if (false === $this->isExternal($url)) {
             return $element;
         }
-        if (false !== strpos($element, 'target="')) {
+        if (str_contains($element, 'target="')) {
             $element = preg_replace('/target="[^\"]+"/', 'target="' . EXTERNAL_LINK_TARGET . '"', $element);
         } else {
             $element = str_replace('a href=', 'a target="' . EXTERNAL_LINK_TARGET . '" href=', $element);
@@ -91,7 +91,7 @@ class MarkdownExtra extends \Michelf\MarkdownExtra
         }
 
         // Just append current uri to the $url
-        if (false === strpos($url, '/')) {
+        if (!str_contains($url, '/')) {
             return self::getCurrentUriPath() . $url;
         }
 

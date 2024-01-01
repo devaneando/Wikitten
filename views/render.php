@@ -1,14 +1,14 @@
-<?php if (!defined('APP_STARTED')) {
+<?php
+if (!defined('APP_STARTED')) {
     die('Forbidden!');
-} ?>
+}
+?>
 <div class="breadcrumbs">
     <div class="pull-right">
         <?php if ($html && isset($source)): ?>
-            <a href="javascript:;" class="btn-black" id="toggle">Toggle source</a>
+            <a href="javascript:" class="btn-black" id="toggle">源码</a>
+            <a href="javascript:window.open(document.location.pathname + '?raw');" class="btn-black">raw link</a>
         <?php endif ?>
-        <?php if ($use_pastebin): ?>
-            <a href="javascript:;" class="btn-black" id="create-pastebin" title="Create public Paste on PasteBin">Create public Paste</a>
-        <?php endif; ?>
     </div>
 
     <?php $path = array(); ?>
@@ -36,22 +36,24 @@
                 </a>
             </li>
         <?php endforeach ?>
+        
+        <li class="breadcrumb-item">
+              <i class="fas fa-clock"></i> <?=($time??'')?>
+        </li>
+        
       </ol>
     </nav>
 
 </div>
 
 <?php if ($html): ?>
-    <?php if ($use_pastebin): ?>
-    <div id="pastebin-notification" class="alert" style="display:none;"></div>
-    <?php endif; ?>
     <div id="render">
         <?php echo $html; ?>
     </div>
     <script>
         $('#render pre').addClass('prettyprint linenums');
         prettyPrint();
-
+        
         $('#render a[href^="#"]').click(function(event) {
             event.preventDefault();
             document.location.hash = $(this).attr('href').replace('#', '');
@@ -60,23 +62,23 @@
 <?php endif ?>
 
 <?php if (isset($source)): ?>
-    <?php if ($use_pastebin): ?>
-    <div id="pastebin-notification" class="alert" style="display:none;"></div>
-    <?php endif; ?>
-    <div id="source">
-        <?php if (ENABLE_EDITING): ?>
+    <div id="source" style="display: none;">
+        <?php if (ifCanEdit($parts)): ?>
             <div class="alert alert-info">
-                <i class="glyphicon glyphicon-pencil"></i> <strong>Editing is enabled</strong>. Use the "Save changes" button below the editor to commit modifications to this file.
+                <i class="fa fa-pencil-alt"></i> <strong>修改模式</strong> 使用保存按钮提交你的修改
             </div>
         <?php endif ?>
 
         <form method="POST" action="<?php echo BASE_URL . "/?a=edit" ?>">
+            <?php if (ifCanEdit($parts)): ?>
+                    <input type="submit" class="btn btn-warning btn-sm" id="submit-edits" value="保存">
+            <?php endif ?>
             <input type="hidden" name="ref" value="<?php echo base64_encode($page['file']) ?>">
             <textarea id="editor" name="source" class="form-control" rows="<?php echo substr_count($source, "\n") + 1; ?>"><?php echo $source; ?></textarea>
 
-            <?php if (ENABLE_EDITING): ?>
+            <?php if (ifCanEdit($parts)): ?>
                 <div class="form-actions">
-                    <input type="submit" class="btn btn-warning btn-sm" id="submit-edits" value="Save Changes">
+                    <input type="submit" class="btn btn-warning btn-sm" id="submit-edits" value="保存">
                 </div>
             <?php endif ?>
         </form>
@@ -116,21 +118,15 @@
         if (typeof modes[extension] != 'undefined') {
             mode = modes[extension];
         }
-
-        var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+        var codeConfig = {
             lineNumbers: true,
             lineWrapping: true,
-            <?php if (USE_DARK_THEME): ?>
-            theme: 'tomorrow-night-bright',
-            <?php else: ?>
-            theme: 'default',
-            <?php endif; ?>
-            mode: mode
-            <?php if (!ENABLE_EDITING): ?>
-            ,readOnly: true
-            <?php endif ?>
-        });
-
+            theme: '<?=isDarkTheme()?'tomorrow-night-bright':'default'?>',
+            mode: mode,
+            <?=ifCanEdit($parts)?'':'readOnly: true'?>
+        };
+        var editor = CodeMirror.fromTextArea(document.getElementById('editor'), codeConfig);
+        
         $('#toggle').click(function (event) {
             event.preventDefault();
             $('#render').toggle();
@@ -140,31 +136,5 @@
             }
 
         });
-
-        <?php if ($use_pastebin): ?>
-        $('#create-pastebin').on('click', function (event) {
-            event.preventDefault();
-
-            $(this).addClass('disabled');
-
-            var notification = $('#pastebin-notification');
-            notification.removeClass('alert-info alert-error').html('').hide();
-
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo BASE_URL . '/?a=createPasteBin'; ?>',
-                data: { ref: '<?php echo base64_encode($page['file']); ?>' },
-                context: $(this)
-            }).done(function(response) {
-                $(this).removeClass('disabled');
-
-                if (response.status === 'ok') {
-                    notification.addClass('alert-info').html('Paste URL: ' + response.url).show();
-                } else {
-                    notification.addClass('alert-error').html('Error: ' + response.error).show();
-                }
-            });
-        });
-        <?php endif; ?>
     </script>
 <?php endif ?>

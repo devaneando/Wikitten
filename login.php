@@ -10,14 +10,13 @@ if (!defined('APP_STARTED')) {
  */
 class Login
 {
+    private static ?bool $is_logged = null;
     /**
      * Constructor
      */
     public function __construct()
     {
-        session_start();
-
-        if ($_GET['action'] === 'logout') {
+        if (isset($_GET['action']) && $_GET['action'] === 'logout') {
             $this->doLogout();
 
             header("location: " . BASE_URL);
@@ -29,23 +28,35 @@ class Login
      * Check if the user is logged
      * @return boolean
      */
-    private function isLogged()
+    public static function isLogged(): bool
     {
-        if ($_SESSION['ACCESS_USER'] !== ACCESS_USER || $_SESSION['ACCESS_PASSWORD'] !== ACCESS_PASSWORD) {
-            return false;
+        if (self::$is_logged != null) {
+            return self::$is_logged;
         }
-
-        return true;
+        if (isset($_COOKIE['token']) && $_COOKIE['token'] === md5(ACCESS_USER.ACCESS_PASSWORD)){
+            self::$is_logged = true;
+            return self::$is_logged;
+        }
+        if (empty($_SESSION['ACCESS_USER']) || empty($_SESSION['ACCESS_PASSWORD'])) {
+            self::$is_logged = false;
+            return self::$is_logged;
+        }
+        if ($_SESSION['ACCESS_USER'] !== ACCESS_USER || $_SESSION['ACCESS_PASSWORD'] !== ACCESS_PASSWORD) {
+            self::$is_logged = false;
+            return self::$is_logged;
+        }
+        self::$is_logged = true;
+        return self::$is_logged;
     }
 
     /**
      * Do the login
-     * @param  string $ip       IP address
-     * @param  string $username Username
-     * @param  string $password Password
+     * @param string $ip       IP address
+     * @param string $username Username
+     * @param string $password Password
      * @return boolean
      */
-    private function doLogin($ip, $username, $password)
+    private function doLogin(string $ip, string $username, string $password): bool
     {
         // Check the access to this function, using logs and ip
         //--> to be implemented
@@ -57,27 +68,26 @@ class Login
 
         $_SESSION['ACCESS_USER'] = $username;
         $_SESSION['ACCESS_PASSWORD'] = $password;
-
+        setcookie("token",md5(ACCESS_USER.ACCESS_PASSWORD), time()+3600*24*31);
         return true;
     }
 
     /**
      * Logout from the password protected area
-     * @return boolean Always true
+     * @return void
      */
-    private function doLogout()
+    private function doLogout(): void
     {
         $_SESSION['ACCESS_USER'] = '';
         $_SESSION['ACCESS_PASSWORD'] = '';
-
-        return true;
+        setcookie("token",'', time()-1);
     }
 
     /**
      * Get the IP address of the visitor
      * @return string
      */
-    private function getRealIpAddr()
+    private function getRealIpAddress(): string
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {   //check ip from share internet
             return $_SERVER['HTTP_CLIENT_IP'];
@@ -99,7 +109,7 @@ class Login
             return true;
         }
 
-        $ip = $this->getRealIpAddr();
+        $ip = $this->getRealIpAddress();
 
         $username = isset($_POST['username']) ? htmlspecialchars($_POST['username']) : null;
         $password = isset($_POST['password']) ? htmlspecialchars($_POST['password']) : null;
@@ -127,7 +137,7 @@ class Login
      * Singleton
      * @return Login
      */
-    public static function instance()
+    public static function instance(): Login
     {
         static $instance;
         if (!($instance instanceof self)) {

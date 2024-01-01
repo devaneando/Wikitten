@@ -1,3 +1,5 @@
+.idea
+
 *.log
 docker/logs/*
 !docker/logs/.gitkeep
@@ -5,7 +7,6 @@ docker/.env
 static/css/custom-styles/*
 !static/css/custom-styles/.gitkeep
 !static/css/custom-styles/github.css
-config.php
 
 ### Temp files
 
@@ -20,3 +21,6 @@ Session.vim
 *.ori
 *.backup
 .DS_Store
+test.php
+
+config.php

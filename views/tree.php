@@ -3,49 +3,33 @@ if (!defined('APP_STARTED')) {
     die('Forbidden!');
 }
 
-function tree($array, $parent, $parts = array(), $step = 0)
-{
-    if (!count($array)) {
-        return '';
-    }
-
-    $tid = ($step == 0) ? 'id="tree"' : '';
-    $t = '<ul class="unstyled" '.$tid.'>';
-
-    foreach ($array as $key => $item) {
-        if (is_array($item)) {
-            $open = $step !== false && (isset($parts[$step]) && $key == $parts[$step]);
-
-            $t .= '<li class="directory'. ($open ? ' open' : '') .'">';
-                $t .= '<a href="#" data-role="directory"><i class="far fa-folder'. ($open ? '-open' : '') .'"></i>&nbsp; ' . $key . '</a>';
-                $t .= tree($item, "$parent/$key", $parts, $open ? $step + 1 : false);
-            $t .=  '</li>';
-        } else {
-            $selected = (isset($parts[$step]) && $item == $parts[$step]);
-            $t .= '<li class="file'. ($selected ? ' active' : '') .'"><a href="'. $parent .'/'. $item . '">'.$item.'</a></li>';
-        }
-    }
-
-    $t .= '</ul>';
-
-    return $t;
-}
 ?>
 
-<div id="tree-filter" class="input-group">
-  <input type="text" id="tree-filter-query" class="form-control" placeholder="Search file &amp; directory names." aria-label="Search" aria-describedby="search-addon">
-  <div class="input-group-append">
-    <button type="button" id="tree-filter-clear-query" class="btn  btn-outline-secondary" title="Clear current search..." disabled>
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-</div>
+<!--<div id="tree-filter" class="input-group">-->
+<!--  <input type="text" id="tree-filter-query" class="form-control" placeholder="搜索文件或目录名." aria-label="Search" aria-describedby="search-addon">-->
+<!--  <div class="input-group-append">-->
+<!--    <button type="button" id="tree-filter-clear-query" class="btn  btn-outline-secondary" title="Clear current search..." disabled>-->
+<!--      <i class="fas fa-times"></i>-->
+<!--    </button>-->
+<!--  </div>-->
+<!--</div>-->
 
 <ul class="unstyled" id="tree-filter-results"></ul>
 
-<?php echo tree($this->_getTree(), BASE_URL, isset($parts) ? $parts : array()); ?>
+<?php echo $treeHTML; ?>
 
 <script>
+    //打开文档
+    // document.getElementById("tree").onclick = function(e){
+    //     if (!e.path[0].dataset.hasOwnProperty('d')){
+    //         return;
+    //     }
+    //     var fileUrl = e.path[0].dataset.d + "/" + e.path[0].innerText;
+    //     console.log(fileUrl);
+    //     $.get(fileUrl,function (htmlData) {
+    //         document.querySelector("#content > div").innerHTML = htmlData;
+    //     })
+    // };
     // Case-insensitive alternative to :contains():
     // All credit to Mina Gabriel:
     // http://stackoverflow.com/a/15033857/443373
@@ -68,7 +52,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
 
             // Handle live search/filtering:
             tree             = $('#tree'),
-            resultsTree      = $('#tree-filter-results')
+            resultsTree      = $('#tree-filter-results'),
             filterInput      = $('#tree-filter-query'),
             clearFilterInput = $('#tree-filter-clear-query')
         ;
@@ -93,7 +77,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
 
         // Same thing if the user presses ESC and the filter is active:
         $(document).keyup(function(e) {
-            e.keyCode == 27 && filterInput.hasClass('active') && cancelFilterAction();
+            e.keyCode === 27 && filterInput.hasClass('active') && cancelFilterAction();
         });
 
         // Perform live searches as the user types:
@@ -101,8 +85,7 @@ function tree($array, $parent, $parts = array(), $step = 0)
         filterInput.bind('input', function() {
             var value         = filterInput.val(),
                 query         = $.trim(value),
-                isActive      = value != ''
-            ;
+                isActive      = value !== '';
 
             // Add a visual cue to show that the filter function is active:
             filterInput.toggleClass('active', isActive);
@@ -134,14 +117,22 @@ function tree($array, $parent, $parts = array(), $step = 0)
 
         // Handle directory-tree expansion:
         $(document).on('click', '#sidebar a[data-role="directory"]', function (event) {
+            //取消原本的点击事件
             event.preventDefault();
 
-            var icon = $(this).children('.far');
-            var open = icon.hasClass(iconFolderOpenClass);
-            var subtree = $(this).siblings('ul')[0];
+            const icon = $(this).children('.far');
+            const open = icon.hasClass(iconFolderOpenClass);
+            const subtree = $(this).siblings('ul')[0];
 
+            //移除当前所有icon
             icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
 
+            if (event.target.nextSibling.childNodes.length === 0) {
+                //按需加载目录
+                $.get(event.target.href, function(data){
+                    event.target.nextSibling.innerHTML = data;
+                });
+            }
             if (open) {
                 if (typeof subtree != 'undefined') {
                     $(subtree).slideUp({ duration: 100 });

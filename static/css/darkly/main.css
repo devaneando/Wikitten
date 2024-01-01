@@ -37,7 +37,7 @@ body {
 }
 code, pre {
     font-family: monospace;
-    background: #333;
+    /*background: #333;*/
     color: #3498db;
 }
 #render h1:first-child,
@@ -83,7 +83,6 @@ form {
     border-radius: 4px;
 }
 #sidebar h2, .breadcrumbs {
-    line-height: 20px;
     background: #333;
     margin: -21px -21px 20px -21px;
     padding: 0 20px;
@@ -114,14 +113,14 @@ form {
 #sidebar ul li:last-child {
     padding-bottom: 0;
 }
-#sidebar li.directory {
-    font-weight: bold;
-}
 #sidebar li.directory > a {
     color: #eee;
 }
-#sidebar li.directory > a:hover {
-    text-decoration: none;
+/*#sidebar li.directory > a:hover {*/
+/*    text-decoration: none;*/
+/*}*/
+#sidebar li.directory > a > i {
+    margin-right: 5px;
 }
 #sidebar li.file {
     font-weight: normal;
@@ -133,6 +132,7 @@ form {
 }
 #sidebar li.file.active > a {
     font-weight: bold;
+    color: burlywood;
 }
 #sidebar li a, #sidebar li a:hover {
     display: block;
@@ -248,7 +248,7 @@ form {
 }
 #tree-filter-results li a:focus:before,
 #tree li a:focus:before {
-    content: "↪";
+    content: "â†ª";
     float: left;
     margin-left: -13px;
     font-weight: bold;
